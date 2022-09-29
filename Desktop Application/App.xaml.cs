@@ -15,6 +15,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Desktop_Application.Navigation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,6 +27,8 @@ namespace Desktop_Application
     /// </summary>
     public partial class App : Application
     {
+        private Window m_window;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -43,9 +46,29 @@ namespace Desktop_Application
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
+
+            InitializeAppNavigation(args);
             m_window.Activate();
         }
 
-        private Window m_window;
+        private void InitializeAppNavigation(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        {
+            // Create a Frame to act as the navigation context
+            Frame rootFrame = new();
+
+            // Handle the failed navigation events
+            rootFrame.NavigationFailed += OnNavigationFailed;
+
+            // Place the frame in current window
+            m_window.Content = rootFrame;
+
+            // Navigate to the root navigation page
+            rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
+        }
+
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            Console.WriteLine("App.xaml.cs: OnNavigationFailed | Navigation failed...");
+        }
     }
 }
