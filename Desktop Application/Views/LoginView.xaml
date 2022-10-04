@@ -8,7 +8,15 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <Image Source="https://play-lh.googleusercontent.com/ehwliTbTSTW7T33U_Rir2pJfPoBPYCsYGStNxqnoBHR0pICIjZ9CWJ0hMQTB52-kXk8" Height="100" />
+        <RichTextBlock TextAlignment="Center">
+            <Paragraph>Budget Hero</Paragraph>
+        </RichTextBlock>
+        <TextBox Width="300" Header="Username:" PlaceholderText="Username" />
+        <PasswordBox Width="300" Header="Password" PlaceholderText="Enter your password" PasswordChar="#" />
+    </StackPanel>
+    
+    
+    
 </Page>
