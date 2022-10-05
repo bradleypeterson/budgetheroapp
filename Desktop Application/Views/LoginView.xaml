@@ -7,16 +7,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <StackPanel Orientation="Vertical">
-        <Image Source="https://play-lh.googleusercontent.com/ehwliTbTSTW7T33U_Rir2pJfPoBPYCsYGStNxqnoBHR0pICIjZ9CWJ0hMQTB52-kXk8" Height="100" />
-        <RichTextBlock TextAlignment="Center">
-            <Paragraph>Budget Hero</Paragraph>
-        </RichTextBlock>
-        <TextBox Width="300" Header="Username:" PlaceholderText="Username" />
-        <PasswordBox Width="300" Header="Password" PlaceholderText="Enter your password" PasswordChar="#" />
-    </StackPanel>
-    
-    
-    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Background="#023e8a" Margin="0,50,0,50">
+            <Image Source="https://play-lh.googleusercontent.com/ehwliTbTSTW7T33U_Rir2pJfPoBPYCsYGStNxqnoBHR0pICIjZ9CWJ0hMQTB52-kXk8" Height="100" Margin="0 30 0 0"/>
+            <RichTextBlock TextAlignment="Center">
+                <Paragraph>Budget Hero</Paragraph>
+            </RichTextBlock>
+            <TextBox Width="300" Header="Username:" PlaceholderText="Username" Foreground="White"/>
+            <PasswordBox Width="300" Header="Password" PlaceholderText="Enter your password" PasswordChar="#" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <HyperlinkButton Content="Sign Up" Foreground="White"/>
+                <HyperlinkButton Content="Forgot Password" Foreground="White"/>
+            </StackPanel>
+            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0"/>
+        </StackPanel>
+    </Grid>
 </Page>
