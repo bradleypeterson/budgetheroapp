@@ -1,12 +1,15 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Desktop_Application.Models;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ModelsLibrary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,11 +29,34 @@ namespace Desktop_Application
         public MainWindow()
         {
             this.InitializeComponent();
+            //CreateTest();
+            ReadTest();
         }
 
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
-            myButton.Content = "Clicked";
+            
+        }
+
+        private void CreateTest()
+        {
+            using var db = new BudgetAppContext();
+
+            // Create
+            db.Add(new User { FirstName = "John", LastName = "Doe", EmailAddress = "jdoe@example.com", PercentageMod = null, Username = "doeman", Password = "123456", UserImageLink = null });
+            db.SaveChanges();
+        }
+
+        private void ReadTest()
+        {
+            using var db = new BudgetAppContext();
+
+            var users = db.Users;
+
+            foreach (User user in users)
+            {
+                Debug.WriteLine("Username: " + user.Username);
+            }
         }
     }
 }
