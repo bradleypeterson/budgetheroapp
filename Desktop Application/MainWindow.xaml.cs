@@ -43,7 +43,7 @@ namespace Desktop_Application
             using var db = new BudgetAppContext();
 
             // Create
-            db.Add(new User { FirstName = "John", LastName = "Doe", EmailAddress = "jdoe@example.com", PercentageMod = null, Username = "doeman", Password = "123456", UserImageLink = null });
+            db.Add(new User { FirstName = "Jane", LastName = "Doe", EmailAddress = "jdoe@example.com", PercentageMod = null, Username = "doewoman", Password = "123456", UserImageLink = null });
             db.SaveChanges();
         }
 
