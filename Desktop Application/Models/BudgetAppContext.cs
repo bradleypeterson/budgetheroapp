@@ -23,7 +23,8 @@ namespace Desktop_Application.Models
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "budgetherodesktop.db");            
+            DbPath = System.IO.Path.Join(path, "budgetherodesktop.db");
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
