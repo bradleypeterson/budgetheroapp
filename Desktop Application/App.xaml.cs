@@ -53,17 +53,17 @@ namespace Desktop_Application
 
         private void InitializeAppNavigation(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            // Create a Frame to act as the navigation context
-            Frame rootFrame = new();
+            //// Create a Frame to act as the navigation context
+            //Frame rootFrame = new();
 
-            // Handle the failed navigation events
-            rootFrame.NavigationFailed += OnNavigationFailed;
+            //// Handle the failed navigation events
+            //rootFrame.NavigationFailed += OnNavigationFailed;
 
-            // Place the frame in current window
-            m_window.Content = rootFrame;
+            //// Place the frame in current window
+            //m_window.Content = rootFrame;
 
-            // Navigate to the root navigation page
-            rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
+            //// Navigate to the root navigation page
+            //rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
         }
 
         private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
