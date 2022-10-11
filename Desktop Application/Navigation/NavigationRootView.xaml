@@ -20,14 +20,40 @@
                     UriSource="ms-appx:///Assets\SpartanHelmet_512_x_512.png" />
             </NavigationView.PaneHeader>-->
 
+            <!-- We will need to create custome icons as the Win UI does not have all the necessary Icons. These are just temporary. -->
             <NavigationView.MenuItems>
                 <NavigationViewItem 
+                    Icon="Home"
                     Tag="dashboard" 
-                    Content="Dashboard" />
+                    Content="Accounts" />
                 <NavigationViewItem 
+                    Icon="Library"
                     Tag="profile" 
-                    Content="Profile" />
+                    Content="Expenses" />
+                <NavigationViewItem 
+                    Icon="Home"
+                    Tag="budget" 
+                    Content="Budget" />
+                <NavigationViewItem 
+                    Icon="People"
+                    Tag="household" 
+                    Content="Household" />
+                <NavigationViewItem 
+                    Icon="ZeroBars"
+                    Tag="reports" 
+                    Content="Reports" />
             </NavigationView.MenuItems>
+
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem
+                    Icon="Import"
+                    Tag="logoff" 
+                    Content="Log Off" />
+                <NavigationViewItem 
+                    Icon="Contact"
+                    Tag="account" 
+                    Content="Account" />
+            </NavigationView.FooterMenuItems>
 
             <ScrollViewer
                 Padding="25,25,25,25">
