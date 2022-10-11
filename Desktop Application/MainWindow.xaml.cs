@@ -31,6 +31,7 @@ namespace Desktop_Application
             this.InitializeComponent();
             //CreateTest();
             ReadTest();
+            
         }
 
         private void myButton_Click(object sender, RoutedEventArgs e)

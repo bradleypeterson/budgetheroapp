@@ -27,7 +27,7 @@ namespace Desktop_Application
     /// </summary>
     public partial class App : Application
     {
-        private Window m_window;
+        private Window l_window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,30 +45,30 @@ namespace Desktop_Application
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
+            l_window = new LaunchWindow();
 
-            InitializeAppNavigation(args);
-            m_window.Activate();
+            //InitializeAppNavigation(args);
+            l_window.Activate();
         }
 
-        private void InitializeAppNavigation(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
-            // Create a Frame to act as the navigation context
-            Frame rootFrame = new();
+        //private void InitializeAppNavigation(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        //{
+        //    // Create a Frame to act as the navigation context
+        //    Frame rootFrame = new();
 
-            // Handle the failed navigation events
-            rootFrame.NavigationFailed += OnNavigationFailed;
+        //    // Handle the failed navigation events
+        //    rootFrame.NavigationFailed += OnNavigationFailed;
 
-            // Place the frame in current window
-            m_window.Content = rootFrame;
+        //    // Place the frame in current window
+        //    m_window.Content = rootFrame;
 
-            // Navigate to the root navigation page
-            rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
-        }
+        //    // Navigate to the root navigation page
+        //    rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
+        //}
 
-        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            Console.WriteLine("App.xaml.cs: OnNavigationFailed | Navigation failed...");
-        }
+        //private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        //{
+        //    Console.WriteLine("App.xaml.cs: OnNavigationFailed | Navigation failed...");
+        //}
     }
 }
