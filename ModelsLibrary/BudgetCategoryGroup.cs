@@ -9,6 +9,6 @@ namespace ModelsLibrary
     public class BudgetCategoryGroup
     {
         public int BudgetCategoryGroupID { get; set; }
-        public string CategoryGroupDesc { get; set; }
+        public string CategoryGroupDesc { get; set; } = null!;
     }
 }
