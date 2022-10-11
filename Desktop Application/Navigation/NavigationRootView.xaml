@@ -53,7 +53,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="Top"/>
+                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="Left"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

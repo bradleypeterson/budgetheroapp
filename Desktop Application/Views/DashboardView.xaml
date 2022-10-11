@@ -9,73 +9,20 @@
     mc:Ignorable="d">
 
     <Grid>
-
-
-        <NavigationView x:Name="nvSample"
-            IsSettingsVisible="True"
-            IsBackButtonVisible="Collapsed"
-            IsBackEnabled="True"
-            Header="Header"
-            AlwaysShowHeader="True"
-            PaneTitle=""
-            PaneDisplayMode="Left"
-            ExpandedModeThresholdWidth="100"
-            SelectionFollowsFocus="Disabled"
-            IsTabStop="False">
-
-            <NavigationView.MenuItems>
-                <NavigationViewItem Content="Menu Item1" Tag="SamplePage1" x:Name="SamplePage1Item">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Home" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Content="Menu Item2" Tag="SamplePage2" x:Name="SamplePage2Item" SelectsOnInvoked="True">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Calculator" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Content="Menu Item3" Tag="SamplePage3" x:Name="SamplePage3Item">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Priority" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-            </NavigationView.MenuItems>
-
-            <NavigationView.PaneCustomContent>
-                <HyperlinkButton x:Name="PaneHyperlink" Content="More info" Margin="12,0" Visibility="Collapsed" />
-            </NavigationView.PaneCustomContent>
-
-
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Account" Tag="SamplePage4" Icon="Contact" />
-            </NavigationView.FooterMenuItems>
-
-            <Frame x:Name="contentFrame">
-                <Grid>
-                    <Pivot Margin="0 0 320 0">
-                        <PivotItem Header="Budget">
-                            <ProgressRing IsActive="True" />
-                        </PivotItem>
-                        <PivotItem Header="Expenses">
-                            <ProgressRing IsActive="True" />
-                        </PivotItem>
-                        <PivotItem Header="Household">
-                            <ProgressRing IsActive="True" />
-                        </PivotItem>
-                    </Pivot>
-
-                    <TextBox HorizontalAlignment="Right" Width="300" Margin="10 0 10 10" >
-                        
-                    </TextBox>
-                    
-                </Grid>
-            </Frame>
-        </NavigationView>
-
-        
-
+        <Pivot Margin="0 0 320 0">
+            <PivotItem Header="Budget">
+                <ProgressRing IsActive="True" />
+            </PivotItem>
+            <PivotItem Header="Expenses">
+                <ProgressRing IsActive="True" />
+            </PivotItem>
+            <PivotItem Header="Household">
+                <ProgressRing IsActive="True" />
+            </PivotItem>
+        </Pivot>
+        <TextBox HorizontalAlignment="Right" Width="300" Margin="10 0 10 10"/>
     </Grid>
 
 
-    
+
 </Page>
