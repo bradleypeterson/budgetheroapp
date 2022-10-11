@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -32,7 +33,8 @@ namespace Desktop_Application.Navigation
         private readonly List<(string Tag, Type Page)> _pages = new()
         {
             ("profile", typeof(ProfileView)),
-            ("dashboard", typeof(DashboardView))
+            ("dashboard", typeof(DashboardView)),
+            ("logoff", typeof(LoginView)),
         };
 
         public NavigationRootView()
@@ -99,7 +101,11 @@ namespace Desktop_Application.Navigation
                 // SettingsItem is not part of NavigationViewControl.MenuItems, and doesn't have a Tag
                 NavigationViewControl.SelectedItem = (NavigationViewItem)NavigationViewControl.SettingsItem;
                 NavigationViewControl.Header = "Settings";
-            } 
+            }
+            else if (ContentFrame.SourcePageType == typeof(LoginView))
+            {
+                this.Frame.Navigate(typeof(LoginView));
+            }
             else if (ContentFrame.SourcePageType != null)
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
