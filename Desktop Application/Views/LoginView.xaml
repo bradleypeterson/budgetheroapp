@@ -24,10 +24,10 @@
                 </PasswordBox.Resources>
             </PasswordBox>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <HyperlinkButton Content="Sign Up" Foreground="White"/>
+                <HyperlinkButton Content="Sign Up" Foreground="White" Click="SignUpButton_Click"/>
                 <HyperlinkButton Content="Forgot Password" Foreground="White"/>
             </StackPanel>
-            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0"/>
+            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0" Click="LoginButton_Click"/>
         </StackPanel>
     </Grid>
 </Page>

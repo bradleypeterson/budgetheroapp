@@ -23,9 +23,22 @@ namespace Desktop_Application.Views
     /// </summary>
     public sealed partial class DashboardView : Page
     {
+        private MainWindow mainWindow;
+
         public DashboardView()
         {
             this.InitializeComponent();
+            GetMainWindow();
+            ResizeWindow();
+        }
+        private void GetMainWindow()
+        {
+            mainWindow = (Application.Current as App)?.Window as MainWindow;
+        }
+
+        private void ResizeWindow()
+        {
+            mainWindow.ResizeWindowForDashboard();
         }
     }
 }

@@ -31,8 +31,6 @@ namespace Desktop_Application.Navigation
         // List of ValueTuple holding the Navigation Tag and the relative Navigation Page
         private readonly List<(string Tag, Type Page)> _pages = new()
         {
-            ("login", typeof(LoginView)),
-            ("registration", typeof(RegistrationView)),
             ("profile", typeof(ProfileView)),
             ("dashboard", typeof(DashboardView))
         };
@@ -101,7 +99,7 @@ namespace Desktop_Application.Navigation
                 // SettingsItem is not part of NavigationViewControl.MenuItems, and doesn't have a Tag
                 NavigationViewControl.SelectedItem = (NavigationViewItem)NavigationViewControl.SettingsItem;
                 NavigationViewControl.Header = "Settings";
-            }
+            } 
             else if (ContentFrame.SourcePageType != null)
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);

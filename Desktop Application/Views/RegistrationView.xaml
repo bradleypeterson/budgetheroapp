@@ -44,7 +44,7 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </PasswordBox.Resources>
             </PasswordBox>
-            <Button Content="Sign Up" HorizontalAlignment="Center" Margin="0 20 0 20"/>
+            <Button Content="Sign Up" HorizontalAlignment="Center" Margin="0 20 0 20" Click="SignUpButton_Click"/>
         </StackPanel>
     </Grid>
 </Page>

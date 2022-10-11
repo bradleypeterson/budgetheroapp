@@ -16,6 +16,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Desktop_Application.Navigation;
+using Desktop_Application.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,6 +30,7 @@ namespace Desktop_Application
     {
         //private Window l_window;
         private Window m_window;
+        private readonly string m_windowTitle = "Budget Hero";
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -39,6 +41,8 @@ namespace Desktop_Application
             this.InitializeComponent();
         }
 
+        public Window Window { get { return m_window; } }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -47,7 +51,7 @@ namespace Desktop_Application
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             //l_window = new LaunchWindow();
-            m_window = new MainWindow();
+            m_window = new MainWindow(m_windowTitle);
 
             InitializeAppNavigation(args);
             m_window.Activate();
@@ -65,7 +69,8 @@ namespace Desktop_Application
             m_window.Content = rootFrame;
 
             // Navigate to the root navigation page
-            rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
+            //rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
+            rootFrame.Navigate(typeof(LoginView), args.Arguments);
         }
 
         private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
