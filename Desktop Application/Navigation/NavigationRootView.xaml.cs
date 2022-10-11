@@ -32,7 +32,10 @@ namespace Desktop_Application.Navigation
         private readonly List<(string Tag, Type Page)> _pages = new()
         {
             ("profile", typeof(ProfileView)),
-            ("dashboard", typeof(DashboardView))
+            ("dashboard", typeof(DashboardView)),
+            ("budget", typeof(DashboardView)),
+            ("household", typeof(DashboardView)),
+            ("reports", typeof(DashboardView)),
         };
 
         public NavigationRootView()
