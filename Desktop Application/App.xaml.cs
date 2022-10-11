@@ -27,7 +27,8 @@ namespace Desktop_Application
     /// </summary>
     public partial class App : Application
     {
-        private Window l_window;
+        //private Window l_window;
+        private Window m_window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,44 +46,31 @@ namespace Desktop_Application
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            l_window = new LaunchWindow();
+            //l_window = new LaunchWindow();
+            m_window = new MainWindow();
 
-            //InitializeAppNavigation(args);
-            l_window.Activate();
+            InitializeAppNavigation(args);
+            m_window.Activate();
         }
 
-        //private void InitializeAppNavigation(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        //{
-        //    // Create a Frame to act as the navigation context
-        //    Frame rootFrame = new();
-
-        //    // Handle the failed navigation events
-        //    rootFrame.NavigationFailed += OnNavigationFailed;
-
-        //    // Place the frame in current window
-        //    m_window.Content = rootFrame;
-
-        //    // Navigate to the root navigation page
-        //    rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
-        //}
         private void InitializeAppNavigation(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            //// Create a Frame to act as the navigation context
-            //Frame rootFrame = new();
+            // Create a Frame to act as the navigation context
+            Frame rootFrame = new();
 
-            //// Handle the failed navigation events
-            //rootFrame.NavigationFailed += OnNavigationFailed;
+            // Handle the failed navigation events
+            rootFrame.NavigationFailed += OnNavigationFailed;
 
-            //// Place the frame in current window
-            //m_window.Content = rootFrame;
+            // Place the frame in current window
+            m_window.Content = rootFrame;
 
-            //// Navigate to the root navigation page
-            //rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
+            // Navigate to the root navigation page
+            rootFrame.Navigate(typeof(NavigationRootView), args.Arguments);
         }
 
-        //private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        //{
-        //    Console.WriteLine("App.xaml.cs: OnNavigationFailed | Navigation failed...");
-        //}
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            Console.WriteLine("App.xaml.cs: OnNavigationFailed | Navigation failed...");
+        }
     }
 }

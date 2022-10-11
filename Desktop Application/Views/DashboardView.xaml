@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        
+
 
         <NavigationView x:Name="nvSample"
             IsSettingsVisible="True"
@@ -21,8 +21,7 @@
             PaneDisplayMode="Left"
             ExpandedModeThresholdWidth="100"
             SelectionFollowsFocus="Disabled"
-            IsTabStop="False"
-            >
+            IsTabStop="False">
 
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Menu Item1" Tag="SamplePage1" x:Name="SamplePage1Item">

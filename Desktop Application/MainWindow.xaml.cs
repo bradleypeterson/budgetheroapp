@@ -59,8 +59,6 @@ namespace Desktop_Application
                 Debug.WriteLine("Username: " + user.Username);
             }
         }
-            this.Content = new Views.DashboardView();
-        }
-
+           
     }
 }

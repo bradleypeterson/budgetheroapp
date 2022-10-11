@@ -33,7 +33,8 @@ namespace Desktop_Application.Navigation
         {
             ("login", typeof(LoginView)),
             ("registration", typeof(RegistrationView)),
-            ("profile", typeof(ProfileView))
+            ("profile", typeof(ProfileView)),
+            ("dashboard", typeof(DashboardView))
         };
 
         public NavigationRootView()

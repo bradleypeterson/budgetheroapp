@@ -25,6 +25,9 @@
                     Tag="login" 
                     Content="Login" />
                 <NavigationViewItem 
+                    Tag="dashboard" 
+                    Content="Dashboard" />
+                <NavigationViewItem 
                     Tag="registration" 
                     Content="Registration" />
                 <NavigationViewItem 
