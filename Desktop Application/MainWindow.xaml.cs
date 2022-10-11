@@ -29,36 +29,6 @@ namespace Desktop_Application
         public MainWindow()
         {
             this.InitializeComponent();
-            //CreateTest();
-            ReadTest();
-            
-        }
-
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void CreateTest()
-        {
-            using var db = new BudgetAppContext();
-
-            // Create
-            db.Add(new User { FirstName = "Jane", LastName = "Doe", EmailAddress = "jdoe@example.com", PercentageMod = null, Username = "doewoman", Password = "123456", UserImageLink = null });
-            db.SaveChanges();
-        }
-
-        private void ReadTest()
-        {
-            using var db = new BudgetAppContext();
-
-            var users = db.Users;
-
-            foreach (User user in users)
-            {
-                Debug.WriteLine("Username: " + user.Username);
-            }
-        }
-           
+        }      
     }
 }
