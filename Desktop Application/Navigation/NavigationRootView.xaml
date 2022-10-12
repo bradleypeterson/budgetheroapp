@@ -14,7 +14,7 @@
             IsBackButtonVisible="Collapsed"
             Loaded="NavigationViewControl_Loaded"
             ItemInvoked="NavigationViewControl_ItemInvoked"
-            BackRequested="NavigationViewControl_BackRequested">
+            BackRequested="NavigationViewControl_BackRequested" IsSettingsVisible="False" Background="#023e8a">
             <!--<NavigationView.PaneHeader>
                 <BitmapIcon
                     UriSource="ms-appx:///Assets\SpartanHelmet_512_x_512.png" />
@@ -22,37 +22,49 @@
 
             <!-- We will need to create custome icons as the Win UI does not have all the necessary Icons. These are just temporary. -->
             <NavigationView.MenuItems>
-                <NavigationViewItem 
-                    Icon="Home"
-                    Tag="dashboard" 
-                    Content="Accounts" />
-                <NavigationViewItem 
-                    Icon="Library"
-                    Tag="profile" 
-                    Content="Expenses" />
-                <NavigationViewItem 
-                    Icon="Home"
-                    Tag="budget" 
-                    Content="Budget" />
-                <NavigationViewItem 
-                    Icon="People"
-                    Tag="household" 
-                    Content="Household" />
-                <NavigationViewItem 
-                    Icon="ZeroBars"
-                    Tag="reports" 
-                    Content="Reports" />
+                <NavigationViewItem Tag="dashboard" Content="Accounts" Height="100" Foreground="White" FontSize="20">
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\test.png" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="dashboard" Content="Expenses" Height="100" Foreground="White" FontSize="20">
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\expenses.png" Foreground="White"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="dashboard" Content="Budget" Height="100" Foreground="White">
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\budget.png" Foreground="White"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="dashboard" Content="Household" Height="100" Foreground="White">
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\household.png" Foreground="White"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="dashboard" Content="Reports" Height="100" Foreground="White">
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\reports.png" Foreground="White"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem
-                    Icon="Import"
-                    Tag="logoff" 
-                    Content="Log Off" />
-                <NavigationViewItem 
-                    Icon="Contact"
-                    Tag="account" 
-                    Content="Account" />
+                <NavigationViewItem Tag="dashboard" Content="Log Off" Height="100" >
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\logoff.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="dashboard" Content="Profile" Height="100" >
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\account.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="dashboard" Content="Settings" Height="100" >
+                    <NavigationViewItem.Icon >
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\settings.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.FooterMenuItems>
 
             <ScrollViewer
