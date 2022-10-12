@@ -12,6 +12,10 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\bank_black.png" />
+    <Content Remove="Assets\bank_white.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Models\NewFile1.txt" />
     <None Remove="LaunchWindow.xaml" />
     <None Remove="Navigation\NavigationRootView.xaml" />
