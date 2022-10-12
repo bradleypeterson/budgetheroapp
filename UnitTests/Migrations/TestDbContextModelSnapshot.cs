@@ -124,16 +124,20 @@ namespace UnitTests.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsHousehold")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
 
-                    b.Property<bool>("IsTransactionPaid")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool?>("IsTransactionPaid")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TransactionMemo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TransactionPayee")

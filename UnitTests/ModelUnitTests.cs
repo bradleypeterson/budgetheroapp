@@ -2,6 +2,7 @@
 using ModelsLibrary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
@@ -20,64 +21,75 @@ namespace UnitTests
         public ModelUnitTests(ITestOutputHelper output)
         {
             this.output = output;
+            ResetTestingDatabase();
+            SeedUserTable();
         }
 
         [Fact]
-        public void Test1_CreateUser()
+        public void CreateUser()
         {
-            ResetTestingDatabase();
-
             // Arrange
             using var database = new TestDbContext();
             var newUser = ModelFactory.CreateUser();
-            var result = 0;
+            var insertResult = 0;
+            int expectedTotalRecords = 4;
+            int actualTotalRecords = 0;
 
             // Act
             database.Users.Add(newUser);
-            result = database.SaveChanges();
+            insertResult = database.SaveChanges();
+            actualTotalRecords = database.Users.Count();
 
             // Assert
-            Assert.True(result == 1);
+            Assert.True(insertResult == 1);
+            Assert.True(actualTotalRecords == expectedTotalRecords);
         }
 
         [Fact]
-        public void Test2_ReadUser()
+        public void ReadUser()
         {
             // Arrange
+            string expectedUserFirstName = "Michael";
+            string actualUserFirstName = "Failed";
             using var database = new TestDbContext();
 
             // Act
-            var existingUser = database.Users.FirstOrDefault();
+            var existingUser = database.Users.FirstOrDefault(u => u.FirstName == expectedUserFirstName);
+            if (existingUser != null)
+                actualUserFirstName = existingUser.FirstName;
 
             // Assert
-            Assert.Equal(1, database.Users.Count());
+            Assert.True(actualUserFirstName == expectedUserFirstName);
         }
 
         [Fact]
-        public void Test3_UpdateUser()
+        public void UpdateUser()
         {
             // Arrange
+            string oldUserFirstName = "John";
+            string newUserFirstName = "Jane";
             using var database = new TestDbContext();
             var existingUser = database.Users.FirstOrDefault();
 
             // Act
             if (existingUser != null)
             {
-                existingUser.FirstName = "Jane";
+                existingUser.FirstName = newUserFirstName;
                 database.SaveChanges();
             }
 
             // Assert
-            Assert.True(database.Users.FirstOrDefault(u => u.FirstName == "John") is null);
-            Assert.False(database.Users.FirstOrDefault(u => u.FirstName == "Jane") is null);
+            Assert.True(database.Users.FirstOrDefault(u => u.FirstName == oldUserFirstName) is null);
+            Assert.False(database.Users.FirstOrDefault(u => u.FirstName == newUserFirstName) is null);
         }
 
         [Fact]
-        public void Test4_DeleteUser()
+        public void DeleteUser()
         {
             // Arrange
+            string existingUserFirstName = "Dwight";
             using var database = new TestDbContext();
-            var existingUser = database.Users.FirstOrDefault();
+            var existingUser = database.Users.FirstOrDefault(u => u.FirstName == existingUserFirstName);
 
             // Act
             if (existingUser != null)
@@ -87,7 +99,7 @@ namespace UnitTests
             }
 
             // Assert
-            Assert.False(database.Users.Any());
+            Assert.True(database.Users.FirstOrDefault(u => u.FirstName == existingUserFirstName) is null);
         }
 
         private static void ResetTestingDatabase()
@@ -96,6 +108,22 @@ namespace UnitTests
 
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
+        }
+
+        private static void SeedUserTable()
+        {
+            using var database = new TestDbContext();
+
+            var hasUsers = database.Users.Any();
+
+            if (!hasUsers)
+            {
+                List<User> testUsers = ModelFactory.CreateUsers();
+
+                testUsers.ForEach(u => database.Users.Add(u));
+            }
+
+            database.SaveChanges();
         }
 
         private void OutputModelData(List<User> users)
