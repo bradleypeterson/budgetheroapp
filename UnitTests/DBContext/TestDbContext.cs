@@ -23,10 +23,20 @@ namespace UnitTests.DBContext
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
             DbPath = Path.Join(path, "budgetherotesting.db");
-            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.IsTransactionPaid)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.IsHousehold)
+                .HasDefaultValue(false);
+        }
     }
 }
