@@ -50,7 +50,7 @@
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Tag="dashboard" Content="Log Off" Height="100" >
+                <NavigationViewItem Tag="logoff" Content="Log Off" Height="100" >
                     <NavigationViewItem.Icon >
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\logoff.png"/>
                     </NavigationViewItem.Icon>
