@@ -16,6 +16,7 @@
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="Black"/>
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="Black"/>
             <SolidColorBrush x:Key="NavigationViewItemForegroundPressed" Color="White"/>
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundPressed" Color="White"/>
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="Black"/>
 
             <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="CornflowerBlue"/>
@@ -31,7 +32,8 @@
             ItemInvoked="NavigationViewControl_ItemInvoked"
             BackRequested="NavigationViewControl_BackRequested" 
             IsSettingsVisible="False" 
-            Background="#023e8a">
+            Background="#023e8a"
+            >
 
             <NavigationView.PaneToggleButtonStyle>
                 <Style TargetType="Button" BasedOn="{StaticResource PaneToggleButtonStyle}">
