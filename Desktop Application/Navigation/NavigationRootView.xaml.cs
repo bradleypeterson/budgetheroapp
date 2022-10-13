@@ -39,9 +39,8 @@ namespace Desktop_Application.Navigation
 
         public NavigationRootView()
         {
-            NavigationViewControl.IsPaneVisible = false;
             this.InitializeComponent();
-
+            NavigationViewControl.IsPaneOpen = false;
         }
 
         private void NavigationViewControl_Loaded(object sender, RoutedEventArgs e)
