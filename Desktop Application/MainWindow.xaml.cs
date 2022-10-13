@@ -41,8 +41,7 @@ namespace Desktop_Application
 
         public void ResizeWindowForDashboard()
         {
-            //ResizeWindow(dashboardWindowWidth, dashboardWindowHeight);
-
+            ResizeWindow(dashboardWindowWidth, dashboardWindowHeight);
             var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             PInvoke.User32.ShowWindow(hWnd, PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
 
