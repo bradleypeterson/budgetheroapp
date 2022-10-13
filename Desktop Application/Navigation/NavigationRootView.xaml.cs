@@ -39,7 +39,9 @@ namespace Desktop_Application.Navigation
 
         public NavigationRootView()
         {
+            NavigationViewControl.IsPaneVisible = false;
             this.InitializeComponent();
+
         }
 
         private void NavigationViewControl_Loaded(object sender, RoutedEventArgs e)
@@ -52,6 +54,8 @@ namespace Desktop_Application.Navigation
 
             // Navigate to the default page
             NavigationViewControl_Navigate("dashboard", new EntranceNavigationTransitionInfo());
+
+            
         }
 
         private void NavigationViewControl_Navigate(string navigationItemTag, NavigationTransitionInfo navigationTransitionInfo)
