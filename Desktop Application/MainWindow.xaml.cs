@@ -51,7 +51,20 @@ namespace Desktop_Application
 
         public void ResizeWindowForLogin()
         {
-            ResizeWindow(loginWindowWidth, loginWindowHeight);
+            //ResizeWindow(loginWindowWidth, loginWindowHeight);
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow((int)((double)displayArea.WorkArea.Width * .23), (int)((double)displayArea.WorkArea.Height * .58));
+                }
+            }
         }
 
         public void ResizeWindowForRegistration()
