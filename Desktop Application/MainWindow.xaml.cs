@@ -44,32 +44,22 @@ namespace Desktop_Application
 
         public void ResizeWindowForDashboard()
         {
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            ResizeDisplayToMonitorDimensions(hWnd);
-            CenterWindow(hWnd);
+            //var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            ResizeDashToMonitorDimensions();
         }
 
         public void ResizeWindowForLogin()
         {
             //ResizeWindow(loginWindowWidth, loginWindowHeight);
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-
-            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-            if (appWindow is not null)
-            {
-                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
-                if (displayArea is not null)
-                {
-                    ResizeWindow((int)((double)displayArea.WorkArea.Width * .23), (int)((double)displayArea.WorkArea.Height * .58));
-                }
-            }
+            //var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            ResizeLoginToMonitorDimensions();
         }
 
         public void ResizeWindowForRegistration()
         {
-            ResizeWindow(registrationWindowWidth, registrationWindowHeight);
+            //ResizeWindow(registrationWindowWidth, registrationWindowHeight);
+            //var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            ResizeRegToMonitorDimensions();
         }
         
         private void ResizeWindow(int customWidth, int customHeight)
@@ -79,6 +69,7 @@ namespace Desktop_Application
             var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
             appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = customWidth, Height = customHeight });
+            CenterWindow(hWnd);
         }
 
         private void CenterWindow(IntPtr hWnd)
@@ -98,8 +89,9 @@ namespace Desktop_Application
             }
         }
 
-        private void ResizeDisplayToMonitorDimensions(IntPtr hWnd)
+        private void ResizeDashToMonitorDimensions()
         {
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
             Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
@@ -110,6 +102,38 @@ namespace Desktop_Application
                 {
                     ResizeWindow(displayArea.WorkArea.Width, displayArea.WorkArea.Height);
                     PInvoke.User32.ShowWindow(hWnd, PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
+                }
+            }
+        }
+
+        private void ResizeLoginToMonitorDimensions()
+        {
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow((int)((double)displayArea.WorkArea.Width * .23), (int)((double)displayArea.WorkArea.Height * .58));
+                }
+            }
+        }
+
+        private void ResizeRegToMonitorDimensions()
+        {
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow((int)(displayArea.WorkArea.Width * .23), (int)(displayArea.WorkArea.Height * .74));
                 }
             }
         }
