@@ -29,13 +29,7 @@ namespace Desktop_Application
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private readonly int dashboardWindowWidth = 1920;
-        private readonly int dashboardWindowHeight = 1080;
-        private readonly int loginWindowWidth = 450;
-        private readonly int loginWindowHeight = 630;
-        private readonly int registrationWindowWidth = 450;
-        private readonly int registrationWindowHeight = 800;
-        
+         
         public MainWindow(string title)
         {
             this.InitializeComponent();
@@ -44,21 +38,16 @@ namespace Desktop_Application
 
         public void ResizeWindowForDashboard()
         {
-            //var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             ResizeDashToMonitorDimensions();
         }
 
         public void ResizeWindowForLogin()
         {
-            //ResizeWindow(loginWindowWidth, loginWindowHeight);
-            //var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             ResizeLoginToMonitorDimensions();
         }
 
         public void ResizeWindowForRegistration()
         {
-            //ResizeWindow(registrationWindowWidth, registrationWindowHeight);
-            //var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             ResizeRegToMonitorDimensions();
         }
         
