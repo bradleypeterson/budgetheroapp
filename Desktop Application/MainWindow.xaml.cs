@@ -29,7 +29,7 @@ namespace Desktop_Application
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-         
+        
         public MainWindow(string title)
         {
             this.InitializeComponent();
@@ -38,17 +38,51 @@ namespace Desktop_Application
 
         public void ResizeWindowForDashboard()
         {
-            ResizeDashToMonitorDimensions();
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow(displayArea.WorkArea.Width, displayArea.WorkArea.Height);
+                    PInvoke.User32.ShowWindow(hWnd, PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
+                }
+            }
         }
 
         public void ResizeWindowForLogin()
         {
-            ResizeLoginToMonitorDimensions();
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow((int)(displayArea.WorkArea.Width * .23), (int)(displayArea.WorkArea.Height * .58));
+                }
+            }
         }
 
         public void ResizeWindowForRegistration()
         {
-            ResizeRegToMonitorDimensions();
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow((int)(displayArea.WorkArea.Width * .23), (int)(displayArea.WorkArea.Height * .74));
+                }
+            }
         }
         
         private void ResizeWindow(int customWidth, int customHeight)
@@ -77,55 +111,5 @@ namespace Desktop_Application
                 }
             }
         }
-
-        private void ResizeDashToMonitorDimensions()
-        {
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-            if (appWindow is not null)
-            {
-                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
-                if (displayArea is not null)
-                {
-                    ResizeWindow(displayArea.WorkArea.Width, displayArea.WorkArea.Height);
-                    PInvoke.User32.ShowWindow(hWnd, PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
-                }
-            }
-        }
-
-        private void ResizeLoginToMonitorDimensions()
-        {
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-            if (appWindow is not null)
-            {
-                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
-                if (displayArea is not null)
-                {
-                    ResizeWindow((int)((double)displayArea.WorkArea.Width * .23), (int)((double)displayArea.WorkArea.Height * .58));
-                }
-            }
-        }
-
-        private void ResizeRegToMonitorDimensions()
-        {
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-            if (appWindow is not null)
-            {
-                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
-                if (displayArea is not null)
-                {
-                    ResizeWindow((int)(displayArea.WorkArea.Width * .23), (int)(displayArea.WorkArea.Height * .74));
-                }
-            }
-        }
-
     }
 }
