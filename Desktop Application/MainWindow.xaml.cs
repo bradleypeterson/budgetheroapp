@@ -12,9 +12,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
+using System.Windows;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,10 +44,22 @@ namespace Desktop_Application
 
         public void ResizeWindowForDashboard()
         {
-            ResizeWindow(dashboardWindowWidth, dashboardWindowHeight);
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            PInvoke.User32.ShowWindow(hWnd, PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
 
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    ResizeWindow(displayArea.WorkArea.Width, displayArea.WorkArea.Height);
+                }
+            }
+
+            CenterWindow(hWnd);
         }
 
         public void ResizeWindowForLogin()
@@ -65,5 +80,23 @@ namespace Desktop_Application
 
             appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = customWidth, Height = customHeight });
         }
+
+        private void CenterWindow(IntPtr hWnd)
+        {
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            if (appWindow is not null)
+            {
+                Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                if (displayArea is not null)
+                {
+                    var CenteredPosition = appWindow.Position;
+                    CenteredPosition.X = ((displayArea.WorkArea.Width - appWindow.Size.Width) / 2);
+                    CenteredPosition.Y = ((displayArea.WorkArea.Height - appWindow.Size.Height) / 2);
+                    appWindow.Move(CenteredPosition);
+                }
+            }
+        }
+
     }
 }
