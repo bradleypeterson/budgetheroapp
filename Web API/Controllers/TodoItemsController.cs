@@ -15,6 +15,8 @@ namespace Web_API.Controllers
     {
         private readonly TodoContext _context;
         
+        // Delete this controller and create a UserController
+
         public TodoItemsController(TodoContext context)
         {
             _context = context;
