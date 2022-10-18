@@ -9,6 +9,42 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <StackPanel Orientation="Vertical" Background="#023e8a" >
+            <Image Source="https://play-lh.googleusercontent.com/ehwliTbTSTW7T33U_Rir2pJfPoBPYCsYGStNxqnoBHR0pICIjZ9CWJ0hMQTB52-kXk8" Height="100" Margin="0 30 0 0"/>
+            <RichTextBlock TextAlignment="Center">
+                <Paragraph Foreground="White">Budget Hero</Paragraph>
+            </RichTextBlock>
+            <TextBox Width="300" Header="Firstname" PlaceholderText="Firstname" Foreground="White">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox Width="300" Header="Lastname" PlaceholderText="Lastname" Foreground="White">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox Width="300" Header="Username" PlaceholderText="Username" Foreground="White">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox Width="300" Header="Email" PlaceholderText="Email" Foreground="White">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <PasswordBox Width="300" Header="Password" PlaceholderText="Password" PasswordChar="#">
+                <PasswordBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </PasswordBox.Resources>
+            </PasswordBox>
+            <PasswordBox Width="300" Header="Confirm Password" PlaceholderText="Confirm Password" PasswordChar="#">
+                <PasswordBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </PasswordBox.Resources>
+            </PasswordBox>
+            <Button Content="Sign Up" HorizontalAlignment="Center" Margin="0 20 0 20" Click="SignUpButton_Click"/>
+        </StackPanel>
     </Grid>
 </Page>

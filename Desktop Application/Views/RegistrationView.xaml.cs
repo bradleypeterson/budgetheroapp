@@ -23,9 +23,27 @@ namespace Desktop_Application.Views
     /// </summary>
     public sealed partial class RegistrationView : Page
     {
+        private MainWindow mainWindow;
+
         public RegistrationView()
         {
             this.InitializeComponent();
+            GetMainWindow();
+            ResizeWindow();
+        }
+        private void GetMainWindow()
+        {
+            mainWindow = (Application.Current as App)?.Window as MainWindow;
+        }
+
+        private void ResizeWindow()
+        {
+            mainWindow.ResizeWindowForRegistration();
+        }
+
+        private void SignUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(LoginView));
         }
     }
 }
