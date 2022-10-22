@@ -1,4 +1,6 @@
-﻿using Desktop_Application.Navigation;
+﻿using Desktop_Application.Interfaces;
+using Desktop_Application.Models;
+using Desktop_Application.Navigation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -13,6 +15,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography;
 using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -30,6 +33,7 @@ namespace Desktop_Application.Views
     {
         private MainWindow mainWindow;
 
+
         public LoginView()
         {
             this.InitializeComponent();
@@ -44,7 +48,29 @@ namespace Desktop_Application.Views
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(NavigationRootView));
+            using var database = new BudgetAppContext();
+            database.Database.EnsureCreated();
+            bool loginValid = true;
+
+            //check if user exists with this username
+            var user = database.Users.FirstOrDefault(u => u.Username == txtUsername.Text.ToString());
+            if (user is null)
+            {
+                loginValid = false;
+            }
+            else
+            {
+                if(!PasswordInterface.VerifyPassword(pwbPassword.ToString(),user.Password))
+                {
+                    //password is invalid for this user
+                    loginValid = false;
+                }
+            }
+
+            if (loginValid)
+            {
+                this.Frame.Navigate(typeof(NavigationRootView));
+            }
         }
 
         private void ResizeWindow()
@@ -56,6 +82,8 @@ namespace Desktop_Application.Views
         {
             this.Frame.Navigate(typeof(RegistrationView));
         }
+
+        
     }
 }
 
