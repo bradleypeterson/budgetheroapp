@@ -6,9 +6,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
-
-
+  
     <Grid>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="320"/>
@@ -21,17 +21,17 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="White" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top" >
 
             </Border>
 
+            <!-- This stack panel is for whatever control is needed for the work area-->
             <StackPanel x:Name="Work_Area" Background="LawnGreen" Grid.Row="1">
-                <!-- This stack panel is for whatever control is needed for the work area-->
+                
             </StackPanel>
 
         </Grid>
-
-
 
         <StackPanel x:Name="Details_Pane" Background="LightGray" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10">
             <Grid >
@@ -43,18 +43,20 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
-
+                <!-- This text block is to show the details of a selected item-->
                 <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="28" Padding="0 20 0 0"/>
 
+                <!-- This border contains the details textbox-->
                 <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275" Height="300" CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
 
                 </Border>
 
 
-
+                <!-- this is the data grid for the bank account items-->
                 <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                    CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                   VerticalAlignment="Bottom" Width="275">
+                                   HeadersVisibility="Column" VerticalAlignment="Bottom" Width="275">
+                    
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -65,18 +67,17 @@
                             <Setter Property="Background" Value="SteelBlue"/>
                         </Style>
                     </controls:DataGrid.Resources>
+                    
                     <controls:DataGrid.RowStyle>
                         <Style TargetType="controls:DataGridRow">
                             <Setter Property="IsHitTestVisible" Value="False"/>
                         </Style>
                     </controls:DataGrid.RowStyle>
-
-                    <!--<controls:DataGrid.ColumnHeaderStyle>
-                        <Style
-                    </controls:DataGrid.ColumnHeaderStyle>-->
-
+                    
                     <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding Account}"/>
+                        <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding Account}">
+                            
+                        </controls:DataGridTextColumn>
                         <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance}"/>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
@@ -84,7 +85,4 @@
             </Grid>
         </StackPanel>
     </Grid>
-
-
-
 </Page>
