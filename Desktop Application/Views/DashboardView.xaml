@@ -52,13 +52,17 @@
 
 
 
-                <controls:DataGrid Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
+                <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                    CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
                                    VerticalAlignment="Bottom" Width="275">
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
                             <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Style>
+                        <Style TargetType="controls:DataGridCell">
+                            <Setter Property="Background" Value="SteelBlue"/>
                         </Style>
                     </controls:DataGrid.Resources>
                     <controls:DataGrid.RowStyle>
@@ -66,6 +70,10 @@
                             <Setter Property="IsHitTestVisible" Value="False"/>
                         </Style>
                     </controls:DataGrid.RowStyle>
+
+                    <!--<controls:DataGrid.ColumnHeaderStyle>
+                        <Style
+                    </controls:DataGrid.ColumnHeaderStyle>-->
 
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding Account}"/>
