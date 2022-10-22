@@ -73,8 +73,8 @@ namespace Desktop_Application.Views
                 var expense = new ObservableCollection<Expense>();
 
                 expense.Add(new Expense() { Date = DateTime.Now, Item = "Toaster", Amount = 5.0, Category = "Household Items", Payee = "Walmart" });
-                expense.Add(new Expense() { Date = DateTime.Now, Item = "Extension Cord", Amount = 5.0, Category = "Household Items", Payee = "Walmart" });
-                expense.Add(new Expense() { Date = DateTime.Now, Item = "Bread", Amount = 5.0, Category = "Household Items", Payee = "Walmart" });
+                expense.Add(new Expense() { Date = DateTime.Now, Item = "Extension Cord", Amount = 14.95, Category = "Household Items", Payee = "Walmart" });
+                expense.Add(new Expense() { Date = DateTime.Now, Item = "Bread", Amount = 2.68, Category = "Household Items", Payee = "Walmart" });
 
                 return expense;
             }
@@ -102,11 +102,16 @@ namespace Desktop_Application.Views
 
         }
 
-        private void ExpenseData_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void ExpenseData_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DataGrid grid = sender as DataGrid;
-            //Expense expense = grid.ItemsSource;
-            //Console.WriteLine(expense.Amount);
+            Expense expense = (Expense)grid.SelectedItem;
+
+            String content = "Name: " + expense.Item + "\nCost: " + expense.Amount.ToString("C");
+
+            Details_Txt.Text = content;
+
+
         }
     }
 }

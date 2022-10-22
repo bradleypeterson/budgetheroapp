@@ -43,7 +43,7 @@
                 <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="809"
                                    AlternatingRowBackground="LightGray"
-                                   PointerPressed="ExpenseData_PointerPressed"
+                                   SelectionChanged="ExpenseData_SelectionChanged"
                                    SelectionMode="Single"
                                    >
                     <controls:DataGrid.Resources>
@@ -87,10 +87,10 @@
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
-                    </Grid>
-                    
-                    <!-- This will need to be added when we get the database call up and running-->
+                        <TextBlock x:Name="Details_Txt" Grid.Row="0" Text="" Foreground="Black" FontSize="16"/>
 
+
+                    </Grid>
                 </Border>
 
                 <Button x:Name="EditExpense_Btn" Grid.Row="2" Content="Edit Expense" HorizontalAlignment="Center" Background="#032d63" Width="150" Margin="20 0 0 0" Click="EditExpense_Btn_Click"/>
