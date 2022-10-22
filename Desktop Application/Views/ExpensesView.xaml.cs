@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ModelsLibrary;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,8 +19,6 @@ using Windows.Foundation.Collections;
 
 namespace Desktop_Application.Views
 {
-    //System.Collections.ObjectModel.ObservableCollection<>
-
 
     public sealed partial class ExpensesView : Page
     {
@@ -30,7 +29,7 @@ namespace Desktop_Application.Views
 
         private void AddExpense_Btn_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void Submit_Btn_Click(object sender, RoutedEventArgs e)
@@ -47,5 +46,7 @@ namespace Desktop_Application.Views
         {
 
         }
+
+        System.Collections.ObjectModel.ObservableCollection<Transaction> ExpensesData = new System.Collections.ObjectModel.ObservableCollection<Transaction>();
     }
 }

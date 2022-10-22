@@ -38,7 +38,9 @@
             </Border>
 
             <StackPanel x:Name="Work_Area" Background="LightGray" Grid.Row="1">
-                <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="809">
+                <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
+                                   CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="809"
+                                   ItemsSource="{x:Bind ExpensesData}">
 
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="Date" Width="1*"/>
