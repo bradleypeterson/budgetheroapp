@@ -43,6 +43,7 @@ namespace Desktop_Application.Views
         {
             private string account;
             private string balance;
+            
             public event PropertyChangedEventHandler PropertyChanged;
 
             private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
