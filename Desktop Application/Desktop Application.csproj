@@ -20,6 +20,7 @@
     <None Remove="Models\NewFile1.txt" />
     <None Remove="LaunchWindow.xaml" />
     <None Remove="Navigation\NavigationRootView.xaml" />
+    <None Remove="Views\ExpensesView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\ProfileView.xaml" />
     <None Remove="Views\RegistrationView.xaml" />
@@ -68,6 +69,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Page Update="Views\ExpensesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="LaunchWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

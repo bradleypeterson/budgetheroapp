@@ -35,6 +35,7 @@ namespace Desktop_Application.Navigation
             ("profile", typeof(ProfileView)),
             ("dashboard", typeof(DashboardView)),
             ("logoff", typeof(LoginView)),
+            ("expenses", typeof(ExpensesView)),
         };
 
         public NavigationRootView()
