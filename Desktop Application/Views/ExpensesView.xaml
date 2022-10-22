@@ -28,7 +28,9 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Background="#032d63" Margin="20 0 0 0" Click="AddExpense_Btn_Click"/>
+                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Background="#032d63" Margin="20 0 0 0" Click="AddExpense_Btn_Click">
+                    </Button>
+                    
 
                     <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search" Background="#032d63"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit"  Background="#032d63" Margin="20 0 0 0" Click="Submit_Btn_Click" />
@@ -37,17 +39,25 @@
                 </Grid>
             </Border>
 
-            <StackPanel x:Name="Work_Area" Background="LightGray" Grid.Row="1">
+            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1">
                 <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="809"
-                                   ItemsSource="{x:Bind ExpensesData}">
+                                   AlternatingRowBackground="LightGray"
+                                   PointerPressed="ExpenseData_PointerPressed"
+                                   SelectionMode="Single"
+                                   >
+                    <controls:DataGrid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Style>
+                    </controls:DataGrid.Resources>
 
                     <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Date" Width="1*"/>
-                        <controls:DataGridTextColumn Header="Expense" Width="2*"/>
-                        <controls:DataGridTextColumn Header="Amount" Width="1*"/>
-                        <controls:DataGridTextColumn Header="Category" Width="1*"/>
-                        <controls:DataGridTextColumn Header="Payee" Width="2*"/>
+                        <controls:DataGridTextColumn Header="Date" Width="1*" Binding="{Binding Date}"/>
+                        <controls:DataGridTextColumn Header="Expense" Width="2*" Binding="{Binding Item}"/>
+                        <controls:DataGridTextColumn Header="Amount" Width="1*" Binding="{Binding Amount}"/>
+                        <controls:DataGridTextColumn Header="Category" Width="1*" Binding="{Binding Category}"/>
+                        <controls:DataGridTextColumn Header="Payee" Width="2*" Binding="{Binding Payee}"/>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
             </StackPanel>
