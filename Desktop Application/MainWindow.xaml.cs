@@ -36,10 +36,7 @@ namespace Desktop_Application
         public bool isFirstLoad = false;
         private const double PERCENT_HEIGHT_LOGIN = .58;
         private const double PERCENT_WIDTH_LOGIN_AND_REG = .23;
-        private const double PERCENT_HEIGHT_REG = .74;
-
-
-
+        private const double PERCENT_HEIGHT_REG = .70;
 
         public MainWindow(string title)
         {
@@ -48,6 +45,11 @@ namespace Desktop_Application
             appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
             this.InitializeComponent();
             this.Title = title; 
+        }
+
+        public void ResetFirstLoad()
+        {
+            isFirstLoad = false;
         }
 
         public void ResizeWindowForDashboard()
