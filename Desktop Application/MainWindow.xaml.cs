@@ -34,6 +34,11 @@ namespace Desktop_Application
         public Microsoft.UI.Windowing.AppWindow appWindow;
         public Microsoft.UI.WindowId windowId;
         public bool isFirstLoad = false;
+        private const double PERCENT_HEIGHT_LOGIN = .58;
+        private const double PERCENT_WIDTH_LOGIN_AND_REG = .23;
+        private const double PERCENT_HEIGHT_REG = .74;
+
+
 
 
         public MainWindow(string title)
@@ -75,7 +80,7 @@ namespace Desktop_Application
                 Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
                 if (displayArea is not null)
                 {
-                    ResizeWindow((int)(displayArea.WorkArea.Width * .23), (int)(displayArea.WorkArea.Height * .58));
+                    ResizeWindow((int)(displayArea.WorkArea.Width * PERCENT_WIDTH_LOGIN_AND_REG), (int)(displayArea.WorkArea.Height * PERCENT_HEIGHT_LOGIN));
                 }
             }
         }
@@ -87,7 +92,7 @@ namespace Desktop_Application
                 Microsoft.UI.Windowing.DisplayArea displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(windowId, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
                 if (displayArea is not null)
                 {
-                    ResizeWindow((int)(displayArea.WorkArea.Width * .23), (int)(displayArea.WorkArea.Height * .74));
+                    ResizeWindow((int)(displayArea.WorkArea.Width * PERCENT_WIDTH_LOGIN_AND_REG), (int)(displayArea.WorkArea.Height * PERCENT_HEIGHT_REG));
                 }
             }
         }

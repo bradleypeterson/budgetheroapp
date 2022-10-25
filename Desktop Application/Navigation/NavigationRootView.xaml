@@ -42,7 +42,7 @@
             </NavigationView.PaneToggleButtonStyle>
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="dashboard" Content="Accounts" Height="100" Foreground="White" FontSize="20">
+                <NavigationViewItem Tag="accounts" Content="Accounts" Height="100" Foreground="White" FontSize="20">
                     <NavigationViewItem.Icon >
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\accounts.png" />
                     </NavigationViewItem.Icon>
