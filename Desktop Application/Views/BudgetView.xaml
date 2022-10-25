@@ -33,7 +33,7 @@
             </Border>
 
             <!-- This panel is for whatever control is needed for the work area-->
-            <RelativePanel x:Name="Work_Area" Background="White" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <RelativePanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <ScrollViewer x:Name="ScrollViewer">
                     <ItemsControl x:Name="icGroupsAccordion">
                         <ItemsControl.ItemTemplate>
@@ -79,7 +79,7 @@
                             <Setter Property="FontWeight" Value="Bold"/>
                         </Style>
                         <Style TargetType="controls:DataGridCell">
-                            <Setter Property="Background" Value="LightSkyBlue"/>
+                            <Setter Property="Background" Value="GhostWhite"/>
                         </Style>
                     </controls:DataGrid.Resources>
 

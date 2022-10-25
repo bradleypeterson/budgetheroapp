@@ -6,8 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Grid>
 
@@ -29,7 +28,7 @@
             </Border>
 
             <!-- This stack panel is for whatever control is needed for the work area-->
-            <StackPanel x:Name="Work_Area" Background="Orange" Grid.Row="1">
+            <StackPanel x:Name="Work_Area" Background="Orange" Grid.Row="1" CornerRadius="0,0,10,10">
 
             </StackPanel>
 
@@ -66,7 +65,7 @@
                             <Setter Property="FontWeight" Value="Bold"/>
                         </Style>
                         <Style TargetType="controls:DataGridCell">
-                            <Setter Property="Background" Value="LightSkyBlue"/>
+                            <Setter Property="Background" Value="GhostWhite"/>
                         </Style>
                     </controls:DataGrid.Resources>
 
