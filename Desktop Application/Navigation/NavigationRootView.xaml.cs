@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Security.Cryptography.Core;
 using Windows.UI.ApplicationSettings;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -34,9 +35,11 @@ namespace Desktop_Application.Navigation
         {
             ("profile", typeof(ProfileView)),
             ("dashboard", typeof(DashboardView)),
+            ("budget", typeof(BudgetView)),
             ("logoff", typeof(LoginView)),
             ("expenses", typeof(ExpensesView)),
             ("construction", typeof(UnderConstructionView)),
+            ("accounts", typeof(AccountsView)),
         };
 
         public NavigationRootView()
@@ -126,6 +129,8 @@ namespace Desktop_Application.Navigation
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            
+            
             if (args.IsSettingsInvoked == true)
             {
                 NavigationViewControl_Navigate("settings", args.RecommendedNavigationTransitionInfo);
@@ -133,6 +138,15 @@ namespace Desktop_Application.Navigation
             else if (args.InvokedItemContainer != null)
             {
                 var navItemTag = args.InvokedItemContainer.Tag.ToString();
+
+                if(navItemTag == "logoff")
+                {
+                    MainWindow mainWindow = (Application.Current as App)?.Window as MainWindow;
+                    mainWindow.ResetFirstLoad();
+                    mainWindow.ResizeWindowForLogin();
+                    
+                }
+
                 NavigationViewControl_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
             }
         }

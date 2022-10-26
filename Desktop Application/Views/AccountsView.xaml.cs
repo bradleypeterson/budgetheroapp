@@ -26,11 +26,11 @@ namespace Desktop_Application.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class DashboardView : Page
+    public sealed partial class AccountsView : Page
     {
         private MainWindow mainWindow;
 
-        public DashboardView()
+        public AccountsView()
         {
             this.InitializeComponent();
             GetMainWindow();
@@ -42,7 +42,7 @@ namespace Desktop_Application.Views
         {
             private string account;
             private string balance;
-            
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -53,7 +53,8 @@ namespace Desktop_Application.Views
             public string Account
             {
                 get { return account; }
-                set { 
+                set
+                {
                     account = value;
                     NotifyPropertyChanged();
                 }

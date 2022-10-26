@@ -56,6 +56,8 @@ namespace Desktop_Application.Views
         {
             this.Frame.Navigate(typeof(RegistrationView));
         }
+
+        // Connect buttons to UI and make database calls
     }
 }
 
