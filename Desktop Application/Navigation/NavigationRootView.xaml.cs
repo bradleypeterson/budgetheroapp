@@ -37,6 +37,8 @@ namespace Desktop_Application.Navigation
             ("dashboard", typeof(DashboardView)),
             ("budget", typeof(BudgetView)),
             ("logoff", typeof(LoginView)),
+            ("expenses", typeof(ExpensesView)),
+            ("construction", typeof(UnderConstructionView)),
             ("accounts", typeof(AccountsView)),
         };
 
