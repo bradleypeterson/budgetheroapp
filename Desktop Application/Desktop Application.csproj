@@ -66,6 +66,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Page Update="Views\UnderConstructionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ExpensesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+	  </Page>
     <Page Update="Views\AccountsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
