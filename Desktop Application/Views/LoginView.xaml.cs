@@ -51,21 +51,55 @@ namespace Desktop_Application.Views
             using var database = new BudgetAppContext();
             database.Database.EnsureCreated();
             bool loginValid = true;
+            bool userExists = true;
+            bool validPassword = true;
+
+            //error textblocks
+            tbEmptyError.Visibility = Visibility.Collapsed;
+            tbUsernameError.Visibility = Visibility.Collapsed;
+            tbPasswordError.Visibility = Visibility.Collapsed;
 
             //check if user exists with this username
             var user = database.Users.FirstOrDefault(u => u.Username == txtUsername.Text.ToString());
             if (user is null)
             {
                 loginValid = false;
+                userExists = false;
             }
             else
             {
-                if(!PasswordInterface.VerifyPassword(pwbPassword.ToString(),user.Password))
+                if(!PasswordInterface.VerifyPassword(pwbPassword.Password,user.Password))
                 {
                     //password is invalid for this user
                     loginValid = false;
+                    validPassword = false;
                 }
             }
+
+            if(txtUsername.Text == "" || pwbPassword.Password == "")
+            {
+                if (tbEmptyError.Visibility == Visibility.Collapsed)
+                {
+                    tbEmptyError.Visibility = Visibility.Visible;
+                }
+            }
+
+            if (!userExists)
+            {
+                if (tbUsernameError.Visibility == Visibility.Collapsed)
+                {
+                    tbUsernameError.Visibility = Visibility.Visible;
+                }
+            }
+
+            if (!validPassword)
+            {
+                if (tbPasswordError.Visibility == Visibility.Collapsed)
+                {
+                    tbPasswordError.Visibility = Visibility.Visible;
+                }
+            }
+
 
             if (loginValid)
             {

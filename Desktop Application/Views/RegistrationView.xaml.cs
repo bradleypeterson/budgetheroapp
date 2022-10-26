@@ -18,6 +18,7 @@ using Desktop_Application.Models;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata.Internal;
 using ModelsLibrary;
 using System.Diagnostics;
+using Desktop_Application.Navigation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,6 +37,10 @@ namespace Desktop_Application.Views
             this.InitializeComponent();
             GetMainWindow();
             ResizeWindow();
+            tbBlankFieldsError.Visibility = Visibility.Collapsed;
+            tbUsernameError.Visibility = Visibility.Collapsed;
+            tbEmailError.Visibility = Visibility.Collapsed;
+            tbPasswordError.Visibility = Visibility.Collapsed;
         }
         private void GetMainWindow()
         {
@@ -52,33 +57,82 @@ namespace Desktop_Application.Views
             using var database = new BudgetAppContext();
             database.Database.EnsureCreated();
             bool registrationValid = true;
+            bool emptyInputs = false;
+            bool unmatchingPasswords = false;
+            bool invalidEmail = false;
+            bool usernameTaken = false;
+
+            //error textblocks
+            tbBlankFieldsError.Visibility = Visibility.Collapsed;
+            tbUsernameError.Visibility = Visibility.Collapsed;
+            tbEmailError.Visibility = Visibility.Collapsed;
+            tbPasswordError.Visibility = Visibility.Collapsed;
 
 
-            //Check all input fields for invalid input
-            if(txtFirstname.Text == "")
+            if(txtFirstname.Text == "" || 
+                txtLastname.Text == "" || 
+                txtUsername.Text == "" ||
+                txtEmail.Text == "" ||
+                pwbPassword.Password == "" ||
+                pwbConfirmPassword.Password == "")
             {
                 registrationValid = false;
+                emptyInputs = true;
             }
-            else if(txtLastname.Text == "")
-            {
-                registrationValid = false;
-            }
-            else if (database.Users.FirstOrDefault(u => u.Username == txtUsername.Text) is not null) 
+
+            if (database.Users.FirstOrDefault(u => u.Username == txtUsername.Text) is not null) 
             {
                 //username already exists
                 registrationValid = false;
-            }
-            else if (!EmailValidator.Validate(txtEmail.Text))
-            {
-                registrationValid = false;
-                
-            }else if(pwbPassword.ToString() != pwbConfirmPassword.ToString())
-            {
-                registrationValid = false;
+                usernameTaken = true;
             }
 
+
+            if (!EmailValidator.Validate(txtEmail.Text) && txtEmail.Text != "")
+            {
+                registrationValid = false;
+                invalidEmail = true;
+                
+            }
             
-            
+            if(pwbPassword.Password != pwbConfirmPassword.Password)
+            {
+                registrationValid = false;
+                unmatchingPasswords = true;
+            }
+
+
+            if (emptyInputs)
+            {
+                if (tbBlankFieldsError.Visibility == Visibility.Collapsed)
+                {
+                    tbBlankFieldsError.Visibility = Visibility.Visible;
+                }
+            }
+
+            if (usernameTaken)
+            {
+                if (tbUsernameError.Visibility == Visibility.Collapsed)
+                {
+                    tbUsernameError.Visibility = Visibility.Visible;
+                }
+            }
+
+            if (invalidEmail)
+            {
+                if (tbEmailError.Visibility == Visibility.Collapsed)
+                {
+                    tbEmailError.Visibility = Visibility.Visible;
+                }
+            }
+
+            if (unmatchingPasswords)
+            {
+                if (tbPasswordError.Visibility == Visibility.Collapsed)
+                {
+                    tbPasswordError.Visibility = Visibility.Visible;
+                }
+            }
 
             if (registrationValid)
             {
@@ -90,15 +144,13 @@ namespace Desktop_Application.Views
                     EmailAddress = txtEmail.Text,
                     PercentageMod = null,
                     Username = txtUsername.Text,
-                    Password = PasswordInterface.HashPassword(pwbPassword.ToString()),
+                    Password = PasswordInterface.HashPassword(pwbPassword.Password),
                     UserImageLink = null
                 };
 
                 database.Users.Add(user);
                 database.SaveChanges();
-                var usertest = database.Users.FirstOrDefault(u => u.Username == txtFirstname.Text.ToString());
-                Debug.WriteLine("!!!!!!!!!!" + usertest.Password);
-                this.Frame.Navigate(typeof(DashboardView));
+                this.Frame.Navigate(typeof(NavigationRootView));
             }
             
         }

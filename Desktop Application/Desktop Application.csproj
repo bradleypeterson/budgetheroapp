@@ -19,10 +19,14 @@
     <None Remove="Models\NewFile1.txt" />
     <None Remove="LaunchWindow.xaml" />
     <None Remove="Navigation\NavigationRootView.xaml" />
+    <None Remove="Views\AccountsView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\ProfileView.xaml" />
     <None Remove="Views\RegistrationView.xaml" />
     <None Remove="Views\SettingsView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Views\AccountsView.xaml" />
   </ItemGroup>
 
   <ItemGroup>

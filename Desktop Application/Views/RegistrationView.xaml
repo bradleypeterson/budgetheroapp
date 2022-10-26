@@ -14,13 +14,49 @@
             <RichTextBlock TextAlignment="Center">
                 <Paragraph Foreground="White">Budget Hero</Paragraph>
             </RichTextBlock>
-            <TextBox x:Name="txtFirstname" Width="300" Header="Firstname" PlaceholderText="Firstname"/>
-            <TextBox x:Name="txtLastname" Width="300" Header="Lastname" PlaceholderText="Lastname"/>
-            <TextBox x:Name="txtUsername" Width="300" Header="Username" PlaceholderText="Username"/>
-            <TextBox x:Name="txtEmail" Width="300" Header="Email" PlaceholderText="Email"/>
-            <PasswordBox x:Name="pwbPassword" Width="300" Header="Password" PlaceholderText="Password"/>
-            <PasswordBox x:Name="pwbConfirmPassword" Width="300" Header="Confirm Password" PlaceholderText="Confirm Password"/>
-            <Button Content="Sign Up" HorizontalAlignment="Center" Margin="0 20 0 20" Click="SignUpButton_Click"/>
+            <TextBlock x:Name="tbBlankFieldsError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+                All fields must not be blank
+            </TextBlock>
+            <TextBox x:Name="txtFirstname" Width="300" Header="Firstname" PlaceholderText="Firstname">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox x:Name="txtLastname" Width="300" Header="Lastname" PlaceholderText="Lastname">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBlock x:Name="tbUsernameError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+                Username is taken
+            </TextBlock>
+            <TextBox x:Name="txtUsername" Width="300" Header="Username" PlaceholderText="Username">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBlock x:Name="tbEmailError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+                Email is invalid
+            </TextBlock>
+            <TextBox x:Name="txtEmail" Width="300" Header="Email" PlaceholderText="Email">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBlock x:Name="tbPasswordError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+                Passwords do not match
+            </TextBlock>
+            <PasswordBox x:Name="pwbPassword" Width="300" Header="Password" PlaceholderText="Password">
+                <PasswordBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </PasswordBox.Resources>
+            </PasswordBox>
+            <PasswordBox x:Name="pwbConfirmPassword" Width="300" Header="Confirm Password" PlaceholderText="Confirm Password">
+                <PasswordBox.Resources>
+                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
+                </PasswordBox.Resources>
+            </PasswordBox>
+            <Button x:Name="btnSignup" Content="Sign Up" HorizontalAlignment="Center" Margin="0 20 0 20" Click="SignUpButton_Click"/>
         </StackPanel>
     </Grid>
 </Page>
