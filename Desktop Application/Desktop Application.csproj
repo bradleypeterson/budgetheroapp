@@ -77,6 +77,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\ExpensesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+	</Page>
     <Page Update="Views\AccountsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
