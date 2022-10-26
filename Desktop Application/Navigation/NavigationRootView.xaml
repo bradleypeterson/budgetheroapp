@@ -57,12 +57,12 @@
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\budget.png"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="dashboard" Content="Household" Height="100" Foreground="White" FontSize="20">
+                <NavigationViewItem Tag="contruction" Content="Household" Height="100" Foreground="White" FontSize="20">
                     <NavigationViewItem.Icon >
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\household.png"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="dashboard" Content="Reports" Height="100" Foreground="White" FontSize="20">
+                <NavigationViewItem Tag="contruction" Content="Reports" Height="100" Foreground="White" FontSize="20">
                     <NavigationViewItem.Icon >
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\reports.png"/>
                     </NavigationViewItem.Icon>

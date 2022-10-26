@@ -39,6 +39,7 @@ namespace Desktop_Application.Navigation
             ("logoff", typeof(LoginView)),
             ("accounts", typeof(AccountsView)),
             ("expenses", typeof(ExpensesView)),
+            ("contruction", typeof(UnderConstructionView)),
         };
 
         public NavigationRootView()
@@ -117,9 +118,11 @@ namespace Desktop_Application.Navigation
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
 
-                NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems
-                    .OfType<NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.Tag));
+                //Code was causing crashes with the underconstruction view. Reimplement late to fix a bug, when we do not use the same new for multiple items.
+
+                //NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems
+                //    .OfType<NavigationViewItem>()
+                //    .First(n => n.Tag.Equals(item.Tag));
 
                 NavigationViewControl.Header =
                     ((NavigationViewItem)NavigationViewControl.SelectedItem)?.Content?.ToString();

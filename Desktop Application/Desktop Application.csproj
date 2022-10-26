@@ -26,6 +26,7 @@
     <None Remove="Views\ProfileView.xaml" />
     <None Remove="Views\RegistrationView.xaml" />
     <None Remove="Views\SettingsView.xaml" />
+    <None Remove="Views\UnderConstructionView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,15 +68,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Page Update="Views\ExpenseView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="Views\UnderConstructionView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\ExpensesView.xaml">
+    <Page Update="Views\ExpenseView.xaml">
       <Generator>MSBuild:Compile</Generator>
-	  </Page>
+    </Page>
     <Page Update="Views\AccountsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
