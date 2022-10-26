@@ -34,7 +34,6 @@ namespace Desktop_Application.Navigation
         private readonly List<(string Tag, Type Page)> _pages = new()
         {
             ("profile", typeof(ProfileView)),
-            ("dashboard", typeof(DashboardView)),
             ("budget", typeof(BudgetView)),
             ("logoff", typeof(LoginView)),
             ("accounts", typeof(AccountsView)),
@@ -57,7 +56,7 @@ namespace Desktop_Application.Navigation
             NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems[0];
 
             // Navigate to the default page
-            NavigationViewControl_Navigate("dashboard", new EntranceNavigationTransitionInfo());
+            NavigationViewControl_Navigate("accounts", new EntranceNavigationTransitionInfo());
 
             
         }
