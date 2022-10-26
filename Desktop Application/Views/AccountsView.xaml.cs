@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.WinUI.UI.Controls;
+using Desktop_Application.Classes;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -35,51 +36,8 @@ namespace Desktop_Application.Views
             this.InitializeComponent();
             GetMainWindow();
             ResizeWindow();
-            Account_Grid.ItemsSource = BankAccount.GetAccounts();
-        }
-
-        public class BankAccount : INotifyPropertyChanged
-        {
-            private string account;
-            private string balance;
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-
-            public string Account
-            {
-                get { return account; }
-                set
-                {
-                    account = value;
-                    NotifyPropertyChanged();
-                }
-            }
-
-            public string Balance
-            {
-                get { return balance; }
-                set
-                {
-                    balance = value;
-                    NotifyPropertyChanged();
-                }
-            }
-
-            public static ObservableCollection<BankAccount> GetAccounts()
-            {
-                var accounts = new ObservableCollection<BankAccount>();
-
-                accounts.Add(new BankAccount() { Account = "Goldenwest Checking", Balance = "$450.25" });
-                accounts.Add(new BankAccount() { Account = "Goldenwest Savings", Balance = "$1289.75" });
-
-
-                return accounts;
-            }
+            Account_Details_Grid.ItemsSource = DummyTransaction.GetDummyTransactions();
+            Accounts_Grid.ItemsSource = DummyAccount.GetDummyAccounts();
         }
 
         private void GetMainWindow()

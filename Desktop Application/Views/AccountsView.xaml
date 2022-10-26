@@ -24,40 +24,52 @@
 
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Margin="20">Add Account</Button>
-                    <Button Margin="20">Delete Account</Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="10,0,10,0">Add Account</Button>
+                    <Button Margin="10,0,10,0">Delete Account</Button>
                 </StackPanel>
             </Border>
 
             <!-- This stack panel is for whatever control is needed for the work area-->
-            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10">
+            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1">
+                <controls:DataGrid x:Name="Accounts_Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="True" 
+                                   CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="1179"
+                                   AlternatingRowBackground="LightGray"
+                                   SelectionMode="Single"
+                                   >
+                    <controls:DataGrid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Style>
+                    </controls:DataGrid.Resources>
 
+                    <controls:DataGrid.Columns>
+                        <controls:DataGridTextColumn Header="Account Name" Width="2*" Binding="{Binding AccountName}"/>
+                        <controls:DataGridTextColumn Header="Balance" Width="2*" Binding="{Binding AccountBalance}"/>
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>
             </StackPanel>
 
         </Grid>
 
+        
         <StackPanel x:Name="Details_Pane" Background="LightGray" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10">
             <Grid >
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="55"/>
-                    <RowDefinition Height="350"/>
-                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="100"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
                 <!-- This text block is just the title header-->
                 <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="28" Padding="0 20 0 0"/>
 
-                <!-- This border contains the details textbox-->
-                <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275" Height="300" CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
-
-                </Border>
-
-
-                <!-- this is the data grid for the bank account items-->
-                <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
+               
+                
+                 <!-- this is the data grid for the account details-->
+                <controls:DataGrid Grid.Row="1" x:Name="Account_Details_Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                    CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
                                    HeadersVisibility="Column" VerticalAlignment="Bottom" Width="275">
 
@@ -79,12 +91,17 @@
                     </controls:DataGrid.RowStyle>
 
                     <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding Account}">
+                        <controls:DataGridTextColumn Header="Date" FontSize="15" Width="1*" Binding="{Binding TransactionDate}">
 
                         </controls:DataGridTextColumn>
-                        <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance}"/>
+                        <controls:DataGridTextColumn Header="Amount" FontSize="15" Width="1*" Binding="{Binding TransactionAmount}"/>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
+
+                <Button Grid.Row="2" HorizontalAlignment="Center">Edit Account</Button>
+
+
+
 
             </Grid>
         </StackPanel>
