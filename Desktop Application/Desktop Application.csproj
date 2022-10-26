@@ -16,18 +16,15 @@
     <Content Remove="Assets\bank_white.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Assets\budgetherologo.png" />
     <None Remove="Models\NewFile1.txt" />
     <None Remove="LaunchWindow.xaml" />
     <None Remove="Navigation\NavigationRootView.xaml" />
-    <None Remove="Views\ExpensesView.xaml" />
     <None Remove="Views\AccountsView.xaml" />
     <None Remove="Views\BudgetView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\ProfileView.xaml" />
     <None Remove="Views\RegistrationView.xaml" />
     <None Remove="Views\SettingsView.xaml" />
-    <None Remove="Views\UnderConstructionView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,9 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
@@ -66,17 +62,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Content Update="Assets\budgetherologo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Page Update="Views\UnderConstructionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\ExpensesView.xaml">
     <Page Update="Views\AccountsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
