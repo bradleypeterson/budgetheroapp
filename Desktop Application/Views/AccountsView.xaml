@@ -23,12 +23,15 @@
             </Grid.RowDefinitions>
 
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
-            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="White" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top" >
-
+            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="20">Add Account</Button>
+                    <Button Margin="20">Delete Account</Button>
+                </StackPanel>
             </Border>
 
             <!-- This stack panel is for whatever control is needed for the work area-->
-            <StackPanel x:Name="Work_Area" Background="Orange" Grid.Row="1" CornerRadius="0,0,10,10">
+            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10">
 
             </StackPanel>
 
