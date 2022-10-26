@@ -18,6 +18,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using System.Windows;
+using Desktop_Application.Services;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,6 +36,18 @@ namespace Desktop_Application
         {
             this.InitializeComponent();
             this.Title = title;
+
+            // Call the API (replace TestApi with APIServiceManager method)
+            Task.Run(async () => await TestApi());
+        }
+
+        public async Task TestApi()
+        {
+            List<User> users = await APIServiceManager.GetAsync<List<User>>($"/api/users");
+            foreach (User user in users)
+            {
+                Debug.WriteLine(user.FirstName);
+            }
         }
 
         public void ResizeWindowForDashboard()
