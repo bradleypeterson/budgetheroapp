@@ -22,14 +22,74 @@ namespace UnitTests
         public async Task GetUserAsync()
         {
             // Arrange
-            User newUser = ModelFactory.CreateUser();
-            newUser.UserId = 2;
+            int userId = 2;
 
             // Act
-            User existingUser = await APIServiceManager.GetUserAsync(newUser);
+            bool userWasRetrieved = await APITestHelper.GetAsync<User>($"/api/users/{userId}");
 
             // Assert
-            Assert.True(existingUser.UserId == newUser.UserId);
+            Assert.True(userWasRetrieved);
+        }
+
+        [Fact]
+        public async Task GetUsersAsync()
+        {
+            // Arrange
+            string endpoint = $"/api/users";
+
+            // Act
+            bool usersWereRetrieved = await APITestHelper.GetAsync<List<User>>(endpoint);
+
+            // Assert
+            Assert.True(usersWereRetrieved);
+        }
+
+        [Fact]
+        public async Task PostUserAsync()
+        {
+            // Arrange
+            string endpoint = $"/api/users";
+            User newUser = ModelFactory.CreateUser();
+            newUser.UserId = 6;
+            
+            // Act
+            bool userWasAdded = await APITestHelper.PostAsync<User>(endpoint, newUser);
+
+            // Assert
+            Assert.True(userWasAdded);
+        }
+
+        [Fact]
+        public async Task PutUserAsync()
+        {
+            // Arrange
+            int userId = 6;
+            string newFirstName = "Jane";
+            string endpoint = $"/api/users/{userId}";
+            User user = ModelFactory.CreateUser();
+            user.UserId = userId;
+            user.FirstName = newFirstName;
+            
+
+            // Act
+            bool userWasUpdated = await APITestHelper.PutAsync<User>(endpoint, user);
+
+            // Assert
+            Assert.True(userWasUpdated);
+        }
+
+        [Fact]
+        public async Task DeleteUserAsync()
+        {
+            // Arrange
+            int userId = 5;
+            string endpoint = $"/api/users/{userId}";
+
+            // Act
+            bool userWasDeleted = await APITestHelper.DeleteAsync(endpoint);
+
+            // Assert
+            Assert.True(userWasDeleted);
         }
     }
 }
