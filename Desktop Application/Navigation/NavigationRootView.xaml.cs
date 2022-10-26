@@ -38,6 +38,7 @@ namespace Desktop_Application.Navigation
             ("budget", typeof(BudgetView)),
             ("logoff", typeof(LoginView)),
             ("accounts", typeof(AccountsView)),
+            ("expenses", typeof(ExpensesView)),
         };
 
         public NavigationRootView()
