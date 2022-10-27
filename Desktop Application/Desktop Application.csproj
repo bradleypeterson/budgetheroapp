@@ -14,6 +14,7 @@
   <ItemGroup>
     <Content Remove="Assets\bank_black.png" />
     <Content Remove="Assets\bank_white.png" />
+    <Content Remove="Assets\budgetherologo.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Models\NewFile1.txt" />
