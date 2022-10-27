@@ -1,4 +1,5 @@
-﻿using Desktop_Application.Navigation;
+﻿using CommunityToolkit.WinUI.UI.Controls;
+using Desktop_Application.Classes;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -9,14 +10,14 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.ViewManagement;
+using Windows.UI.ApplicationSettings;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,15 +27,17 @@ namespace Desktop_Application.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginView : Page
+    public sealed partial class AccountsView : Page
     {
         private MainWindow mainWindow;
 
-        public LoginView()
+        public AccountsView()
         {
             this.InitializeComponent();
             GetMainWindow();
             ResizeWindow();
+            Account_Details_Grid.ItemsSource = DummyTransaction.GetDummyTransactions();
+            Accounts_Grid.ItemsSource = DummyAccount.GetDummyAccounts();
         }
 
         private void GetMainWindow()
@@ -42,22 +45,9 @@ namespace Desktop_Application.Views
             mainWindow = (Application.Current as App)?.Window as MainWindow;
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(NavigationRootView));
-        }
-
         private void ResizeWindow()
         {
-            mainWindow.ResizeWindowForLogin();
+            mainWindow.ResizeWindowForDashboard();
         }
-
-        private void SignUpButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(RegistrationView));
-        }
-
-        // Connect buttons to UI and make database calls
     }
 }
-
