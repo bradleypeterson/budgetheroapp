@@ -14,9 +14,9 @@
   <ItemGroup>
     <Content Remove="Assets\bank_black.png" />
     <Content Remove="Assets\bank_white.png" />
-    <Content Remove="Assets\budgetherologo.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\budgetherologo.png" />
     <None Remove="Models\NewFile1.txt" />
     <None Remove="LaunchWindow.xaml" />
     <None Remove="Navigation\NavigationRootView.xaml" />
@@ -28,9 +28,6 @@
     <None Remove="Views\RegistrationView.xaml" />
     <None Remove="Views\SettingsView.xaml" />
     <None Remove="Views\UnderConstructionView.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="Views\AccountsView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,6 +66,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Content Update="Assets\budgetherologo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
