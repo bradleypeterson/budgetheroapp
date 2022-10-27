@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Security.Cryptography.Core;
 using Windows.UI.ApplicationSettings;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -33,8 +34,11 @@ namespace Desktop_Application.Navigation
         private readonly List<(string Tag, Type Page)> _pages = new()
         {
             ("profile", typeof(ProfileView)),
-            ("dashboard", typeof(DashboardView)),
+            ("budget", typeof(BudgetView)),
             ("logoff", typeof(LoginView)),
+            ("accounts", typeof(AccountsView)),
+            ("expenses", typeof(ExpensesView)),
+            ("contruction", typeof(UnderConstructionView)),
         };
 
         public NavigationRootView()
@@ -52,7 +56,7 @@ namespace Desktop_Application.Navigation
             NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems[0];
 
             // Navigate to the default page
-            NavigationViewControl_Navigate("dashboard", new EntranceNavigationTransitionInfo());
+            NavigationViewControl_Navigate("accounts", new EntranceNavigationTransitionInfo());
 
             
         }
@@ -113,9 +117,11 @@ namespace Desktop_Application.Navigation
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
 
-                NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems
-                    .OfType<NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.Tag));
+                //Code was causing crashes with the underconstruction view. Reimplement late to fix a bug, when we do not use the same new for multiple items.
+
+                //NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems
+                //    .OfType<NavigationViewItem>()
+                //    .First(n => n.Tag.Equals(item.Tag));
 
                 NavigationViewControl.Header =
                     ((NavigationViewItem)NavigationViewControl.SelectedItem)?.Content?.ToString();
@@ -124,6 +130,8 @@ namespace Desktop_Application.Navigation
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            
+            
             if (args.IsSettingsInvoked == true)
             {
                 NavigationViewControl_Navigate("settings", args.RecommendedNavigationTransitionInfo);
@@ -131,6 +139,15 @@ namespace Desktop_Application.Navigation
             else if (args.InvokedItemContainer != null)
             {
                 var navItemTag = args.InvokedItemContainer.Tag.ToString();
+
+                if(navItemTag == "logoff")
+                {
+                    MainWindow mainWindow = (Application.Current as App)?.Window as MainWindow;
+                    mainWindow.ResetFirstLoad();
+                    mainWindow.ResizeWindowForLogin();
+                    
+                }
+
                 NavigationViewControl_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
             }
         }

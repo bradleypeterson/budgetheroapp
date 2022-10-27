@@ -14,16 +14,20 @@
   <ItemGroup>
     <Content Remove="Assets\bank_black.png" />
     <Content Remove="Assets\bank_white.png" />
+    <Content Remove="Assets\budgetherologo.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Models\NewFile1.txt" />
     <None Remove="LaunchWindow.xaml" />
     <None Remove="Navigation\NavigationRootView.xaml" />
     <None Remove="Views\AccountsView.xaml" />
+    <None Remove="Views\BudgetView.xaml" />
+    <None Remove="Views\ExpenseView.xaml" />
     <None Remove="Views\LoginView.xaml" />
     <None Remove="Views\ProfileView.xaml" />
     <None Remove="Views\RegistrationView.xaml" />
     <None Remove="Views\SettingsView.xaml" />
+    <None Remove="Views\UnderConstructionView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="Views\AccountsView.xaml" />
@@ -41,6 +45,8 @@
 
   <ItemGroup>
     <PackageReference Include="EmailValidation" Version="1.0.8" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
@@ -67,6 +73,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Page Update="Views\UnderConstructionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ExpenseView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\AccountsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\BudgetView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="LaunchWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
