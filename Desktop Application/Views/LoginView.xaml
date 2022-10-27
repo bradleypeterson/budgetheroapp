@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
     <Grid>
         <StackPanel Orientation="Vertical" Background="#023e8a">
-            <Image Source="ms-appx:///Assets/budgetherologo.png" Height="150" Margin="0 30 0 0"/>
+            <Image Source="ms-appx:///Assets/budgetherologo.png" Height="100" Margin="0 30 0 0"/>
             <RichTextBlock TextAlignment="Center">
                 <Paragraph Foreground="White" FontFamily="Forte" FontSize="30">Budget Hero</Paragraph>
             </RichTextBlock>
