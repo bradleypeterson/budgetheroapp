@@ -25,8 +25,8 @@
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Margin="10,0,10,0">Add Account</Button>
-                    <Button Margin="10,0,10,0">Delete Account</Button>
+                    <Button Margin="20">Add Account</Button>
+                    <Button Margin="20">Delete Account</Button>
                 </StackPanel>
             </Border>
 
@@ -34,7 +34,7 @@
             <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1">
                 <controls:DataGrid x:Name="Accounts_Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="1179"
-                                   AlternatingRowBackground="LightGray"
+                                   AlternatingRowBackground="LightGray" GridLinesVisibility="All"
                                    SelectionMode="Single"
                                    >
                     <controls:DataGrid.Resources>

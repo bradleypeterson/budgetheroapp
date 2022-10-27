@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.ApplicationSettings;
@@ -32,49 +33,64 @@ namespace Desktop_Application.Views
     {
         private MainWindow mainWindow;
        
-        public class CatGroupItem
+        public class CatGroup
         {
             public string GroupName { get; set; }
         }
 
-        private List<CatGroupItem> categoryGroupNames = new List<CatGroupItem> ();
+        public class CatItem
+        {
+            public double progress;
+            public double remaining;
+            
+            public string ItemName { get; set; }
+            public double Budgeted { get; set; }
+            public double Allocated { get; set; }
 
+            public CatItem()
+            {
+                progress = Allocated / Budgeted;
+                remaining = Budgeted - Allocated;
+            }
+        }
 
-
+        private List<CatGroup> categoryGroupNames = new List<CatGroup> ();
 
         public BudgetView()
         {
             this.InitializeComponent();
-            GetMainWindow();
-            ResizeWindow();
             Account_Grid.ItemsSource = BankAccount.GetAccounts();
 
-            //call function that will fill the categoryGroups list with category names
-            categoryGroupNames.Add(new CatGroupItem { GroupName = "Bills"});
-            categoryGroupNames.Add(new CatGroupItem { GroupName = "Food"});
-            categoryGroupNames.Add(new CatGroupItem { GroupName = "Entertainment"});
-            categoryGroupNames.Add(new CatGroupItem { GroupName = "Loans"});
-            categoryGroupNames.Add(new CatGroupItem { GroupName = "Goals"});
+            //TODO: call function that will fill the categoryGroups list with category names
+            
+            //TEMP: data for testing UI --------------------------------
+            categoryGroupNames.Add(new CatGroup { GroupName = "Bills"});
+            categoryGroupNames.Add(new CatGroup { GroupName = "Food"});
+            categoryGroupNames.Add(new CatGroup { GroupName = "Entertainment"});
+            categoryGroupNames.Add(new CatGroup { GroupName = "Loans"});
+            categoryGroupNames.Add(new CatGroup { GroupName = "Goals"});
+            //------------------------------------------------------TEMP
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-                //TODO: create expanders in GroupsAccordion Item Control from all the categoryGroupNames in the list
-
-                icGroupsAccordion.ItemsSource = categoryGroupNames;
+            /* Fills the GroupAccordion with Category Group Names found in the associated list */
+            icGroupsAccordion.ItemsSource = categoryGroupNames;
                 
-                /*TODO: Data grid for content */
-                //DataGrid dataGrid = new DataGrid();
+            /* Go through the categoryGroupNames list and for each group name add all appropriate category items to the datagrid within  */    
+                 
+            /*This data grid will be inside each expander, we will need to name it based on the category it is in
+            We will also need to call another function to fill the datagrid with the correct category items.
+            Will probably need to create a datagrid class with a constructor that has all the correct columns and such */
 
-                
-                /*This data grid will be inside each expander, we will need to name it based on the category it is in
-                We will also need to call another function to fill the datagrid with the correct category items.
-                Will probably need to create a datagrid class with a constructor that has all the correct columns and such */
-                //expander.Content = dataGrid;
 
         }
 
         //TODO: create function that will get all of the category group names from the DB and save it to the list
+        private void GetCatItemNames()
+        {
+
+        }
 
 
         public class BankAccount : INotifyPropertyChanged
@@ -120,16 +136,6 @@ namespace Desktop_Application.Views
 
                 return accounts;
             }
-        }
-
-        private void GetMainWindow()
-        {
-            mainWindow = (Application.Current as App)?.Window as MainWindow;
-        }
-
-        private void ResizeWindow()
-        {
-            mainWindow.ResizeWindowForDashboard();
         }
 
 

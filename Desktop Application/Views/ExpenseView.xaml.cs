@@ -10,8 +10,10 @@ using ModelsLibrary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,10 +26,12 @@ namespace Desktop_Application.Views
 
     public sealed partial class ExpensesView : Page
     {
+
         public ExpensesView()
         {
             this.InitializeComponent();
             ExpenseData.ItemsSource = Expense.getExpenses();
+            Account_Grid.ItemsSource = BankAccount.GetAccounts();
         }
 
         public class Expense
@@ -112,6 +116,51 @@ namespace Desktop_Application.Views
             Details_Txt.Text = content;
 
 
+        }
+
+        public class BankAccount : INotifyPropertyChanged
+        {
+            private string account;
+            private string balance;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            public string Account
+            {
+                get { return account; }
+                set
+                {
+                    account = value;
+                    NotifyPropertyChanged();
+                }
+            }
+
+            public string Balance
+            {
+                get { return balance; }
+                set
+                {
+                    balance = value;
+                    NotifyPropertyChanged();
+                }
+            }
+
+            public static ObservableCollection<BankAccount> GetAccounts()
+            {
+                var accounts = new ObservableCollection<BankAccount>();
+
+                /* Dummy Data until we hook up the DB */
+                accounts.Add(new BankAccount() { Account = "Goldenwest Checking", Balance = "$450.25" });
+                accounts.Add(new BankAccount() { Account = "Goldenwest Savings", Balance = "$1289.75" });
+
+
+                return accounts;
+            }
         }
     }
 }
