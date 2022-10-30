@@ -28,8 +28,8 @@
         <NavigationView
             x:Name="NavigationViewControl"
             Canvas.ZIndex="0"
-            IsBackButtonVisible="Visible"
-            IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+            IsBackButtonVisible="Collapsed"
+            IsBackEnabled="False"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
             IsSettingsVisible="True"
             ExpandedModeThresholdWidth="1280"
@@ -43,34 +43,47 @@
                 TODO: Update item icons by updating FontIcon.Glyph properties.
                 https://docs.microsoft.com/windows/apps/design/style/segoe-fluent-icons-font#icon-list
                 -->
-                <NavigationViewItem x:Uid="Shell_Login" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.LoginViewModel">
+                <NavigationViewItem x:Uid="Shell_Login" 
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.LoginViewModel"
+                                    Visibility="Collapsed">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Registration" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.RegistrationViewModel">
+                <NavigationViewItem x:Uid="Shell_Registration" 
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.RegistrationViewModel"
+                                    Visibility="Collapsed">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" 
+                                  Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Accounts" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.AccountsViewModel">
+                <NavigationViewItem x:Uid="Shell_Accounts" 
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.AccountsViewModel">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" 
+                                  Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Budget" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.BudgetViewModel">
+                <NavigationViewItem x:Uid="Shell_Budget" 
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.BudgetViewModel">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" 
+                                  Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Expense" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ExpensesViewModel">
+                <NavigationViewItem x:Uid="Shell_Expense" 
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ExpensesViewModel">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" 
+                                  Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Profile" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ProfileViewModel">
+                <NavigationViewItem x:Uid="Shell_Profile" 
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ProfileViewModel">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" 
+                                  Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

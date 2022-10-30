@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.Helpers;
@@ -14,7 +15,7 @@ public class NavigationViewService : INavigationViewService
 
     private readonly IPageService _pageService;
 
-    private NavigationView? _navigationView;
+    private static NavigationView? _navigationView;
 
     public IList<object>? MenuItems => _navigationView?.MenuItems;
 
@@ -40,6 +41,22 @@ public class NavigationViewService : INavigationViewService
         {
             _navigationView.BackRequested -= OnBackRequested;
             _navigationView.ItemInvoked -= OnItemInvoked;
+        }
+    }
+
+    public static void HideNavigationViewPane()
+    {
+        if (_navigationView != null)
+        {
+            _navigationView.IsPaneVisible = false;
+        }
+    }
+
+    public static void ShowNavigationViewPane()
+    {
+        if (_navigationView != null)
+        {
+            _navigationView.IsPaneVisible = true;
         }
     }
 

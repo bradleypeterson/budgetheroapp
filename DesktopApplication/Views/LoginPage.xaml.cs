@@ -1,4 +1,7 @@
-﻿using DesktopApplication.ViewModels;
+﻿using DesktopApplication.Contracts.Services;
+using DesktopApplication.Helpers;
+using DesktopApplication.Services;
+using DesktopApplication.ViewModels;
 
 using Microsoft.UI.Xaml.Controls;
 
@@ -14,6 +17,12 @@ public sealed partial class LoginPage : Page
     public LoginPage()
     {
         ViewModel = App.GetService<LoginViewModel>();
+        NavigationViewService.HideNavigationViewPane();
         InitializeComponent();
+    }
+
+    private void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        MainWindowHelper.ResizeWindow(this);
     }
 }
