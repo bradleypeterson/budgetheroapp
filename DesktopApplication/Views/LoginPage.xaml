@@ -36,7 +36,7 @@
                 <HyperlinkButton Content="Sign Up" Foreground="White" />
                 <HyperlinkButton Content="Forgot Password" Foreground="White"/>
             </StackPanel>
-            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0" />
+            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0" Command="{x:Bind ViewModel.NavigateCommand}" />
         </StackPanel>
     </Grid>
 </Page>
