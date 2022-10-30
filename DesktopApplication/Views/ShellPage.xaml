@@ -63,7 +63,7 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Expense" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ExpenseViewModel">
+                <NavigationViewItem x:Uid="Shell_Expense" helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ExpensesViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>

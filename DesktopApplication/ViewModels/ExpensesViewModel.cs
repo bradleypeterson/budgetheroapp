@@ -2,9 +2,9 @@
 
 namespace DesktopApplication.ViewModels;
 
-public class ExpenseViewModel : ObservableRecipient
+public class ExpensesViewModel : ObservableRecipient
 {
-    public ExpenseViewModel()
+    public ExpensesViewModel()
     {
     }
 }

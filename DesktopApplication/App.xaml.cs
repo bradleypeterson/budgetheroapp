@@ -71,8 +71,8 @@ public partial class App : Application
             services.AddTransient<SettingsPage>();
             services.AddTransient<ProfileViewModel>();
             services.AddTransient<ProfilePage>();
-            services.AddTransient<ExpenseViewModel>();
-            services.AddTransient<ExpensePage>();
+            services.AddTransient<ExpensesViewModel>();
+            services.AddTransient<ExpensesPage>();
             services.AddTransient<BudgetViewModel>();
             services.AddTransient<BudgetPage>();
             services.AddTransient<AccountsViewModel>();

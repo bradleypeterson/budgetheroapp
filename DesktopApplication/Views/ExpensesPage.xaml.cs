@@ -4,16 +4,16 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace DesktopApplication.Views;
 
-public sealed partial class ExpensePage : Page
+public sealed partial class ExpensesPage : Page
 {
-    public ExpenseViewModel ViewModel
+    public ExpensesViewModel ViewModel
     {
         get;
     }
 
-    public ExpensePage()
+    public ExpensesPage()
     {
-        ViewModel = App.GetService<ExpenseViewModel>();
+        ViewModel = App.GetService<ExpensesViewModel>();
         InitializeComponent();
     }
 }

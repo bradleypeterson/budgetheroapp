@@ -18,7 +18,7 @@ public class PageService : IPageService
         Configure<RegistrationViewModel, RegistrationPage>();
         Configure<AccountsViewModel, AccountsPage>();
         Configure<BudgetViewModel, BudgetPage>();
-        Configure<ExpenseViewModel, ExpensePage>();
+        Configure<ExpensesViewModel, ExpensesPage>();
         Configure<ProfileViewModel, ProfilePage>();
         Configure<SettingsViewModel, SettingsPage>();
     }
