@@ -18,6 +18,7 @@
     <None Remove="Assets\budgetherologo.png" />
     <None Remove="Controls\AppLogoControl.xaml" />
     <None Remove="Styles\Brushes.xaml" />
+    <None Remove="Styles\Layouts.xaml" />
     <None Remove="Views\Forms\AccountForm.xaml" />
   </ItemGroup>
 
@@ -37,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DesktopApplication.Core\DesktopApplication.Core.csproj" />
+    <ProjectReference Include="..\ModelsLibrary\ModelsLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +50,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Styles\Layouts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Forms\AccountForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
