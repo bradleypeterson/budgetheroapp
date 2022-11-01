@@ -3,15 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:DesktopApplication.Controls"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
         <StackPanel Orientation="Vertical" Background="#023e8a" >
-            <Image Source="https://play-lh.googleusercontent.com/ehwliTbTSTW7T33U_Rir2pJfPoBPYCsYGStNxqnoBHR0pICIjZ9CWJ0hMQTB52-kXk8" Height="100" Margin="0 30 0 0"/>
-            <RichTextBlock TextAlignment="Center">
-                <Paragraph Foreground="White">Budget Hero</Paragraph>
-            </RichTextBlock>
+            <controls:AppLogoControl/>
             <TextBlock x:Name="tbBlankFieldsError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
                 All fields must not be blank
             </TextBlock>
