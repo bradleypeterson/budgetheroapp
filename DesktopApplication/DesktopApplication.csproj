@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\budgetherologo.png" />
+    <None Remove="Controls\AppLogoControl.xaml" />
     <None Remove="Styles\Brushes.xaml" />
   </ItemGroup>
 
@@ -46,6 +47,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\AppLogoControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Styles\Brushes.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
