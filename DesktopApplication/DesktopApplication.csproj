@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\budgetherologo.png" />
+    <None Remove="Styles\Brushes.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +46,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Styles\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

@@ -8,33 +8,25 @@
     Loaded="Page_Loaded">
 
     <Grid x:Name="ContentArea">
-        <StackPanel Orientation="Vertical" Background="#023e8a">
+        <StackPanel Orientation="Vertical" Background="{StaticResource PrimaryBackgroundBrush}">
             <Image Source="ms-appx:///Assets/budgetherologo.png" Height="200" Margin="0 30 0 0"/>
             <RichTextBlock TextAlignment="Center">
-                <Paragraph Foreground="White" FontFamily="Forte" FontSize="30">Budget Hero</Paragraph>
+                <Paragraph Foreground="{StaticResource PrimaryForegroundBrush}" FontFamily="Forte" FontSize="30">Budget Hero</Paragraph>
             </RichTextBlock>
-            <TextBlock x:Name="tbEmptyError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+            <TextBlock x:Name="tbEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
                 Please enter a username and password
             </TextBlock>
-            <TextBlock x:Name="tbUsernameError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+            <TextBlock x:Name="tbUsernameError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
                 Invalid username
             </TextBlock>
-            <TextBox x:Name="txtUsername" Width="300" Header="Username" PlaceholderText="Username">
-                <TextBox.Resources>
-                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
-                </TextBox.Resources>
-            </TextBox>
-            <TextBlock x:Name="tbPasswordError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
+            <TextBox x:Name="txtUsername" Width="300" Header="Username" PlaceholderText="Username" Foreground="{StaticResource PrimaryForegroundBrush}"/>
+            <TextBlock x:Name="tbPasswordError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
                 Password incorrect
             </TextBlock>
-            <PasswordBox x:Name="pwbPassword" Width="300" Header="Password" PlaceholderText="Enter your password" Margin="0 10 0 0">
-                <PasswordBox.Resources>
-                    <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
-                </PasswordBox.Resources>
-            </PasswordBox>
+            <PasswordBox x:Name="pwbPassword" Width="300" Header="Password" PlaceholderText="Enter your password" Margin="0 10 0 0" Foreground="{StaticResource PrimaryForegroundBrush}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <HyperlinkButton Content="Sign Up" Foreground="White" />
-                <HyperlinkButton Content="Forgot Password" Foreground="White"/>
+                <HyperlinkButton Content="Sign Up" Foreground="{StaticResource PrimaryForegroundBrush}" />
+                <HyperlinkButton Content="Forgot Password" Foreground="{StaticResource PrimaryForegroundBrush}"/>
             </StackPanel>
             <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0" Command="{x:Bind ViewModel.NavigateCommand}" />
         </StackPanel>
