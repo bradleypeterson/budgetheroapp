@@ -18,6 +18,7 @@
     <None Remove="Assets\budgetherologo.png" />
     <None Remove="Controls\AppLogoControl.xaml" />
     <None Remove="Styles\Brushes.xaml" />
+    <None Remove="Views\Forms\AccountForm.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +48,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Forms\AccountForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\AppLogoControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

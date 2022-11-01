@@ -1,11 +1,17 @@
 ﻿using DesktopApplication.Views;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace DesktopApplication.Helpers;
 public class MainWindowHelper
 {
+    public static XamlRoot GetXamlRoot()
+    {
+        return App.MainWindow.Content.XamlRoot;
+    }
+
     public static void ResizeWindow(Page pageType)
     {
         const double PERCENT_HEIGHT_LOGIN = .58;
