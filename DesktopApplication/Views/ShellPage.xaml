@@ -11,11 +11,6 @@
 
     <Grid>
         
-        <Grid.Resources>
-            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="White"/>
-            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="White"/>
-        </Grid.Resources>
-        
         <Grid x:Name="AppTitleBar"
               Canvas.ZIndex="1"
               Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
@@ -43,6 +38,7 @@
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             Header="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}"
             Background="Gainsboro">
+
             <NavigationView.MenuItems>
                 <!--
                 TODO: Update item titles by updating <x:Uid>.Content entries in Strings/en-us/Resources.resw.
@@ -70,7 +66,7 @@
                                     Height="100" 
                                     helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.AccountsViewModel"
                                     FontSize="23">
-                    <NavigationViewItem.Icon>
+                       <NavigationViewItem.Icon>
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\accounts.png"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>

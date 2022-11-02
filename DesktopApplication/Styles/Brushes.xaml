@@ -5,5 +5,7 @@
     <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#023e8a"/>
     <SolidColorBrush x:Key="PrimaryForegroundBrush" Color="White"/>
     <SolidColorBrush x:Key="ErrorForegroundBrush" Color="IndianRed"/>
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="White"/>
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="White"/>
 
 </ResourceDictionary>
