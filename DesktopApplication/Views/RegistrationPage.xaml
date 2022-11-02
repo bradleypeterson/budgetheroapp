@@ -3,12 +3,25 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+<<<<<<< Updated upstream
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:DesktopApplication.Controls"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
         <StackPanel Orientation="Vertical" Background="#023e8a" >
             <controls:AppLogoControl/>
+=======
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Grid x:Name="ContentArea">
+        <StackPanel Orientation="Vertical" Background="#023e8a" >
+            <Image Source="ms-appx:///Assets/budgetherologo.png" Height="200" Margin="0 30 0 0"/>
+            <RichTextBlock TextAlignment="Center">
+                <Paragraph Foreground="White" FontFamily="Forte" FontSize="30">Budget Hero</Paragraph>
+            </RichTextBlock>
+>>>>>>> Stashed changes
             <TextBlock x:Name="tbBlankFieldsError" HorizontalAlignment="Center" Foreground="IndianRed" FontWeight="bold" Visibility="Collapsed">
                 All fields must not be blank
             </TextBlock>

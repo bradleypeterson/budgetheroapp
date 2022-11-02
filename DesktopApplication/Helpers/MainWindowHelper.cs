@@ -1,22 +1,31 @@
-﻿using DesktopApplication.Views;
+﻿using DesktopApplication.ViewModels;
+using DesktopApplication.Views;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Security.Cryptography.Core;
 
 namespace DesktopApplication.Helpers;
 public class MainWindowHelper
 {
+<<<<<<< Updated upstream
     public static XamlRoot GetXamlRoot()
     {
         return App.MainWindow.Content.XamlRoot;
     }
+=======
+    private static bool isFirstTimeLoad = true;
+>>>>>>> Stashed changes
 
     public static void ResizeWindow(Page pageType)
     {
-        const double PERCENT_HEIGHT_LOGIN = .58;
+        const double PERCENT_HEIGHT_LOGIN = .60;
         const double PERCENT_WIDTH_LOGIN_AND_REG = .23;
-        const double PERCENT_HEIGHT_REG = .70;
+        const double PERCENT_HEIGHT_REG = .80;
+        const double DEFAULT_HEIGHT = .75;
+        const double DEFAULT_WIDTH = .75;
+        
         double width;
         double height;
 
@@ -31,13 +40,26 @@ public class MainWindowHelper
                 height = GetWindowHeight(PERCENT_HEIGHT_REG);
                 break;
             default:
-                width = 1920;
-                height = 1080;
+                width = GetWindowWidth(DEFAULT_WIDTH);
+                height = GetWindowHeight(DEFAULT_HEIGHT);
                 break;
         }
 
-        App.MainWindow.SetWindowSize(width, height);
-        App.MainWindow.CenterOnScreen();
+        if (isFirstTimeLoad)
+        {
+            App.MainWindow.SetWindowSize(width, height);
+            App.MainWindow.CenterOnScreen();
+        }
+
+    }
+
+    public static void MaxWinFirstTimeLoad()
+    {
+        if (isFirstTimeLoad)
+        {
+            App.MainWindow.Maximize();
+            isFirstTimeLoad = false;
+        }
     }
 
     private static double GetWindowHeight(double heightPercentage)

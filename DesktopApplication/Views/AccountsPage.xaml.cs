@@ -24,5 +24,6 @@ public sealed partial class AccountsPage : Page
     private void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         MainWindowHelper.ResizeWindow(this);
+        MainWindowHelper.MaxWinFirstTimeLoad();
     }
 }

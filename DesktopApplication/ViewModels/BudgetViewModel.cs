@@ -1,12 +1,19 @@
+<<<<<<< Updated upstream
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.ViewModels.Models;
 using ModelsLibrary;
+=======
+﻿using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using DesktopApplication.Commands;
+>>>>>>> Stashed changes
 
 namespace DesktopApplication.ViewModels;
 
 public class BudgetViewModel : ObservableRecipient
 {
+<<<<<<< Updated upstream
     public List<BudgetCategoryGroupViewModel> BudgetCategoryGroups { get; }
 
     public BudgetViewModel()
@@ -25,5 +32,15 @@ public class BudgetViewModel : ObservableRecipient
         };
 
         return list;
+=======
+    public ICommand AddCategoryCommand { get; }
+    
+    
+    
+    public BudgetViewModel()
+    {
+        AddCategoryCommand = new AddCategoryCommand();
+
+>>>>>>> Stashed changes
     }
 }

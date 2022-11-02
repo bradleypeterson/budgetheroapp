@@ -23,7 +23,7 @@
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Margin="20" Content="Add Category"/>
+                    <Button Margin="20" Content="Add Category" Command="{x:Bind ViewModel.AddCategoryCommand}"/>
                     <Button Margin="20" Content="Edit Category"/>
                     <Button Margin="20" Content="Delete Category"/>
                 </StackPanel>

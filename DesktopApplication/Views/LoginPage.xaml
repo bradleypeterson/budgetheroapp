@@ -23,10 +23,15 @@
             </TextBlock>
             <PasswordBox x:Name="pwbPassword" Width="300" Header="Password" PlaceholderText="Enter your password" Margin="0 10 0 0" Foreground="{StaticResource PrimaryForegroundBrush}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+<<<<<<< Updated upstream
                 <HyperlinkButton Content="Sign Up" Foreground="{StaticResource PrimaryForegroundBrush}" />
                 <HyperlinkButton Content="Forgot Password" Foreground="{StaticResource PrimaryForegroundBrush}"/>
+=======
+                <HyperlinkButton Content="Sign Up" Foreground="White" Command="{x:Bind ViewModel.NavigateCommand}"/>
+                <HyperlinkButton Content="Forgot Password" Foreground="White"/>
+>>>>>>> Stashed changes
             </StackPanel>
-            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0" Command="{x:Bind ViewModel.NavigateCommand}" />
+            <Button Content="Log In" HorizontalAlignment="Center" Margin="0 30 0 0" />
         </StackPanel>
     </Grid>
 </Page>

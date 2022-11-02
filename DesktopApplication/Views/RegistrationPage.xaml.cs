@@ -1,4 +1,5 @@
-﻿using DesktopApplication.ViewModels;
+﻿using DesktopApplication.Helpers;
+using DesktopApplication.ViewModels;
 
 using Microsoft.UI.Xaml.Controls;
 
@@ -16,4 +17,11 @@ public sealed partial class RegistrationPage : Page
         ViewModel = App.GetService<RegistrationViewModel>();
         InitializeComponent();
     }
+
+    private void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        MainWindowHelper.ResizeWindow(this);
+    }
+
+
 }
