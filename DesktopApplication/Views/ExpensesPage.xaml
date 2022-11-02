@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
 
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
-            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top" >
+            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -29,19 +29,18 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Margin="20" />
-                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search"/>
+                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Margin="20,20,150,20" HorizontalAlignment="Right" />
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Expenses"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
-
                 </Grid>
             </Border>
-
-            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1">
+            
+            <!-- This panel is for whatever control is needed for the work area-->
+            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
                 <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
-                                   CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="809"
-                                   AlternatingRowBackground="LightGray" GridLinesVisibility="All"
-                                   SelectionMode="Single"
-                                   >
+                                   CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
+                                   GridLinesVisibility="All" SelectionMode="Single">
+                    
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Black"/>
@@ -60,67 +59,63 @@
 
         </Grid>
 
-        <StackPanel x:Name="Details_Pane" Background="LightGray" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10">
-            <Grid >
+        <!-- This stack panel will show the details of any selected item from the work area -->
+        <Grid x:Name="Details_Pane" Background="LightGray" Grid.Column="1" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10" BorderBrush="Black" BorderThickness="2">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="55"/>
-                    <RowDefinition Height="350"/>
-                    <RowDefinition Height="300"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
 
-                <!-- This text block is to show the details of a selected item-->
-                <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="28" Padding="0 20 0 0"/>
+            <!-- This text block is to show the details of a selected item-->
+            <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="30" Padding="0 20 0 0"/>
 
-                <!-- This border contains the details textbox-->
-                <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275" Height="300" CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Name="Details_Txt" Grid.Row="0" Text="" Foreground="Black" FontSize="16"/>
-                    </Grid>
-                </Border>
+            <!-- This border contains the details textbox-->
+            <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275" CornerRadius="10" Margin="0 20 0 0" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="Details_Txt" Grid.Row="0" Text="" Foreground="Black" FontSize="16"/>
+                </Grid>
+            </Border>
 
-                <!-- This is the stack panel that contains editing buttons-->
-                <StackPanel Grid.Row="2" Orientation="Vertical">
-                    <Button x:Name="EditExpense_Btn" Content="Edit Expense" HorizontalAlignment="Center" Width="150" Margin="20 0 0 0" />
-                    <Button x:Name="DeleteExpense_Btn" Content="Delete Expense" HorizontalAlignment="Center" Width="150" Margin="20 0 0 0" />
-                </StackPanel>
+            <!-- This is the stack panel that contains editing buttons-->
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <Button x:Name="EditExpense_Btn" Content="Edit Expense" HorizontalAlignment="Center" Width="120" Margin="20 0 0 0" />
+                <Button x:Name="DeleteExpense_Btn" Content="Delete Expense" HorizontalAlignment="Center" Width="120" Margin="20 0 0 0" />
+            </StackPanel>
 
-                <!-- this is the data grid for the bank account items-->
-                <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
-                                   CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                   HeadersVisibility="Column" VerticalAlignment="Bottom" Width="275">
+            <!-- this is the data grid for the bank account items-->
+            <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
+                                CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
+                                HeadersVisibility="Column" VerticalAlignment="Center" Height="150" Width="275">
 
-                    <controls:DataGrid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Style>
-                        <Style TargetType="controls:DataGridCell">
-                            <Setter Property="Background" Value="GhostWhite"/>
-                        </Style>
-                    </controls:DataGrid.Resources>
+                <controls:DataGrid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                    </Style>
+                    <Style TargetType="controls:DataGridCell">
+                        <Setter Property="Background" Value="GhostWhite"/>
+                    </Style>
+                </controls:DataGrid.Resources>
 
-                    <controls:DataGrid.RowStyle>
-                        <Style TargetType="controls:DataGridRow">
-                            <Setter Property="IsHitTestVisible" Value="False"/>
-                        </Style>
-                    </controls:DataGrid.RowStyle>
+                <controls:DataGrid.RowStyle>
+                    <Style TargetType="controls:DataGridRow">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                    </Style>
+                </controls:DataGrid.RowStyle>
 
-                    <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding Account}">
-
-                        </controls:DataGridTextColumn>
-                        <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance}"/>
-                    </controls:DataGrid.Columns>
-                </controls:DataGrid>
-
-            </Grid>
-        </StackPanel>
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*"/>
+                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </Grid>
     </Grid>
 </Page>

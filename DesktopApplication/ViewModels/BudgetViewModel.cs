@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.ViewModels.Models;
 using ModelsLibrary;
 ﻿using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Commands;
 
 namespace DesktopApplication.ViewModels;

@@ -3,11 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="320"/>
@@ -21,21 +21,21 @@
             </Grid.RowDefinitions>
 
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
-            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top" >
+            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Margin="20" Content="Add Category" Command="{x:Bind ViewModel.AddCategoryCommand}"/>
-                    <Button Margin="20" Content="Edit Category"/>
-                    <Button Margin="20" Content="Delete Category"/>
+                    <Button x:Name="AddCategoryButton" Margin="20" Content="Add Category"/>
+                    <Button x:Name="EditCategoryButton" Margin="20" Content="Edit Category"/>
+                    <Button x:Name="DeleteCategoryButton" Margin="20" Content="Delete Category"/>
                 </StackPanel>
             </Border>
 
             <!-- This panel is for whatever control is needed for the work area-->
-            <RelativePanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <RelativePanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
                 <ScrollViewer x:Name="ScrollViewer">
                     <ItemsControl x:Name="icGroupsAccordion">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Expander Width="1225" Header="{Binding GroupName}">
+                                <Expander Width="1225" Header="PlaceHolder">
                                     <Expander.Content>
                                         <controls:DataGrid x:Name="GroupDataGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" BorderBrush="Black" BorderThickness="2" 
                                                            GridLinesVisibility="All" HeadersVisibility="Column" VerticalAlignment="Bottom">
@@ -65,54 +65,55 @@
             </RelativePanel>
         </Grid>
 
-        <StackPanel x:Name="Details_Pane" Background="LightGray" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10">
-            <Grid >
+        <!-- This Grid will show the details of any selected item from the work area -->
+        <Grid x:Name="Details_Pane" Background="LightGray" Grid.Column="1" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10" BorderBrush="Black" BorderThickness="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="55"/>
-                    <RowDefinition Height="350"/>
-                    <RowDefinition Height="300"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+            <!-- This text block is to show the details of a selected item-->
+            <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="30" Padding="0 20 0 0"/>
 
-                <!-- This text block is to show the details of a selected item-->
-                <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="28" Padding="0 20 0 0"/>
+            <!-- This border contains the details textbox-->
+            <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275" CornerRadius="10" Margin="0 20 0 0" >
 
-                <!-- This border contains the details textbox-->
-                <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275" Height="300" CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
+            </Border>
+            
+            <!-- This is the stack panel for any buttons needed to manipulate the selected item in the work area -->
+            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                
+            </StackPanel>
 
-                </Border>
+            <!-- this is the data grid for the bank account items-->
+            <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
+                                CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
+                                HeadersVisibility="Column" VerticalAlignment="Center" Width="275" Height="150">
 
+                <controls:DataGrid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                    </Style>
+                    <Style TargetType="controls:DataGridCell">
+                        <Setter Property="Background" Value="GhostWhite"/>
+                    </Style>
+                </controls:DataGrid.Resources>
 
-                <!-- this is the data grid for the bank account items-->
-                <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
-                                   CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                   HeadersVisibility="Column" VerticalAlignment="Bottom" Width="275">
+                <controls:DataGrid.RowStyle>
+                    <Style TargetType="controls:DataGridRow">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                    </Style>
+                </controls:DataGrid.RowStyle>
 
-                    <controls:DataGrid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Style>
-                        <Style TargetType="controls:DataGridCell">
-                            <Setter Property="Background" Value="GhostWhite"/>
-                        </Style>
-                    </controls:DataGrid.Resources>
-
-                    <controls:DataGrid.RowStyle>
-                        <Style TargetType="controls:DataGridRow">
-                            <Setter Property="IsHitTestVisible" Value="False"/>
-                        </Style>
-                    </controls:DataGrid.RowStyle>
-
-                    <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding Account}"/>
-                        <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance}"/>
-                    </controls:DataGrid.Columns>
-                </controls:DataGrid>
-
-            </Grid>
-        </StackPanel>
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*"/>
+                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </Grid>
     </Grid>
 </Page>

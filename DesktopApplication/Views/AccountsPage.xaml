@@ -21,7 +21,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
-            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" VerticalAlignment="Top">
+            <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Margin="20" Command="{x:Bind ViewModel.ShowDialogCommand}">Add Account</Button>
                     <Button Margin="20">Delete Account</Button>
@@ -29,12 +29,11 @@
             </Border>
 
             <!-- This stack panel is for whatever control is needed for the work area-->
-            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1">
+            <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
                 <controls:DataGrid x:Name="Accounts_Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="True" 
-                                   CanUserResizeColumns="True" CanUserSortColumns="True" BorderBrush="Black" BorderThickness="2" Height="1179"
-                                   AlternatingRowBackground="LightGray" GridLinesVisibility="All"
-                                   SelectionMode="Single"
-                                   >
+                                   CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
+                                   GridLinesVisibility="All" SelectionMode="Single">
+                    
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Black"/>
@@ -50,54 +49,24 @@
 
         </Grid>
 
+        <!-- This stack panel will show the details of any selected item from the work area -->
+        <Grid x:Name="Details_Pane" Background="LightGray" Grid.Column="1" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10" BorderBrush="Black" BorderThickness="2">
 
-        <StackPanel x:Name="Details_Pane" Background="LightGray" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10">
-            <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="55"/>
-                    <RowDefinition Height="200"/>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+            <!-- This text block is just the title header-->
+            <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="30" Padding="0 20 0 0"/>
 
-                <!-- This text block is just the title header-->
-                <TextBlock Grid.Row="0" Text="Details" TextAlignment="Center" Foreground="Black" FontSize="28" Padding="0 20 0 0"/>
+            <!-- This border contains the details textbox-->
+            <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275"  CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
+                <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
+            </Border>
 
-
-
-                <!-- this is the data grid for the account details-->
-                <controls:DataGrid Grid.Row="1" x:Name="Account_Details_Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
-                                   CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                   HeadersVisibility="Column" VerticalAlignment="Bottom" Width="275">
-
-                    <controls:DataGrid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Style>
-                        <Style TargetType="controls:DataGridCell">
-                            <Setter Property="Background" Value="GhostWhite"/>
-                        </Style>
-                    </controls:DataGrid.Resources>
-
-                    <controls:DataGrid.RowStyle>
-                        <Style TargetType="controls:DataGridRow">
-                            <Setter Property="IsHitTestVisible" Value="False"/>
-                        </Style>
-                    </controls:DataGrid.RowStyle>
-
-                    <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Date" FontSize="15" Width="1*" Binding="{Binding TransactionDate}">
-
-                        </controls:DataGridTextColumn>
-                        <controls:DataGridTextColumn Header="Amount" FontSize="15" Width="1*" Binding="{Binding TransactionAmount}"/>
-                    </controls:DataGrid.Columns>
-                </controls:DataGrid>
-
-                <Button Grid.Row="2" HorizontalAlignment="Center">Edit Account</Button>
-            </Grid>
-        </StackPanel>
-    </Grid>
+            <Button Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Edit Account"/>
+        </Grid>
+      </Grid>
 </Page>
