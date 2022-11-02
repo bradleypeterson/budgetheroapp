@@ -9,14 +9,12 @@ using Windows.Security.Cryptography.Core;
 namespace DesktopApplication.Helpers;
 public class MainWindowHelper
 {
-<<<<<<< Updated upstream
+    private static bool isFirstTimeLoad = true;
+    
     public static XamlRoot GetXamlRoot()
     {
         return App.MainWindow.Content.XamlRoot;
     }
-=======
-    private static bool isFirstTimeLoad = true;
->>>>>>> Stashed changes
 
     public static void ResizeWindow(Page pageType)
     {
