@@ -15,7 +15,7 @@
             <DataTemplate x:Key="AccordianDataTemplate"
                           x:DataType="viewModel:BudgetCategoryGroupViewModel">
                 <Expander Width="1225" Header="{x:Bind CategoryGroupDesc}">
-                    <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True" 
+                    <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True"
                                        CanUserReorderColumns="False" BorderBrush="Black" 
                                        BorderThickness="2" GridLinesVisibility="All" 
                                        HeadersVisibility="Column" VerticalAlignment="Bottom"

@@ -14,7 +14,6 @@
             <ColumnDefinition Width="320"/>
         </Grid.ColumnDefinitions>
 
-
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="75"/>
@@ -42,6 +41,7 @@
 
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="Account Name" Width="2*" Binding="{Binding AccountName}"/>
+                        <controls:DataGridTextColumn Header="Account Type" Width="2*" Binding="{Binding AccountType}"/>
                         <controls:DataGridTextColumn Header="Balance" Width="2*" Binding="{Binding AccountBalance}"/>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
