@@ -23,7 +23,6 @@
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Margin="20" Command="{x:Bind ViewModel.ShowDialogCommand}">Add Account</Button>
-                    <Button Margin="20">Delete Account</Button>
                 </StackPanel>
             </Border>
 
@@ -65,8 +64,10 @@
             <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275"  CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
                 <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
             </Border>
-
-            <Button Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Edit Account"/>
+            <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Margin="10" Content="Edit Account"/>
+                <Button Margin="10" Content="Delete Account"/>
+            </StackPanel>
         </Grid>
       </Grid>
 </Page>
