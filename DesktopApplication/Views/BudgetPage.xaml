@@ -5,9 +5,42 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModel="using:DesktopApplication.ViewModels.Models"
+    xmlns:customControls="using:DesktopApplication.Controls"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
+
+        <Grid.Resources>
+            <DataTemplate x:Key="AccordianDataTemplate"
+                          x:DataType="viewModel:BudgetCategoryGroupViewModel">
+                <Expander Width="1225" Header="{x:Bind CategoryGroupDesc}">
+                    <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True" 
+                                       CanUserReorderColumns="False" BorderBrush="Black" 
+                                       BorderThickness="2" GridLinesVisibility="All" 
+                                       HeadersVisibility="Column" VerticalAlignment="Bottom"
+                                       ItemsSource="{x:Bind BudgetCategories, Mode=OneWay}">
+                        <controls:DataGrid.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                            <Style TargetType="controls:DataGridCell">
+                                <Setter Property="Background" Value="GhostWhite"/>
+                            </Style>
+                        </controls:DataGrid.Resources>
+
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTextColumn Header="ItemName" FontSize="15" Width="1*" Binding="{Binding CategoryName}"/>
+                            <controls:DataGridTextColumn Header="Budgeted" FontSize="15" Width="1*" Binding="{Binding CategoryAmount}"/>
+                            <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated}"/>
+                            <controls:DataGridTextColumn Header="Remaining" FontSize="15" Width="1*" Binding="{Binding Remaining}"/>
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                </Expander>
+            </DataTemplate>
+        </Grid.Resources>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="320"/>
@@ -31,36 +64,10 @@
 
             <!-- This panel is for whatever control is needed for the work area-->
             <RelativePanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
-                <ScrollViewer x:Name="ScrollViewer">
-                    <ItemsControl x:Name="icGroupsAccordion">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Expander Width="1225" Header="PlaceHolder">
-                                    <Expander.Content>
-                                        <controls:DataGrid x:Name="GroupDataGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" BorderBrush="Black" BorderThickness="2" 
-                                                           GridLinesVisibility="All" HeadersVisibility="Column" VerticalAlignment="Bottom">
-                                            <controls:DataGrid.Resources>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                                                </Style>
-                                                <Style TargetType="controls:DataGridCell">
-                                                    <Setter Property="Background" Value="GhostWhite"/>
-                                                </Style>
-                                            </controls:DataGrid.Resources>
-
-                                            <controls:DataGrid.Columns>
-                                                <controls:DataGridTextColumn Header="ItemName" FontSize="15" Width="1*" Binding="{Binding ItemName}"/>
-                                                <controls:DataGridTextColumn Header="Budgeted" FontSize="15" Width="1*" Binding="{Binding Budgeted}"/>
-                                                <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated}"/>
-                                                <controls:DataGridTextColumn Header="Remaining" FontSize="15" Width="1*" Binding="{Binding Remaining}"/>
-                                            </controls:DataGrid.Columns>
-                                        </controls:DataGrid>
-                                    </Expander.Content>
-                                </Expander>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                <ScrollViewer>
+                    <ItemsRepeater ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}"
+                                   Layout="{StaticResource VerticalStackLayout}"
+                                   ItemTemplate="{StaticResource AccordianDataTemplate}"/>
                 </ScrollViewer>
             </RelativePanel>
         </Grid>
