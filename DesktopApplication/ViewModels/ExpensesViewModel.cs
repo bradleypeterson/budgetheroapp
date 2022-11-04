@@ -6,10 +6,14 @@ namespace DesktopApplication.ViewModels;
 
 public class ExpensesViewModel : ObservableRecipient
 {
-    public ICommand ExpenseDialogCommand { get; }
+    public ICommand AddExpenseDialogCommand { get; }
+    public ICommand EditExpenseDialogCommand { get; }
+    public ICommand DeleteExpenseDialogCommand { get; }
 
     public ExpensesViewModel()
     {
-        ExpenseDialogCommand = new AddExpenseCommand();
+        AddExpenseDialogCommand = new AddExpenseCommand();
+        EditExpenseDialogCommand = new EditExpenseCommand();
+        DeleteExpenseDialogCommand = new DeleteExpenseCommand();
     }
 }
