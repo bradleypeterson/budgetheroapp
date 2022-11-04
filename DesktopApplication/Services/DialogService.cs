@@ -31,4 +31,20 @@ public class DialogService : IDialogService
         };
         await dialog.ShowAsync();
     }
+
+    public async void ExpenseDialog()
+    {
+        ContentDialog dialog = new()
+        {
+            XamlRoot = _root,
+            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = "Add Expense",
+            PrimaryButtonText = "Save",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Primary,
+            PrimaryButtonCommand = new AddAccountCommand(),
+            Content = new ExpenseForm()
+        };
+        await dialog.ShowAsync();
+    }
 }

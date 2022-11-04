@@ -29,7 +29,7 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Margin="20,20,150,20" HorizontalAlignment="Right" />
+                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Margin="20,20,150,20" HorizontalAlignment="Right" Command="{x:Bind ViewModel.ExpenseDialogCommand}" />
                     <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Expenses"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
                 </Grid>

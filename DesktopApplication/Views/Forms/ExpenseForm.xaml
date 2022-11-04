@@ -1,0 +1,60 @@
+﻿<Page
+    x:Class="DesktopApplication.Views.Forms.ExpenseForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DesktopApplication.Views.Forms"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid RowSpacing="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+
+
+        <RadioButtons Grid.Column="0" Grid.Row="0" x:Name="ExpenseType" SelectedIndex="0" MaxColumns="2" Header="Select one of the following:">
+            <x:String>Deposit</x:String>
+            <x:String>Expense</x:String>
+        </RadioButtons>
+
+        <TextBox Header="Name:" Grid.Column="0" Grid.Row="1" x:Name="ExpenseName"/>
+
+
+        <CalendarDatePicker Grid.Column="0" Grid.Row="2" x:Name="ExpenseDate" Header="Date:" />
+
+        <TextBox Grid.Column="0" Grid.Row="3" x:Name="ExpenseAmount" Header="Amount:"/>
+
+        <TextBox Grid.Column="0" Grid.Row="7" x:Name="ExpenseMemo" Header="Memo:"/>
+        <CheckBox Grid.Column="0" Grid.Row="5" Content="Visible to household?"/>
+        <CheckBox Grid.Column="0" Grid.Row="6" Content="Is it pending?"/>
+
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="4">
+
+            <TextBlock Text="Category" Padding="0 0 0 10"/>
+
+            <DropDownButton x:Name="ExpenseCategory" Content="Select Category">
+                <DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+        </StackPanel>
+
+        
+
+    </Grid>
+</Page>
