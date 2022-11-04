@@ -16,4 +16,5 @@ public class BudgetCategoryViewModel
     {
         _budgetCategory = budgetCategory;
     }
+
 }

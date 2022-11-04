@@ -12,6 +12,7 @@ public class BudgetCategoryGroupViewModel
     private readonly BudgetCategoryGroup _budgetCategoryGroup;
     public string CategoryGroupDesc { get; }
     public List<BudgetCategoryViewModel> BudgetCategories { get; }
+    
 
     public BudgetCategoryGroupViewModel(BudgetCategoryGroup budgetCategoryGroup)
     {

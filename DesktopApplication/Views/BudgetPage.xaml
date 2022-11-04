@@ -10,27 +10,29 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-
         <Grid.Resources>
             <DataTemplate x:Key="AccordianDataTemplate"
                           x:DataType="viewModel:BudgetCategoryGroupViewModel">
                 <Expander Width="1225" Header="{x:Bind CategoryGroupDesc}">
                     <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True"
                                        CanUserReorderColumns="False" BorderBrush="Black" 
-                                       BorderThickness="2" GridLinesVisibility="All" 
+                                       BorderThickness="2" GridLinesVisibility="Horizontal" 
                                        HeadersVisibility="Column" VerticalAlignment="Bottom"
+                                       SelectionMode="Single" AlternatingRowBackground="LightCyan"
+                                       SelectionChanged="DataGrid_SelectionChanged"
                                        ItemsSource="{x:Bind BudgetCategories, Mode=OneWay}">
-                        <controls:DataGrid.Resources>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Left"/>
-                            </Style>
-                            <Style TargetType="controls:DataGridCell">
-                                <Setter Property="Background" Value="GhostWhite"/>
-                            </Style>
-                        </controls:DataGrid.Resources>
+                    <controls:DataGrid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                        </Style>
+                        <Style TargetType="controls:DataGridCell">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
+                    </controls:DataGrid.Resources>
 
-                        <controls:DataGrid.Columns>
+                        
+                    <controls:DataGrid.Columns>
                             <controls:DataGridTextColumn Header="ItemName" FontSize="15" Width="1*" Binding="{Binding CategoryName}"/>
                             <controls:DataGridTextColumn Header="Budgeted" FontSize="15" Width="1*" Binding="{Binding CategoryAmount}"/>
                             <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated}"/>

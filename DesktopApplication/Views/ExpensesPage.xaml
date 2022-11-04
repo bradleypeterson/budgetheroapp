@@ -39,7 +39,7 @@
             <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
                 <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
-                                   GridLinesVisibility="All" SelectionMode="Single">
+                                   GridLinesVisibility="All" SelectionMode="Extended">
                     
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
