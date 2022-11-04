@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 namespace DesktopApplication.Contracts.Services;
 public interface IDialogService
 {
+    //when making new service start here by making a method of the service you want
     void ShowDialog();
+
 }
