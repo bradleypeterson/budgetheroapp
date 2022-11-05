@@ -12,4 +12,8 @@ public interface IDialogService
     void AddExpenseDialog();
     void DeleteExpenseDialog();
     void EditExpenseDialog();
+    void AddCategoryGroupDialog();
+    void DeleteCategoryGroupDialog();
+    void AddAccountDialog();
+    void DeleteAccountDialog();
 }

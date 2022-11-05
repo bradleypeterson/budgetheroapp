@@ -5,8 +5,7 @@
     xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Grid RowSpacing="20">
         <Grid.ColumnDefinitions>
@@ -39,7 +38,6 @@
         <TextBox Grid.Column="0" Grid.Row="3" x:Name="ExpenseAmount" Header="Amount:"/>
 
         <TextBox Grid.Column="0" Grid.Row="7" x:Name="ExpenseMemo" Header="Memo:"/>
-        <CheckBox Grid.Column="0" Grid.Row="5" Content="Visible to household?"/>
         <CheckBox Grid.Column="0" Grid.Row="6" Content="Is it pending?"/>
 
         <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="4">

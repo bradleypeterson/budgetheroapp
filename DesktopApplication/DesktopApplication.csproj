@@ -20,6 +20,8 @@
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\Layouts.xaml" />
     <None Remove="Views\Forms\AccountForm.xaml" />
+    <None Remove="Views\Forms\AddCategoryGroupForm.xaml" />
+    <None Remove="Views\Forms\DeleteCategoryGroupForm.xaml" />
     <None Remove="Views\Forms\DeleteExpenseForm.xaml" />
     <None Remove="Views\Forms\ExpenseForm.xaml" />
     <None Remove="Views\Forms\DeleteAccountForm.xaml" />
@@ -53,6 +55,12 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Forms\DeleteCategoryGroupForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Forms\AddCategoryGroupForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Forms\DeleteAccountForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,10 +6,10 @@ namespace DesktopApplication.ViewModels;
 
 public class AccountsViewModel : ObservableRecipient
 {
-    public ICommand ShowDialogCommand { get; }
+    public ICommand AddAccountDialogCommand { get; }
 
     public AccountsViewModel()
     {
-        ShowDialogCommand = new ShowDialogCommand();
+        AddAccountDialogCommand = new AddAccountCommand();
     }
 }
