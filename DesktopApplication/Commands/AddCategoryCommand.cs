@@ -10,6 +10,7 @@ internal class AddCategoryCommand : CommandBase
 {
     public override void Execute(object? parameter)
     {
+        // Implement Category Group Creating logic here
         Debug.WriteLine("!!!!!!!!!! Add category command");
 
     }

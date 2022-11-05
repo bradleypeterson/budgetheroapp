@@ -22,7 +22,7 @@
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Margin="20" Command="{x:Bind ViewModel.ShowDialogCommand}">Add Account</Button>
+                    <Button Margin="20" Command="{x:Bind ViewModel.ShowDialogCommand}" Content="Add Account"/>
                 </StackPanel>
             </Border>
 
