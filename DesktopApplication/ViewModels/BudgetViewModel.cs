@@ -13,6 +13,7 @@ public class BudgetViewModel : ObservableRecipient
 
     public ICommand AddCategoryGroupDialogCommand { get; }
     public ICommand DeleteCategoryGroupDialogCommand { get; }
+    public ICommand EditCategoryGroupDialogCommand { get; }
 
     public BudgetViewModel()
     {
@@ -20,6 +21,7 @@ public class BudgetViewModel : ObservableRecipient
 
         AddCategoryGroupDialogCommand = new AddCategoryGroupCommand();
         DeleteCategoryGroupDialogCommand = new DeleteCategoryGroupCommand();
+        EditCategoryGroupDialogCommand = new EditCategoryGroupCommand();
     }
 
     private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()

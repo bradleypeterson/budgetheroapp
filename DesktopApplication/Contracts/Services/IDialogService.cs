@@ -16,4 +16,5 @@ public interface IDialogService
     void DeleteCategoryGroupDialog();
     void AddAccountDialog();
     void DeleteAccountDialog();
+    void EditCategoryGroupDialog();
 }

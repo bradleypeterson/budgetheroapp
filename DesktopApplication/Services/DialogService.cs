@@ -65,6 +65,23 @@ public class DialogService : IDialogService
         await dialog.ShowAsync();
     }
 
+    public async void EditCategoryGroupDialog()
+    {
+        ContentDialog dialog = new()
+        {
+            XamlRoot = _root,
+            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = "Edit Category Group",
+            PrimaryButtonText = "Save",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Primary,
+            PrimaryButtonCommand = new EditCategoryGroupCommand(),
+            Content = new EditCategoryGroupForm()
+        };
+        await dialog.ShowAsync();
+
+    }
+
     public async void AddAccountDialog()
     {
         ContentDialog dialog = new()

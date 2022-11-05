@@ -5,10 +5,16 @@
     xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
-    <Grid>
-
-    </Grid>
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <!-- Content body -->
+        <TextBlock Text="Select Category Group to Delete"/>
+        <ComboBox Grid.Row="0" x:Name="EditCombo" Header="Group Name" PlaceholderText="Choose Group To Delete">
+            <x:String>Housing</x:String>
+            <x:String>Utilities</x:String>
+            <x:String>Food</x:String>
+            <x:String>Transportation</x:String>
+        </ComboBox>
+    </StackPanel>
 </Page>
