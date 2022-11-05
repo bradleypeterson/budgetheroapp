@@ -20,6 +20,8 @@
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\Layouts.xaml" />
     <None Remove="Views\Forms\AccountForm.xaml" />
+    <None Remove="Views\Forms\DeleteExpenseForm.xaml" />
+    <None Remove="Views\Forms\ExpenseForm.xaml" />
     <None Remove="Views\Forms\DeleteAccountForm.xaml" />
   </ItemGroup>
 
@@ -52,6 +54,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Page Update="Views\Forms\DeleteAccountForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Forms\DeleteExpenseForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Forms\ExpenseForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Styles\Layouts.xaml">

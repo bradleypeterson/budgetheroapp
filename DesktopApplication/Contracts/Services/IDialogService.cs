@@ -9,5 +9,7 @@ public interface IDialogService
 {
     //when making new service start here by making a method of the service you want
     void ShowDialog();
-
+    void AddExpenseDialog();
+    void DeleteExpenseDialog();
+    void EditExpenseDialog();
 }
