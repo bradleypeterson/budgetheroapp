@@ -22,7 +22,7 @@
         <StackPanel x:Name="ExpensePanel" Grid.Row="1" Visibility="Collapsed">
             <TextBox x:Name="ExpenseName" Header="Name:" />
             <CalendarDatePicker x:Name="ExpenseDate" Header="Date:"/>
-            <TextBox x:Name="ExpenseAmount" Header="Amount:" PlaceholderText="Enter Amount Here"/>
+            <TextBox x:Name="ExpenseAmount" Header="Amount:" PlaceholderText="Enter Amount"/>
 
             <TextBlock Text="Category"/>
             
@@ -50,7 +50,7 @@
             
             <CalendarDatePicker x:Name="DepositDate" Header="Date:"/>
             
-            <TextBox x:Name="DepositAmount" Header="Amount:" PlaceholderText="Enter Amount Here"/>
+            <TextBox x:Name="DepositAmount" Header="Amount:" PlaceholderText="Enter Amount"/>
             
             <TextBox x:Name="DepositMemo" Header="Memo:" TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"/>
         </StackPanel>
