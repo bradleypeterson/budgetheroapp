@@ -1,7 +1,9 @@
 ﻿using DesktopApplication.Activation;
+using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.Core.Contracts.Services;
 using DesktopApplication.Core.Services;
+using DesktopApplication.Data;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.Services;
@@ -64,6 +66,8 @@ public partial class App : Application
             services.AddSingleton<INavigationService, NavigationService>();
 
             services.AddTransient<IDialogService, DialogService>();
+            services.AddDbContext<BudgetAppContext>();
+            services.AddScoped<IDataStore, DataStore>();
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
