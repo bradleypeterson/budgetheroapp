@@ -25,5 +25,27 @@ public sealed partial class ExpenseForm : Page
     public ExpenseForm()
     {
         this.InitializeComponent();
+        ExpenseDate.Date = DateTime.Now;
+        DepositDate.Date = DateTime.Now;
     }
+
+    private void RadioButton_Checked(object sender, RoutedEventArgs e)
+    {
+        var radButton = sender as RadioButton;
+
+        if (radButton is not null)
+        {
+            if (radButton.Content.ToString() == "Expense")
+            {
+                ExpensePanel.Visibility = Visibility.Visible;
+               DepositPanel.Visibility = Visibility.Collapsed;
+            }
+            else if (radButton.Content.ToString() == "Deposit")
+            {
+                DepositPanel.Visibility = Visibility.Visible;
+                ExpensePanel.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+
 }

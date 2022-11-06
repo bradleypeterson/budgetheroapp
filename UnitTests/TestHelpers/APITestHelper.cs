@@ -20,7 +20,7 @@ namespace UnitTests.TestHelpers
             if (!result.IsSuccessStatusCode)
                 return false;
 
-            string resultJson = await result.Content.ReadAsStringAsync();
+            var resultJson = await result.Content.ReadAsStringAsync();
             T resultModel = JsonConvert.DeserializeObject<T>(resultJson);
 
             if (resultModel is not null)
@@ -67,7 +67,7 @@ namespace UnitTests.TestHelpers
 
         private static void ConfigureClient()
         {
-            string apiBaseAddAddress = "https://www.budgethero.app/api/";
+            var apiBaseAddAddress = "https://www.budgethero.app/api/";
             _client.BaseAddress = new Uri(apiBaseAddAddress);
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(

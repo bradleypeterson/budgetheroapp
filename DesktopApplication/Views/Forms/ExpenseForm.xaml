@@ -7,52 +7,59 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid RowSpacing="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         
-
-
-        <RadioButtons Grid.Column="0" Grid.Row="0" x:Name="ExpenseType" SelectedIndex="0" MaxColumns="2" Header="Select one of the following:">
-            <x:String>Deposit</x:String>
-            <x:String>Expense</x:String>
+        <RadioButtons x:Name="TransactionType" Grid.Row="0" SelectedIndex="0" MaxColumns="2" Header="Select one of the following:">
+            <RadioButton x:Name="ExpenseRadButton" Content="Expense" Checked="RadioButton_Checked"/>
+            <RadioButton x:Name="DepositRadButton" Content="Deposit" Checked="RadioButton_Checked"/>
         </RadioButtons>
 
-        <TextBox Header="Name:" Grid.Column="0" Grid.Row="1" x:Name="ExpenseName"/>
+        <!-- Panel for adding an expense -->
+        <StackPanel x:Name="ExpensePanel" Grid.Row="1" Visibility="Collapsed">
+            <TextBox x:Name="ExpenseName" Header="Name:" />
+            <CalendarDatePicker x:Name="ExpenseDate" Header="Date:"/>
+            <TextBox x:Name="ExpenseAmount" Header="Amount:" PlaceholderText="Enter Amount Here"/>
 
+            <TextBlock Text="Category"/>
+            
+            <ComboBox x:Name="ExpenseCategoryCombo" PlaceholderText="Select Category">
+                <!--TODO: This combo box will populate with all available category ITEMS, that way in can be placed in the correct category group-->
+                <x:String>Item1</x:String>
+                <x:String>Item2</x:String>
+                <x:String>Item3</x:String>
+            </ComboBox>
 
-        <CalendarDatePicker Grid.Column="0" Grid.Row="2" x:Name="ExpenseDate" Header="Date:" />
-
-        <TextBox Grid.Column="0" Grid.Row="3" x:Name="ExpenseAmount" Header="Amount:"/>
-
-        <TextBox Grid.Column="0" Grid.Row="7" x:Name="ExpenseMemo" Header="Memo:"/>
-        <CheckBox Grid.Column="0" Grid.Row="6" Content="Is it pending?"/>
-
-        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="4">
-
-            <TextBlock Text="Category" Padding="0 0 0 10"/>
-
-            <DropDownButton x:Name="ExpenseCategory" Content="Select Category">
-                <DropDownButton.Flyout>
-                    <MenuFlyout Placement="Bottom">
-                    </MenuFlyout>
-                </DropDownButton.Flyout>
-            </DropDownButton>
+            <TextBox x:Name="ExpensePayee" Header="Payee:" PlaceholderText="Enter Payee"/>
+            
+            <TextBox x:Name="ExpenseMemo" Header="Memo:" TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"/>
         </StackPanel>
-
         
+        <!-- Panel for adding a deposit -->
+        <StackPanel x:Name="DepositPanel" Grid.Row="1" Visibility="Collapsed">
+            <TextBox x:Name="DepositName" Header="Name:" />
+
+            <TextBlock Text="Bank Account:"/>
+            <ComboBox x:Name="BankAccountCombo" PlaceholderText="Select Bank Account">
+                <x:String>America First Savings</x:String>
+                <x:String>America First Checking</x:String>
+            </ComboBox>
+            
+            <CalendarDatePicker x:Name="DepositDate" Header="Date:"/>
+            
+            <TextBox x:Name="DepositAmount" Header="Amount:" PlaceholderText="Enter Amount Here"/>
+            
+            <TextBox x:Name="DepositMemo" Header="Memo:" TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"/>
+        </StackPanel>
+        
+        <!-- I Dont think we need this -AG -->
+        <!--<CheckBox Grid.Column="0" Grid.Row="6" Content="Is it pending?"/>-->
+        
+        <!-- Also, we don't need to check if it is visible to the household because we will handle all of that logic on the household budget page
+             no personal budget items will be visible to the household -AG -->
 
     </Grid>
 </Page>

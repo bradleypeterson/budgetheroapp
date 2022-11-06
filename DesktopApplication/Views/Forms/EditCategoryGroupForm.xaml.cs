@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using ABI.Windows.UI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -25,23 +28,26 @@ public sealed partial class EditCategoryGroupForm : Page
     public EditCategoryGroupForm()
     {
         this.InitializeComponent();
+        GroupNameText.IsReadOnly = true;
     }
 
     private void RadioButton_Checked(object sender, RoutedEventArgs e)
     {
         var radButton = sender as RadioButton;
 
-        if (radButton != null)
+        if (radButton is not null)
         {
             if (radButton.Content.ToString() == "Add Category Item")
             {
                 AddItemPanel.Visibility = Visibility.Visible;
                 RemoveItemPanel.Visibility = Visibility.Collapsed;
+                //TODO: Clear all fields in remove item panel
             }
             else if (radButton.Content.ToString() == "Remove Category Item")
             {
                 RemoveItemPanel.Visibility = Visibility.Visible;
                 AddItemPanel.Visibility = Visibility.Collapsed;
+                //TODO: clear all fields in add item panel
             }
         }
     }
@@ -50,9 +56,12 @@ public sealed partial class EditCategoryGroupForm : Page
     {
         var combo = sender as ComboBox;
 
+        
+
         if (combo != null)
         {
-            GroupNameText.Text = (string)combo.SelectedItem;
+           GroupNameText.IsReadOnly = false;
+           GroupNameText.Text = (string)combo.SelectedItem;
         }
     }
 }

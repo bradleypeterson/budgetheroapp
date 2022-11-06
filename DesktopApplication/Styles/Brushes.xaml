@@ -8,5 +8,6 @@
     <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="White"/>
     <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="White"/>
     <SolidColorBrush x:Key="DeleteAccountTextForegroundBrush" Color="Black"/>
-    
+    <SolidColorBrush x:Key="TestBrush" Color="Orange"/>
+
 </ResourceDictionary>

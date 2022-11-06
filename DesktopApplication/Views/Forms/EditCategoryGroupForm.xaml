@@ -16,63 +16,33 @@
         </Grid.RowDefinitions>
         
         
-        <ComboBox Grid.Row="0" x:Name="EditCombo" Header="Group Name" PlaceholderText="Choose Group To Edit" SelectionChanged="EditCombo_SelectionChanged">
+        <ComboBox Grid.Row="0" x:Name="EditCombo" PlaceholderText="Choose Group To Edit" SelectionChanged="EditCombo_SelectionChanged">
             <x:String>Housing</x:String>
             <x:String>Utilities</x:String>
             <x:String>Food</x:String>
             <x:String>Transportation</x:String>
         </ComboBox>
 
-        <TextBox x:Name="GroupNameText" Grid.Row="1" Header="Group Name" Margin="0,10,0,10"/>
+        <TextBox Grid.Row="1" x:Name="GroupNameText"  Header="Group Name:" Margin="0,10,0,10"/>
 
+        <RadioButtons Grid.Row="2" x:Name="CatEditRadButtons"  MaxColumns="2" Header="Options:">
+            <RadioButton x:Name="AddCatRadio" Content="Add Category Item" Checked="RadioButton_Checked"/>
+            <RadioButton x:Name="RemoveCatRadio" Content="Remove Category Item" Checked="RadioButton_Checked"/>
+        </RadioButtons>
 
-            <RadioButtons Grid.Row="2" Header="Options:">
-            <RadioButtons.Style>
-                <Style TargetType="RadioButtons">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="RadioButtons">
-                                <StackPanel>
-
-                                    <VisualStateManager.VisualStateGroups>
-                                        <VisualStateGroup x:Name="CommonStates">
-                                            <VisualState x:Name="Normal" />
-
-                                            <VisualState x:Name="Disabled">
-                                                <VisualState.Setters>
-                                                    <Setter Target="HeaderContentPresenter.Foreground" Value="{ThemeResource RadioButtonsHeaderForegroundDisabled}" />
-
-                                                </VisualState.Setters>
-                                            </VisualState>
-
-                                        </VisualStateGroup>
-
-                                    </VisualStateManager.VisualStateGroups>
-                                    <ContentPresenter x:Name="HeaderContentPresenter" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" Foreground="{ThemeResource RadioButtonsHeaderForeground}" Margin="{ThemeResource RadioButtonsTopHeaderMargin}" />
-                                    <ItemsRepeater x:Name="InnerRepeater">
-                                        <ItemsRepeater.Layout>
-                                            <StackLayout  Spacing="15" Orientation="Horizontal"/>
-                                        </ItemsRepeater.Layout>
-                                    </ItemsRepeater>
-                                </StackPanel>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </RadioButtons.Style>
-                <RadioButton Content="Add Category Item" Checked="RadioButton_Checked"/>
-                <RadioButton Content="Remove Category Item" Checked="RadioButton_Checked"/>
-            </RadioButtons>
-
-        <StackPanel x:Name="AddItemPanel" Grid.Row="3" Visibility="Collapsed">
-            <TextBlock Text="ADD ITEM"/>
-            <!-- TODO: Add Text Box to enter name of category to add-->
-            <!-- TODO: Add Text Box to enter Budget of category to add-->
+        <StackPanel Grid.Row="3" x:Name="AddItemPanel"  Visibility="Collapsed">
+            <TextBox x:Name="CatItemText" Header="Category Item Name:" PlaceholderText="Enter Name of Category Item" Margin="0,10,0,0"/>
+            <TextBox x:Name="CatAmountText" Header="Category Item Budget:" PlaceholderText="Enter Amount to Budget" Margin="0,10,0,0"/>
         </StackPanel>
 
         <StackPanel x:Name="RemoveItemPanel" Grid.Row="3" Visibility="Collapsed">
-            <TextBlock Text="REMOVE ITEM"/>
-            <!-- TODO: Add combo box showing items available to get rid of-->
+            <ComboBox Grid.Row="0" x:Name="RemoveCombo" PlaceholderText="Choose Item To Remove">
+                <!-- TODO: The items that show up in this combo box will be populated with all items belonging to selected group-->
+                    <!--PLACEHOLDER --><x:String>Item1</x:String>
+                    <!--PLACEHOLDER --><x:String>Item2</x:String>
+                    <!--PLACEHOLDER --><x:String>Item3</x:String>
+            </ComboBox>
+
         </StackPanel>
         
     </Grid>

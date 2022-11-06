@@ -9,8 +9,7 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Content body -->
-        <TextBlock Text="Select Category Group to Delete"/>
-        <ComboBox Grid.Row="0" x:Name="EditCombo" Header="Group Name" PlaceholderText="Choose Group To Delete">
+        <ComboBox Grid.Row="0" x:Name="EditCombo" PlaceholderText="Choose Group To Delete">
             <x:String>Housing</x:String>
             <x:String>Utilities</x:String>
             <x:String>Food</x:String>
