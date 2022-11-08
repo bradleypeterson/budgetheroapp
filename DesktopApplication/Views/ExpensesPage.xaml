@@ -29,15 +29,15 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Expense" Margin="20,20,150,20" HorizontalAlignment="Right" />
-                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Expenses"/>
+                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Transaction" Margin="20,20,150,20" HorizontalAlignment="Right" Command="{x:Bind ViewModel.AddExpenseDialogCommand}" />
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
                 </Grid>
             </Border>
             
             <!-- This panel is for whatever control is needed for the work area-->
             <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
-                <controls:DataGrid x:Name="ExpenseData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
+                <controls:DataGrid x:Name="TransactionData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
                                    GridLinesVisibility="All" SelectionMode="Extended">
                     
@@ -49,7 +49,7 @@
 
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="Date" Width="1*" Binding="{Binding Date}"/>
-                        <controls:DataGridTextColumn Header="Expense" Width="2*" Binding="{Binding Item}"/>
+                        <controls:DataGridTextColumn Header="Transaction" Width="2*" Binding="{Binding Item}"/>
                         <controls:DataGridTextColumn Header="Amount" Width="1*" Binding="{Binding Amount}"/>
                         <controls:DataGridTextColumn Header="Category" Width="1*" Binding="{Binding Category}"/>
                         <controls:DataGridTextColumn Header="Payee" Width="2*" Binding="{Binding Payee}"/>
@@ -85,8 +85,8 @@
 
             <!-- This is the stack panel that contains editing buttons-->
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <Button x:Name="EditExpense_Btn" Content="Edit Expense" HorizontalAlignment="Center" Width="120" Margin="20 0 0 0" />
-                <Button x:Name="DeleteExpense_Btn" Content="Delete Expense" HorizontalAlignment="Center" Width="120" Margin="20 0 0 0" />
+                <Button x:Name="EditTransaction_Btn" Content="Edit Transaction" HorizontalAlignment="Center" Width="137" Margin="5 0 10 0" Command="{x:Bind ViewModel.EditExpenseDialogCommand}" />
+                <Button x:Name="DeleteTransaction_Btn" Content="Delete Transaction" HorizontalAlignment="Center" Width="137" Command="{x:Bind ViewModel.DeleteExpenseDialogCommand}" />
             </StackPanel>
 
             <!-- this is the data grid for the bank account items-->

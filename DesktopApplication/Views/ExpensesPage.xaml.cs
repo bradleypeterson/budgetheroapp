@@ -6,10 +6,7 @@ namespace DesktopApplication.Views;
 
 public sealed partial class ExpensesPage : Page
 {
-    public ExpensesViewModel ViewModel
-    {
-        get;
-    }
+    public ExpensesViewModel ViewModel { get; }
 
     public ExpensesPage()
     {

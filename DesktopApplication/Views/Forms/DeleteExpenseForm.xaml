@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="DesktopApplication.Views.Forms.AddCategoryForm"
+    x:Class="DesktopApplication.Views.Forms.DeleteExpenseForm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DesktopApplication.Views.Forms"
@@ -9,6 +9,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Would you like to delete this expense?" FontSize="24" />
+            <TextBlock Text="This cannot be undone" FontSize="16" />
+        </StackPanel>
 
     </Grid>
 </Page>

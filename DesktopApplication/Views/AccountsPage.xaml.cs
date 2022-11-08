@@ -9,10 +9,7 @@ namespace DesktopApplication.Views;
 
 public sealed partial class AccountsPage : Page
 {
-    public AccountsViewModel ViewModel
-    {
-        get;
-    }
+    public AccountsViewModel ViewModel { get; }
 
     public AccountsPage()
     {

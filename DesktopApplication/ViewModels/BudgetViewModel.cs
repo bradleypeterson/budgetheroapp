@@ -10,12 +10,18 @@ namespace DesktopApplication.ViewModels;
 public class BudgetViewModel : ObservableRecipient
 {
     public List<BudgetCategoryGroupViewModel> BudgetCategoryGroups { get; }
-    public ICommand AddCategoryCommand { get; }
+
+    public ICommand AddCategoryGroupDialogCommand { get; }
+    public ICommand DeleteCategoryGroupDialogCommand { get; }
+    public ICommand EditCategoryGroupDialogCommand { get; }
 
     public BudgetViewModel()
     {
         BudgetCategoryGroups = GenerateSampleBudgetCategoryGroups();
-        AddCategoryCommand = new AddCategoryCommand();
+
+        AddCategoryGroupDialogCommand = new AddCategoryGroupCommand();
+        DeleteCategoryGroupDialogCommand = new DeleteCategoryGroupCommand();
+        EditCategoryGroupDialogCommand = new EditCategoryGroupCommand();
     }
 
     private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()

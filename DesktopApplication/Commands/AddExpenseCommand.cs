@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 using DesktopApplication.Contracts.Services;
 
 namespace DesktopApplication.Commands;
-internal class AddAccountCommand : CommandBase
+internal class AddExpenseCommand : CommandBase
 {
     private readonly IDialogService _dialogService;
 
-    public AddAccountCommand()
+    public AddExpenseCommand()
     {
         _dialogService = App.GetService<IDialogService>();
     }
 
     public override void Execute(object? parameter)
     {
-        _dialogService.AddAccountDialog();
+        _dialogService.AddExpenseDialog();
     }
 }

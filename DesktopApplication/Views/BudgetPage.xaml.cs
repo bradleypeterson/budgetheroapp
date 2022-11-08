@@ -11,10 +11,7 @@ public sealed partial class BudgetPage : Page
 {
     private object? storedSender;
     
-    public BudgetViewModel ViewModel
-    {
-        get;
-    }
+    public BudgetViewModel ViewModel { get; }
 
     public BudgetPage()
     {
