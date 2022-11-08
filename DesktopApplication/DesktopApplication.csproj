@@ -16,6 +16,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\budgetherologo.png" />
+    <None Remove="Assets\WindowIcon.ico" />
+    <None Remove="Assets\WindowIcon2.ico" />
     <None Remove="Controls\AppLogoControl.xaml" />
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\Layouts.xaml" />
@@ -51,6 +53,12 @@
   <ItemGroup>
     <Content Update="Assets\budgetherologo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\WindowIcon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\WindowIcon2.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

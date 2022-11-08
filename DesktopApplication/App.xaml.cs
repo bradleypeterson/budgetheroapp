@@ -11,6 +11,7 @@ using DesktopApplication.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using Windows.Storage;
 
 namespace DesktopApplication;
 
@@ -43,6 +44,10 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+
+        // Apply theme choice.
+        App.Current.RequestedTheme = ApplicationTheme.Light;
+
 
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
