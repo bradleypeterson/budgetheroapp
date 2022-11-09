@@ -2,7 +2,6 @@
 using DesktopApplication.Helpers;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
-
 using Microsoft.UI.Xaml.Controls;
 
 namespace DesktopApplication.Views;

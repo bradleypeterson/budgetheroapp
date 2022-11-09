@@ -118,16 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>DesktopApplication</value>
+    <value>BudgetHero</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>DesktopApplication</value>
-  </data>
-  <data name="Shell_Login.Content" xml:space="preserve">
-    <!--<value>Login</value>-->
-  </data>
-  <data name="Shell_Registration.Content" xml:space="preserve">
-    <!--<value>Registration</value>-->
   </data>
   <data name="Shell_Accounts.Content" xml:space="preserve">
     <value>Accounts</value>

@@ -25,6 +25,7 @@ internal class TitleBarHelper
 
     public static void UpdateTitleBar(ElementTheme theme)
     {
+        
         if (App.MainWindow.ExtendsContentIntoTitleBar)
         {
             if (theme != ElementTheme.Default)

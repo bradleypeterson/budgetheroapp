@@ -9,14 +9,14 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
-        <TextBox Header="Account Name" PlaceholderText="Enter Account Name" Foreground="{StaticResource PrimaryForegroundBrush}"/>
+        <TextBox Header="Account Name" PlaceholderText="Enter Account Name"/>
         
         <ComboBox x:Name="AccountType" PlaceholderText="Choose Account Type" Margin="0,10,0,10">
             <x:String>Checking</x:String>
             <x:String>Savings</x:String>
         </ComboBox>
         
-        <TextBox Header="Account Balance" PlaceholderText="Enter Account Balance" Foreground="{StaticResource PrimaryForegroundBrush}"/>
+        <TextBox Header="Account Balance" PlaceholderText="Enter Account Balance"/>
         
     </StackPanel>
     
