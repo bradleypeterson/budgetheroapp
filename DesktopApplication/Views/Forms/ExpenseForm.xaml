@@ -25,7 +25,7 @@
             <TextBox x:Name="ExpenseAmount" Header="Amount:" PlaceholderText="Enter Amount"/>
 
             <TextBlock Text="Bank Account:"/>
-            <ComboBox x:Name="TransBankAccountCombo" PlaceholderText="Select Bank Account">
+            <ComboBox x:Name="ExpenseBankAccountCombo" PlaceholderText="Select Bank Account">
                 <x:String>America First Savings</x:String>
                 <x:String>America First Checking</x:String>
             </ComboBox>
