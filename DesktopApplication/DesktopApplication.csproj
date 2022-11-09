@@ -22,13 +22,14 @@
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\Layouts.xaml" />
     <None Remove="Styles\Styles.xaml" />
-    <None Remove="Views\Forms\AccountForm.xaml" />
+    <None Remove="ViewModels\Forms\DeleteItemForm.xaml" />
     <None Remove="Views\Forms\AddCategoryGroupForm.xaml" />
+    <None Remove="Views\Forms\BankAccountForm.xaml" />
     <None Remove="Views\Forms\DeleteCategoryGroupForm.xaml" />
-    <None Remove="Views\Forms\DeleteExpenseForm.xaml" />
+    <None Remove="Views\Forms\DeleteTransactionForm.xaml" />
     <None Remove="Views\Forms\EditCategoryGroupForm.xaml" />
-    <None Remove="Views\Forms\ExpenseForm.xaml" />
     <None Remove="Views\Forms\DeleteAccountForm.xaml" />
+    <None Remove="Views\Forms\TransactionForm.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +66,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="ViewModels\Forms\DeleteItemForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Styles\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -80,16 +84,16 @@
     <Page Update="Views\Forms\DeleteAccountForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Forms\DeleteExpenseForm.xaml">
+    <Page Update="Views\Forms\DeleteTransactionForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Forms\ExpenseForm.xaml">
+    <Page Update="Views\Forms\TransactionForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Styles\Layouts.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Forms\AccountForm.xaml">
+    <Page Update="Views\Forms\BankAccountForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Controls\AppLogoControl.xaml">

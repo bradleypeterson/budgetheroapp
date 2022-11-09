@@ -1,27 +1,23 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DesktopApplication.Contracts.Data;
+using DesktopApplication.Contracts.Services;
 using DesktopApplication.ViewModels.Models;
 using ModelsLibrary;
-﻿using System.Windows.Input;
-using DesktopApplication.Commands;
 
 namespace DesktopApplication.ViewModels;
 
 public class BudgetViewModel : ObservableRecipient
 {
-    public List<BudgetCategoryGroupViewModel> BudgetCategoryGroups { get; }
+    private readonly IDataStore _dataStore;
+    private readonly ISessionService _sessionService;
 
-    public ICommand AddCategoryGroupDialogCommand { get; }
-    public ICommand DeleteCategoryGroupDialogCommand { get; }
-    public ICommand EditCategoryGroupDialogCommand { get; }
+    public List<BudgetCategoryGroupViewModel> BudgetCategoryGroups { get; }
 
     public BudgetViewModel()
     {
+        _dataStore = App.GetService<IDataStore>();
+        _sessionService = App.GetService<ISessionService>();
         BudgetCategoryGroups = GenerateSampleBudgetCategoryGroups();
-
-        AddCategoryGroupDialogCommand = new AddCategoryGroupCommand();
-        DeleteCategoryGroupDialogCommand = new DeleteCategoryGroupCommand();
-        EditCategoryGroupDialogCommand = new EditCategoryGroupCommand();
     }
 
     private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()
@@ -36,5 +32,4 @@ public class BudgetViewModel : ObservableRecipient
 
         return list;
     }
-
 }

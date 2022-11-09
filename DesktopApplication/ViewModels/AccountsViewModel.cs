@@ -1,15 +1,152 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DesktopApplication.Commands;
+using CommunityToolkit.Mvvm.Input;
+using DesktopApplication.Contracts.Data;
+using DesktopApplication.Contracts.Services;
+using DesktopApplication.CustomEventArgs;
+using DesktopApplication.ViewModels.Forms;
+using DesktopApplication.ViewModels.Models;
+using DesktopApplication.Views.Forms;
+using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels;
 
 public class AccountsViewModel : ObservableRecipient
 {
-    public ICommand AddAccountDialogCommand { get; }
+    private readonly ISessionService _sessionService;
+    private readonly IDialogService _dialogService;
+    private readonly IDataStore _dataStore;
 
     public AccountsViewModel()
     {
-        AddAccountDialogCommand = new AddAccountCommand();
+        _sessionService = App.GetService<ISessionService>();
+        _dialogService = App.GetService<IDialogService>();
+        _dataStore = App.GetService<IDataStore>();
+
+        ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
+        ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
+        ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
+    }
+
+    public IAsyncRelayCommand ShowAddDialogCommand { get; }
+    public IAsyncRelayCommand ShowEditDialogCommand { get; }
+    public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
+    public ObservableCollection<BankAccountViewModel> BankAccounts { get; set; } = new();
+
+    private BankAccountViewModel? _selectedBankAccount;
+    public BankAccountViewModel? SelectedBankAccount
+    {
+        get => _selectedBankAccount;
+        set
+        {
+            SetProperty(ref _selectedBankAccount, value);
+            if (value is not null)
+            {
+                HasItemSelected = true;
+            } else
+            {
+                HasItemSelected = false;
+            }
+        }
+    }
+
+    private bool _hasItemSelected;
+    public bool HasItemSelected
+    {
+        get => _hasItemSelected;
+        set => SetProperty(ref _hasItemSelected, value);
+    }
+
+    public async Task LoadAsync()
+    {
+        if (BankAccounts.Any())
+        {
+            return;
+        }
+
+        var bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        if (bankAccounts is not null)
+        {
+            foreach (var bankAccount in bankAccounts)
+            {
+                BankAccounts.Add(new BankAccountViewModel(bankAccount!));
+            }
+        }
+    }
+
+    private async Task ShowAddDialog()
+    {
+        _dialogService.OnSaved += AddBankAccountAsync;
+        
+        var dialogTitle = "Add Account";        
+        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle);
+
+        _dialogService.OnSaved -= AddBankAccountAsync;
+    }
+
+    private async Task ShowEditDialog()
+    {
+        _dialogService.OnSaved += EditBankAccountAsync;
+        
+        var dialogTitle = "Edit Account";
+        var _selectedBankAccount = SelectedBankAccount!.BankAccount;
+        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount);
+        
+        _dialogService.OnSaved -= EditBankAccountAsync;
+    }
+
+    private async Task ShowDeleteDialog()
+    {
+        _dialogService.OnSaved += DeleteBankAccountAsync;
+
+        var dialogTitle = "Delete Account";
+        var _selectedBankAccount = SelectedBankAccount!.BankAccount;
+        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount, true);
+
+        _dialogService.OnSaved -= DeleteBankAccountAsync;
+    }
+
+    private async void AddBankAccountAsync(object? sender, DialogServiceEventArgs e)
+    {
+        var newBankAccount = GetBankAccount(e);
+        newBankAccount.UserId = _sessionService.GetSessionUserId();
+
+        var result = await _dataStore.BankAccount.AddAsync(newBankAccount);
+
+        if (result == 1)
+        {
+            BankAccounts.Add(new BankAccountViewModel(newBankAccount));
+        }
+    }
+
+    private async void EditBankAccountAsync(object? sender, DialogServiceEventArgs e)
+    {
+        var editedBankAccount = GetBankAccount(e);
+        var listedBankAccount = BankAccounts.FirstOrDefault(
+            a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
+        int index;
+
+        if (listedBankAccount is not null)
+        {
+            await _dataStore.BankAccount.Update(editedBankAccount);
+
+            index = BankAccounts.IndexOf(listedBankAccount);
+            BankAccounts[index].BankAccount = editedBankAccount;
+        }
+    }
+
+    private async void DeleteBankAccountAsync(object? sender, DialogServiceEventArgs e)
+    {
+        var selectedBankAccount = _selectedBankAccount!.BankAccount;
+        await _dataStore.BankAccount.DeleteAsync(selectedBankAccount);
+
+        BankAccounts.Remove(_selectedBankAccount);
+    }
+
+    private static BankAccount GetBankAccount(DialogServiceEventArgs e)
+    {
+        var accountForm = (BankAccountForm)e.Content;
+        return accountForm.ViewModel.BankAccount;
     }
 }

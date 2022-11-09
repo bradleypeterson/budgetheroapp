@@ -1,5 +1,4 @@
-﻿using DesktopApplication.Controls;
-using DesktopApplication.Helpers;
+﻿using DesktopApplication.Helpers;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
 using Microsoft.UI.Xaml;
@@ -18,9 +17,10 @@ public sealed partial class AccountsPage : Page
         InitializeComponent();
     }
 
-    private void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         MainWindowHelper.ResizeWindow(this);
         MainWindowHelper.MaxWinFirstTimeLoad();
+        await ViewModel.LoadAsync();
     }
 }

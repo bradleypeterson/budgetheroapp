@@ -20,9 +20,9 @@ namespace DesktopApplication.Views.Forms;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class AccountForm : Page
+public sealed partial class DeleteTransactionForm : Page
 {
-    public AccountForm()
+    public DeleteTransactionForm()
     {
         this.InitializeComponent();
     }

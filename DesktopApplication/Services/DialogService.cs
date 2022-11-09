@@ -1,7 +1,7 @@
-﻿using DesktopApplication.Commands;
+﻿using System.Diagnostics;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
-using DesktopApplication.Views.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -10,141 +10,49 @@ public class DialogService : IDialogService
 {
     private readonly XamlRoot _root;
 
+    public event EventHandler<DialogServiceEventArgs>? OnSaved;
+
     public DialogService()
     {
         _root = MainWindowHelper.GetXamlRoot();
     }
 
-    // Demo method only to prove functionality---------
-    public async void ShowDialog()
+    public async Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null, bool isDeleting = false)
     {
-        ContentDialog dialog = new()
+        Page? dialogContent;
+
+        if (model is not null)
+        {
+            dialogContent = DialogFormHelper.GetFormWithData(typeof(TForm), model, isDeleting);
+        }
+        else
+        {
+            dialogContent = (Page?)Activator.CreateInstance(typeof(TForm));
+        }
+
+        var dialog = BuildContentDialog(dialogTitle, dialogContent);
+
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary && dialogContent is not null)
+        {
+            OnSaved?.Invoke(this, new DialogServiceEventArgs(dialogContent));
+        }
+    }
+
+    private ContentDialog BuildContentDialog(string dialogTitle, Page? dialogContent)
+    {
+        ContentDialog contentDialog = new()
         {
             XamlRoot = _root,
             Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Add Account",
+            Title = dialogTitle,
             PrimaryButtonText = "Save",
             CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new AddAccountCommand(),
-            Content = new AccountForm()
+            Content = dialogContent
         };
-        await dialog.ShowAsync();
+
+        return contentDialog;
     }
-    //-------------------------------------------------
-
-    public async void AddCategoryGroupDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Add Category Group",
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new AddCategoryGroupCommand(),
-            Content = new AddCategoryGroupForm()
-        };
-        await dialog.ShowAsync();
-    }
-
-    public async void DeleteCategoryGroupDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Delete Category Group",
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new DeleteCategoryGroupCommand(),
-            Content = new DeleteCategoryGroupForm()
-        };
-        await dialog.ShowAsync();
-    }
-
-    public async void EditCategoryGroupDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Edit Category Group",
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new EditCategoryGroupCommand(),
-            Content = new EditCategoryGroupForm()
-        };
-        await dialog.ShowAsync();
-
-    }
-
-    public async void AddAccountDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Add Account",
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new AddAccountCommand(),
-            Content = new AccountForm()
-        };
-        await dialog.ShowAsync();
-    }
-
-    public async void AddExpenseDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Add Expense",
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new AddAccountCommand(),
-            Content = new ExpenseForm()
-        };
-        await dialog.ShowAsync();
-    }
-
-    public async void EditExpenseDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Edit Expense",
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new EditExpenseCommand(),
-            Content = new ExpenseForm()
-        };
-        await dialog.ShowAsync();
-    }
-
-    public async void DeleteExpenseDialog()
-    {
-        ContentDialog dialog = new()
-        {
-            XamlRoot = _root,
-            Style = App.Current.Resources["DefaultContentDialogStyle"] as Style,
-            Title = "Delete Expense",
-            PrimaryButtonText = "Confirm",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonCommand = new DeleteExpenseCommand(),
-            Content = new DeleteExpenseForm()
-        };
-        await dialog.ShowAsync();
-    }
-
-    public void DeleteAccountDialog() => throw new NotImplementedException();
 }

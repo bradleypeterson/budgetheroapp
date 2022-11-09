@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace DesktopApplication.Contracts.Data;
 public interface IRepository<T> where T : class
@@ -22,11 +17,11 @@ public interface IRepository<T> where T : class
 
     Task<IEnumerable<T?>> ListAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, int>> orderBy = null!, string? includes = null);
 
-    void Add(T entity);
+    Task<int> AddAsync(T entity);
 
-    void Delete(T entity);
+    Task DeleteAsync(T entity);
 
     void Delete(IEnumerable<T> entities);
 
-    void Update(T entity);
+    Task Update(T entity);
 }

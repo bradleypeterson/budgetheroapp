@@ -29,7 +29,7 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Transaction" Margin="20,20,150,20" HorizontalAlignment="Right" Command="{x:Bind ViewModel.AddExpenseDialogCommand}" />
+                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Transaction" Margin="20,20,150,20" HorizontalAlignment="Right" />
                     <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
                 </Grid>
@@ -85,8 +85,8 @@
 
             <!-- This is the stack panel that contains editing buttons-->
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <Button x:Name="EditTransaction_Btn" Content="Edit Transaction" HorizontalAlignment="Center" Width="137" Margin="5 0 10 0" Command="{x:Bind ViewModel.EditExpenseDialogCommand}" />
-                <Button x:Name="DeleteTransaction_Btn" Content="Delete Transaction" HorizontalAlignment="Center" Width="137" Command="{x:Bind ViewModel.DeleteExpenseDialogCommand}" />
+                <Button x:Name="EditTransaction_Btn" Content="Edit Transaction" HorizontalAlignment="Center" Width="137" Margin="5 0 10 0" />
+                <Button x:Name="DeleteTransaction_Btn" Content="Delete Transaction" HorizontalAlignment="Center" Width="137" />
             </StackPanel>
 
             <!-- this is the data grid for the bank account items-->

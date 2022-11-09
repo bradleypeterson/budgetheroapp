@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using DesktopApplication.Contracts.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,16 +32,16 @@ public class Repository<T> : IRepository<T> where T : class
         return query.ToList();
     }
 
-    public void Add(T entity)
+    public async virtual Task<int> AddAsync(T entity)
     {
         dbContext.Set<T>().Add(entity);
-        dbContext.SaveChanges();
+        return await dbContext.SaveChangesAsync();
     }
 
-    public void Delete(T entity)
+    public async Task DeleteAsync(T entity)
     {
         dbContext.Set<T>().Remove(entity);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
     public void Delete(IEnumerable<T> entities)
@@ -237,9 +232,9 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public void Update(T entity)
+    public async Task Update(T entity)
     {
         dbContext.Entry(entity).State = EntityState.Modified;
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 }

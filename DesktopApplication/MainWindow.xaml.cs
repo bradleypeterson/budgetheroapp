@@ -1,6 +1,4 @@
 ﻿using DesktopApplication.Helpers;
-using Microsoft.UI.Xaml.Controls;
-using Windows.Storage;
 
 namespace DesktopApplication;
 

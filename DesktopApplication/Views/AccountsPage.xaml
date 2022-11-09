@@ -5,9 +5,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:converters="using:DesktopApplication.Converters"
+    xmlns:viemodels="using:DesktopApplication.ViewModels.Models"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <converters:DecimalToStringConverter
+                x:Name="DecimalToStringConverter"
+                Format="C2"/>
+        </ResourceDictionary>
+    </Page.Resources>
     <Grid x:Name="ContentArea">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -22,7 +31,8 @@
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Margin="20" Command="{x:Bind ViewModel.AddAccountDialogCommand}" Content="Add Account"/>
+                    <Button Content="Add Account" Margin="20" 
+                            Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
                 </StackPanel>
             </Border>
 
@@ -30,18 +40,18 @@
             <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
                 <controls:DataGrid x:Name="Accounts_Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
-                                   GridLinesVisibility="All" SelectionMode="Single">
-                    
+                                   GridLinesVisibility="All" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.BankAccounts, Mode=OneWay}"
+                                   SelectedItem="{x:Bind ViewModel.SelectedBankAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Black"/>
                         </Style>
                     </controls:DataGrid.Resources>
-
                     <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Account Name" Width="2*" Binding="{Binding AccountName}"/>
+                        <controls:DataGridTextColumn Header="Account Name" Width="2*" Binding="{Binding BankName}"/>
                         <controls:DataGridTextColumn Header="Account Type" Width="2*" Binding="{Binding AccountType}"/>
-                        <controls:DataGridTextColumn Header="Balance" Width="2*" Binding="{Binding AccountBalance}"/>
+                        <controls:DataGridTextColumn Header="Balance" Width="2*" Binding="{Binding Balance, Converter={StaticResource DecimalToStringConverter}}"/>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
             </StackPanel>
@@ -65,8 +75,14 @@
                 <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
             </Border>
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button Margin="10" Content="Edit Account"/>
-                <Button Margin="10" Content="Delete Account"/>
+                <Button Margin="10" 
+                        Content="Edit Account" 
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Command="{x:Bind ViewModel.ShowEditDialogCommand}"/>
+                <Button Margin="10" 
+                        Content="Delete Account"
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Command="{x:Bind ViewModel.ShowDeleteDialogCommand}"/>
             </StackPanel>
         </Grid>
       </Grid>

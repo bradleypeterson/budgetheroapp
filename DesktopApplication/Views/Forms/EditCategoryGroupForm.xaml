@@ -42,7 +42,6 @@
                     <!--PLACEHOLDER --><x:String>Item2</x:String>
                     <!--PLACEHOLDER --><x:String>Item3</x:String>
             </ComboBox>
-
         </StackPanel>
         
     </Grid>

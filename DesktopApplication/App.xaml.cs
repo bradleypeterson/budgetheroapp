@@ -8,6 +8,8 @@ using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
+using DesktopApplication.ViewModels.Forms;
+using DesktopApplication.ViewModels.Models;
 using DesktopApplication.Views;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -61,6 +63,9 @@ public partial class App : Application
 
             // Other Activation Handlers
 
+            // Data Context
+            services.AddDbContext<BudgetAppContext>();
+
             // Services
             services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
@@ -70,8 +75,9 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
 
+            services.AddSingleton<ISessionService, SessionService>();
             services.AddTransient<IDialogService, DialogService>();
-            services.AddDbContext<BudgetAppContext>();
+            services.AddTransient<IPasswordService, PasswordService>();
             services.AddScoped<IDataStore, DataStore>();
 
             // Core Services
@@ -94,6 +100,10 @@ public partial class App : Application
             services.AddTransient<LoginPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
+
+            // Form View Models
+            services.AddTransient<BankAccountFormViewModel>();
+            services.AddTransient<DeleteItemViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

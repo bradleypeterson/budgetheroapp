@@ -58,9 +58,9 @@
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="AddCategoryButton" Command="{x:Bind ViewModel.AddCategoryGroupDialogCommand}" Margin="20" Content="Add Category Group"/>
-                    <Button x:Name="EditCategoryButton" Command="{x:Bind ViewModel.EditCategoryGroupDialogCommand}" Margin="20" Content="Edit Category Group"/>
-                    <Button x:Name="DeleteCategoryButton" Command="{x:Bind ViewModel.DeleteCategoryGroupDialogCommand}" Margin="20" Content="Delete Category Group"/>
+                    <Button x:Name="AddCategoryButton" Margin="20" Content="Add Category Group"/>
+                    <Button x:Name="EditCategoryButton" Margin="20" Content="Edit Category Group"/>
+                    <Button x:Name="DeleteCategoryButton" Margin="20" Content="Delete Category Group"/>
                 </StackPanel>
             </Border>
 

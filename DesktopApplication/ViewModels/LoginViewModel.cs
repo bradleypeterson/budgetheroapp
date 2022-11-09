@@ -1,19 +1,106 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DesktopApplication.Commands;
+using CommunityToolkit.Mvvm.Input;
+using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 
 namespace DesktopApplication.ViewModels;
 
 public class LoginViewModel : ObservableRecipient
 {
-    public ICommand NavigateCommand { get; }
-    public ICommand DashboardCommand { get; }
+    private readonly INavigationService _navigationService;
+    private readonly ISessionService _sessionService;
+    private readonly IDataStore _dataStore;
+    private readonly IPasswordService _passwordService;
 
     public LoginViewModel()
     {
-        var _navigationService = App.GetService<INavigationService>();
-        NavigateCommand = new NavigateCommand(_navigationService, typeof(RegistrationViewModel).FullName!);
-        DashboardCommand = new NavigateCommand(_navigationService, typeof(AccountsViewModel).FullName!);
+        _navigationService = App.GetService<INavigationService>();
+        _sessionService = App.GetService<ISessionService>();
+        _dataStore = App.GetService<IDataStore>();
+        _passwordService = App.GetService<IPasswordService>();
+        SignUpCommand = new RelayCommand(NavigateToSignUpView);
+        LoginCommand = new AsyncRelayCommand(Login);
+        IsFormComplete = false;
+        IsSubmitting = false;
+    }
+
+    public ICommand SignUpCommand { get; }
+
+    public IAsyncRelayCommand LoginCommand { get; }
+
+    private string? _username;
+    public string? Username
+    {
+        get => _username;
+        set
+        {
+            _username = value;
+            ValidateFormCompletion();
+        }
+    }
+
+    private string? _password;
+    public string? Password
+    {
+        get => _password;
+        set
+        {
+            _password = value;
+            ValidateFormCompletion();
+        }
+    }
+    private bool _isSubmitting;
+    public bool IsSubmitting
+    {
+        get => _isSubmitting;
+        set => SetProperty(ref _isSubmitting, value);
+    }
+    public bool IsFormComplete { get; set; }
+    public bool CanLogin => HasUsername && HasPassword && !LoginCommand.IsRunning;
+    private bool HasUsername => !string.IsNullOrEmpty(Username);
+    private bool HasPassword => !string.IsNullOrEmpty(Password);
+
+    private async Task Login()
+    {
+        var existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
+
+        await Task.Delay(1500);
+
+        if (existingUser is not null)
+        {
+            var isValidPassword = _passwordService.VerifyPassword(_password!, existingUser.Password!);
+
+            if (isValidPassword)
+            {
+                Debug.WriteLine("You have successfully logged in!");
+                _sessionService.CreateSession(existingUser);
+                _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
+            }
+            else
+            {
+                Debug.WriteLine("Invalid username or password.");
+            }
+        }
+        else
+        {
+            Debug.WriteLine("Invalid username or password.");
+        }
+    }
+
+    private void NavigateToSignUpView() => _navigationService.NavigateTo(typeof(RegistrationViewModel).FullName!);
+
+    private void ValidateFormCompletion()
+    {
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            IsFormComplete = true;
+        }
+        else
+        {
+            IsFormComplete = false;
+        }
+        OnPropertyChanged(nameof(IsFormComplete));
     }
 }
