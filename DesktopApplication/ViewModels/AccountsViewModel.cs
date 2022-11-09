@@ -5,8 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
+using DesktopApplication.Models;
 using DesktopApplication.ViewModels.Forms;
-using DesktopApplication.ViewModels.Models;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 
@@ -32,10 +32,10 @@ public class AccountsViewModel : ObservableRecipient
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
-    public ObservableCollection<BankAccountViewModel> BankAccounts { get; set; } = new();
+    public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
 
-    private BankAccountViewModel? _selectedBankAccount;
-    public BankAccountViewModel? SelectedBankAccount
+    private ObservableBankAccount? _selectedBankAccount;
+    public ObservableBankAccount? SelectedBankAccount
     {
         get => _selectedBankAccount;
         set
@@ -70,7 +70,7 @@ public class AccountsViewModel : ObservableRecipient
         {
             foreach (var bankAccount in bankAccounts)
             {
-                BankAccounts.Add(new BankAccountViewModel(bankAccount!));
+                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
             }
         }
     }
@@ -116,7 +116,7 @@ public class AccountsViewModel : ObservableRecipient
 
         if (result == 1)
         {
-            BankAccounts.Add(new BankAccountViewModel(newBankAccount));
+            BankAccounts.Add(new ObservableBankAccount(newBankAccount));
         }
     }
 

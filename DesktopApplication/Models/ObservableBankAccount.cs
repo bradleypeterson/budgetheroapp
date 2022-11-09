@@ -2,10 +2,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using ModelsLibrary;
 
-namespace DesktopApplication.ViewModels.Models;
-public class BankAccountViewModel : ObservableRecipient
+namespace DesktopApplication.Models;
+public class ObservableBankAccount : ObservableObject
 {
-    public BankAccountViewModel(BankAccount bankAccount)
+    public ObservableBankAccount(BankAccount bankAccount)
     {
         BankAccount = bankAccount;
     }
