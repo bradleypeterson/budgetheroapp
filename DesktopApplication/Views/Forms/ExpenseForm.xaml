@@ -18,14 +18,19 @@
             <RadioButton x:Name="DepositRadButton" Content="Deposit" Checked="RadioButton_Checked"/>
         </RadioButtons>
 
-        <!-- Panel for adding an expense -->
+        <!-- Panel for adding an transaction -->
         <StackPanel x:Name="ExpensePanel" Grid.Row="1" Visibility="Collapsed">
             <TextBox x:Name="ExpenseName" Header="Name:" />
             <CalendarDatePicker x:Name="ExpenseDate" Header="Date:"/>
             <TextBox x:Name="ExpenseAmount" Header="Amount:" PlaceholderText="Enter Amount"/>
 
+            <TextBlock Text="Bank Account:"/>
+            <ComboBox x:Name="TransBankAccountCombo" PlaceholderText="Select Bank Account">
+                <x:String>America First Savings</x:String>
+                <x:String>America First Checking</x:String>
+            </ComboBox>
+
             <TextBlock Text="Category"/>
-            
             <ComboBox x:Name="ExpenseCategoryCombo" PlaceholderText="Select Category">
                 <!--TODO: This combo box will populate with all available category ITEMS, that way in can be placed in the correct category group-->
                 <x:String>Item1</x:String>
@@ -43,7 +48,7 @@
             <TextBox x:Name="DepositName" Header="Name:" />
 
             <TextBlock Text="Bank Account:"/>
-            <ComboBox x:Name="BankAccountCombo" PlaceholderText="Select Bank Account">
+            <ComboBox x:Name="DepositBankAccountCombo" PlaceholderText="Select Bank Account">
                 <x:String>America First Savings</x:String>
                 <x:String>America First Checking</x:String>
             </ComboBox>

@@ -130,7 +130,7 @@
     <value>Budget</value>
   </data>
   <data name="Shell_Expense.Content" xml:space="preserve">
-    <value>Expenses</value>
+    <value>Transactions</value>
   </data>
   <data name="Shell_Profile.Content" xml:space="preserve">
     <value>Profile</value>
