@@ -23,7 +23,8 @@ public class BudgetAppContext : DbContext
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
         DbPath = System.IO.Path.Join(path, "budgetherodesktop.db");
-        Database.EnsureCreated();
+        //Database.EnsureCreated();
+        //Database.EnsureDeleted();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
