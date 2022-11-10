@@ -43,7 +43,7 @@ namespace DesktopApplication.Migrations
                     BudgetCategoryID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CategoryName = table.Column<string>(type: "TEXT", nullable: false),
-                    CategoryAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    CategoryAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false, defaultValue: 0m),
                     BudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -136,6 +136,106 @@ namespace DesktopApplication.Migrations
                         principalColumn: "BudgetCategoryID",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategoryGroups",
+                columns: new[] { "BudgetCategoryGroupID", "CategoryGroupDesc" },
+                values: new object[] { 1, "Housing" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategoryGroups",
+                columns: new[] { "BudgetCategoryGroupID", "CategoryGroupDesc" },
+                values: new object[] { 2, "Living Expenses" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategoryGroups",
+                columns: new[] { "BudgetCategoryGroupID", "CategoryGroupDesc" },
+                values: new object[] { 3, "Entertainment" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategoryGroups",
+                columns: new[] { "BudgetCategoryGroupID", "CategoryGroupDesc" },
+                values: new object[] { 4, "Savings Goals" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 1, 1, "Mortgage" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 2, 1, "HOA Dues" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 3, 1, "Lawn Care" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 4, 1, "Homeowners Insurance" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 5, 2, "Restaurants" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 6, 2, "Groceries" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 7, 2, "Coffee Shops" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 8, 2, "Bars" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 9, 3, "Air Travel" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 10, 3, "Hotel" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 11, 3, "Rental Car" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 12, 3, "Movies" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 13, 4, "Car" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 14, 4, "Vacation" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 15, 4, "Retirement" });
+
+            migrationBuilder.InsertData(
+                table: "BudgetCategories",
+                columns: new[] { "BudgetCategoryID", "BudgetCategoryGroupID", "CategoryName" },
+                values: new object[] { 16, 4, "Wedding" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BankAccounts_UserId",

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesktopApplication.Migrations
 {
     [DbContext(typeof(BudgetAppContext))]
-    [Migration("20221110021756_Initial")]
+    [Migration("20221110052316_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,8 +76,10 @@ namespace DesktopApplication.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("CategoryAmount")
+                        .ValueGeneratedOnAdd()
                         .HasPrecision(18, 2)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(0m);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -88,6 +90,120 @@ namespace DesktopApplication.Migrations
                     b.HasIndex("BudgetCategoryGroupID");
 
                     b.ToTable("BudgetCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            BudgetCategoryID = 1,
+                            BudgetCategoryGroupID = 1,
+                            CategoryAmount = 0m,
+                            CategoryName = "Mortgage"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 2,
+                            BudgetCategoryGroupID = 1,
+                            CategoryAmount = 0m,
+                            CategoryName = "HOA Dues"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 3,
+                            BudgetCategoryGroupID = 1,
+                            CategoryAmount = 0m,
+                            CategoryName = "Lawn Care"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 4,
+                            BudgetCategoryGroupID = 1,
+                            CategoryAmount = 0m,
+                            CategoryName = "Homeowners Insurance"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 5,
+                            BudgetCategoryGroupID = 2,
+                            CategoryAmount = 0m,
+                            CategoryName = "Restaurants"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 6,
+                            BudgetCategoryGroupID = 2,
+                            CategoryAmount = 0m,
+                            CategoryName = "Groceries"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 7,
+                            BudgetCategoryGroupID = 2,
+                            CategoryAmount = 0m,
+                            CategoryName = "Coffee Shops"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 8,
+                            BudgetCategoryGroupID = 2,
+                            CategoryAmount = 0m,
+                            CategoryName = "Bars"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 9,
+                            BudgetCategoryGroupID = 3,
+                            CategoryAmount = 0m,
+                            CategoryName = "Air Travel"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 10,
+                            BudgetCategoryGroupID = 3,
+                            CategoryAmount = 0m,
+                            CategoryName = "Hotel"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 11,
+                            BudgetCategoryGroupID = 3,
+                            CategoryAmount = 0m,
+                            CategoryName = "Rental Car"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 12,
+                            BudgetCategoryGroupID = 3,
+                            CategoryAmount = 0m,
+                            CategoryName = "Movies"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 13,
+                            BudgetCategoryGroupID = 4,
+                            CategoryAmount = 0m,
+                            CategoryName = "Car"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 14,
+                            BudgetCategoryGroupID = 4,
+                            CategoryAmount = 0m,
+                            CategoryName = "Vacation"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 15,
+                            BudgetCategoryGroupID = 4,
+                            CategoryAmount = 0m,
+                            CategoryName = "Retirement"
+                        },
+                        new
+                        {
+                            BudgetCategoryID = 16,
+                            BudgetCategoryGroupID = 4,
+                            CategoryAmount = 0m,
+                            CategoryName = "Wedding"
+                        });
                 });
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategoryGroup", b =>
@@ -103,6 +219,28 @@ namespace DesktopApplication.Migrations
                     b.HasKey("BudgetCategoryGroupID");
 
                     b.ToTable("BudgetCategoryGroups");
+
+                    b.HasData(
+                        new
+                        {
+                            BudgetCategoryGroupID = 1,
+                            CategoryGroupDesc = "Housing"
+                        },
+                        new
+                        {
+                            BudgetCategoryGroupID = 2,
+                            CategoryGroupDesc = "Living Expenses"
+                        },
+                        new
+                        {
+                            BudgetCategoryGroupID = 3,
+                            CategoryGroupDesc = "Entertainment"
+                        },
+                        new
+                        {
+                            BudgetCategoryGroupID = 4,
+                            CategoryGroupDesc = "Savings Goals"
+                        });
                 });
 
             modelBuilder.Entity("ModelsLibrary.Transaction", b =>

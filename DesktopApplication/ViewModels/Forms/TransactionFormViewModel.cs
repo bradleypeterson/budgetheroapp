@@ -68,7 +68,7 @@ public class TransactionFormViewModel : ObservableRecipient
     {
         if (BankAccounts.Any()) return;
 
-        var _usersBankAccounts = await _dataStore.BankAccount
+        IEnumerable<BankAccount?>? _usersBankAccounts = await _dataStore.BankAccount
             .ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
 
         if (_usersBankAccounts is not null)
@@ -81,7 +81,7 @@ public class TransactionFormViewModel : ObservableRecipient
 
         if (BudgetCategories.Any()) return;
 
-        var _userCategories = _dataStore.BudgetCategory.List();
+        IEnumerable<BudgetCategory>? _userCategories = _dataStore.BudgetCategory.List();
 
         if (_userCategories is not null)
         {
