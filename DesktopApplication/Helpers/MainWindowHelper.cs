@@ -18,7 +18,7 @@ public class MainWindowHelper
 
     public static void ResizeWindow(Page pageType)
     {
-        const double PERCENT_HEIGHT_LOGIN = .60;
+        const double PERCENT_HEIGHT_LOGIN = .63;
         const double PERCENT_WIDTH_LOGIN_AND_REG = .23;
         const double PERCENT_HEIGHT_REG = .80;
         const double DEFAULT_HEIGHT = .75;
