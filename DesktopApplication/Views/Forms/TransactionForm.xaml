@@ -76,12 +76,6 @@
                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             
         </StackPanel>
-        
-        <!-- I Dont think we need this -AG -->
-        <!--<CheckBox Grid.Column="0" Grid.Row="6" Content="Is it pending?"/>-->
-        
-        <!-- Also, we don't need to check if it is visible to the household because we will handle all of that logic on the household budget page
-             no personal budget items will be visible to the household -AG -->
 
     </Grid>
 </Page>

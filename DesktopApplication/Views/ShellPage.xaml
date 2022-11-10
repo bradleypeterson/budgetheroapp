@@ -15,16 +15,27 @@
               Canvas.ZIndex="1"
               Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
               IsHitTestVisible="True"
-              VerticalAlignment="Top">
-            <!--<Image Source="/Assets/WindowIcon.ico"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Right"
+              Padding="0,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>                
+            </Grid.ColumnDefinitions>
+
+            
+            <Image Grid.Column ="0"  Source="/Assets/WindowIcon.ico"
                    HorizontalAlignment="Left"
                    Width="16"
-                   Height="16" />
-            <TextBlock x:Name="AppTitleBarText"
+                   Height="16" 
+                   />
+            <TextBlock Grid.Column="1" x:Name="AppTitleBarText"
                        VerticalAlignment="Center"
                        TextWrapping="NoWrap"
                        Style="{StaticResource CaptionTextBlockStyle}"
-                       Margin="28,0,0,0"/>-->
+                       Margin="28,0,0,0"/>
+            <Button Grid.Column="2" Content="Log Out" Margin="10,0,0,0"/>
         </Grid>
 
         <NavigationView
