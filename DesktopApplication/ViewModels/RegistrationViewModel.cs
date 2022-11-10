@@ -81,6 +81,7 @@ public class RegistrationViewModel : ObservableRecipient
             FirstName = _firstName,
             LastName = _lastName,
             EmailAddress = _email,
+            PercentageMod = 0,
             Username = _username,
             Password = hashedPassword
         };

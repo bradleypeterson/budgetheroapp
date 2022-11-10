@@ -13,4 +13,9 @@ public sealed partial class ExpensesPage : Page
         ViewModel = App.GetService<ExpensesViewModel>();
         InitializeComponent();
     }
+
+    private async void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        await ViewModel.LoadAsync();
+    }
 }

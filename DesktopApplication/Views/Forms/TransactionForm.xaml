@@ -5,59 +5,76 @@
     xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    xmlns:converters="using:DesktopApplication.Converters"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+    
+    <Page.Resources>
+        <ResourceDictionary>
+            <converters:DateToStringConverter
+                x:Name="DateToStringConverter"
+                Format="MM/dd/yyyy"/>
+            <converters:DatePickerConverter
+                x:Name="DatePickerConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="2.5*" />
         </Grid.RowDefinitions>
         
-        <RadioButtons x:Name="TransactionType" Grid.Row="0" SelectedIndex="0" MaxColumns="2" Header="Select one of the following:">
-            <RadioButton x:Name="ExpenseRadButton" Content="Expense" Checked="RadioButton_Checked"/>
-            <RadioButton x:Name="DepositRadButton" Content="Deposit" Checked="RadioButton_Checked"/>
+        <RadioButtons x:Name="TransactionType" Grid.Row="0" SelectedIndex="0" MaxColumns="2" Header="Transaction Type:">
+            <RadioButton x:Name="ExpenseRadButton" Content="Expense"
+                         IsChecked="{x:Bind ViewModel.HasExpenseChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <RadioButton x:Name="DepositRadButton" Content="Deposit"
+                         IsChecked="{x:Bind ViewModel.HasDepositChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </RadioButtons>
 
-        <!-- Panel for adding an expense -->
-        <StackPanel x:Name="ExpensePanel" Grid.Row="1" Visibility="Collapsed">
-            <TextBox x:Name="ExpenseName" Header="Name:" />
-            <CalendarDatePicker x:Name="ExpenseDate" Header="Date:"/>
-            <TextBox x:Name="ExpenseAmount" Header="Amount:" PlaceholderText="Enter Amount"/>
+        <StackPanel x:Name="TransactionInputPanel" Grid.Row="1">
+
+            <CalendarDatePicker x:Name="TransactionDatePicker" 
+                                Header="Date:"
+                                Date="{x:Bind ViewModel.ObservableTransaction.TransactionDate, 
+                                              Converter={StaticResource DatePickerConverter}}"/>
+
+            <TextBox x:Name="TransactionPayeeTextBox" 
+                     Header="Payee:" 
+                     PlaceholderText="Enter Payee"
+                     Text="{x:Bind ViewModel.ObservableTransaction.TransactionPayee, 
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBox x:Name="ExpenseAmount" Header="Amount:" 
+                     PlaceholderText="Enter Amount"
+                     Visibility="{x:Bind ViewModel.HasExpenseChecked, Mode=OneWay}"
+                     Text="{x:Bind ViewModel.ObservableTransaction.ExpenseAmount,
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBox x:Name="DepositAmount" Header="Amount:" 
+                     PlaceholderText="Enter Amount"
+                     Visibility="{x:Bind ViewModel.HasDepositChecked, Mode=OneWay}"
+                     Text="{x:Bind ViewModel.ObservableTransaction.DepositAmount,
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Text="Bank Account:"/>
-            <ComboBox x:Name="ExpenseBankAccountCombo" PlaceholderText="Select Bank Account">
-                <x:String>America First Savings</x:String>
-                <x:String>America First Checking</x:String>
-            </ComboBox>
+
+            <ComboBox x:Name="BankAccountComboBox" PlaceholderText="Select Bank Account"
+                      SelectedItem="{x:Bind ViewModel.SelectedBankAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{x:Bind ViewModel.BankAccounts}"
+                      DisplayMemberPath="BankName"/>
 
             <TextBlock Text="Category"/>
-            <ComboBox x:Name="ExpenseCategoryCombo" PlaceholderText="Select Category">
-                <!--TODO: This combo box will populate with all available category ITEMS, that way in can be placed in the correct category group-->
-                <x:String>Item1</x:String>
-                <x:String>Item2</x:String>
-                <x:String>Item3</x:String>
-            </ComboBox>
 
-            <TextBox x:Name="ExpensePayee" Header="Payee:" PlaceholderText="Enter Payee"/>
-            
-            <TextBox x:Name="ExpenseMemo" Header="Memo:" TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"/>
-        </StackPanel>
-        
-        <!-- Panel for adding a deposit -->
-        <StackPanel x:Name="DepositPanel" Grid.Row="1" Visibility="Collapsed">
-            <TextBox x:Name="DepositName" Header="Name:" />
+            <ComboBox x:Name="ExpenseCategoryCombo" PlaceholderText="Select Category"
+                      SelectedItem="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{x:Bind ViewModel.BudgetCategories}"
+                      DisplayMemberPath="CategoryName"/>
 
-            <TextBlock Text="Bank Account:"/>
-            <ComboBox x:Name="DepositBankAccountCombo" PlaceholderText="Select Bank Account">
-                <x:String>America First Savings</x:String>
-                <x:String>America First Checking</x:String>
-            </ComboBox>
+            <TextBox x:Name="TransactionMemo" Header="Memo:" 
+                     TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"
+                     Text="{x:Bind ViewModel.ObservableTransaction.TransactionMemo, 
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             
-            <CalendarDatePicker x:Name="DepositDate" Header="Date:"/>
-            
-            <TextBox x:Name="DepositAmount" Header="Amount:" PlaceholderText="Enter Amount"/>
-            
-            <TextBox x:Name="DepositMemo" Header="Memo:" TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"/>
         </StackPanel>
         
         <!-- I Dont think we need this -AG -->

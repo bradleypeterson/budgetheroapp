@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -22,30 +23,18 @@ namespace DesktopApplication.Views.Forms;
 /// </summary>
 public sealed partial class TransactionForm : Page
 {
+    public TransactionFormViewModel ViewModel
+    {
+        get;
+    }
     public TransactionForm()
     {
-        this.InitializeComponent();
-        ExpenseDate.Date = DateTime.Now;
-        DepositDate.Date = DateTime.Now;
+        ViewModel = App.GetService<TransactionFormViewModel>();
+        InitializeComponent();
     }
 
-    private void RadioButton_Checked(object sender, RoutedEventArgs e)
+    private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        var radButton = sender as RadioButton;
-
-        if (radButton is not null)
-        {
-            if (radButton.Content.ToString() == "Expense")
-            {
-                ExpensePanel.Visibility = Visibility.Visible;
-               DepositPanel.Visibility = Visibility.Collapsed;
-            }
-            else if (radButton.Content.ToString() == "Deposit")
-            {
-                DepositPanel.Visibility = Visibility.Visible;
-                ExpensePanel.Visibility = Visibility.Collapsed;
-            }
-        }
+        await ViewModel.LoadAsync();
     }
-
 }

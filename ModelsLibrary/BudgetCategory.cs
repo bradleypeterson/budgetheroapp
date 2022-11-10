@@ -13,7 +13,7 @@ namespace ModelsLibrary
         public int BudgetCategoryID { get; set; }
 
         [Required]
-        public string CategoryName { get; set; } = null!;
+        public string? CategoryName { get; set; }
 
         [Precision(18,2)]
         public decimal CategoryAmount { get; set; }
@@ -22,7 +22,6 @@ namespace ModelsLibrary
         public int BudgetCategoryGroupID { get; set; }
 
         [Required]
-        public BudgetCategoryGroup BudgetCategoryGroup { get; set; } = null!;
-
+        public BudgetCategoryGroup? BudgetCategoryGroup { get; set; }
     }
 }

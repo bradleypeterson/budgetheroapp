@@ -178,7 +178,7 @@ namespace DesktopApplication.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("PercentageMod")
+                    b.Property<double>("PercentageMod")
                         .HasColumnType("REAL");
 
                     b.Property<string>("UserImageLink")

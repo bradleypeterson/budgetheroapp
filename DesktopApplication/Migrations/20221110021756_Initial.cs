@@ -66,7 +66,7 @@ namespace DesktopApplication.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    PercentageMod = table.Column<double>(type: "REAL", nullable: true),
+                    PercentageMod = table.Column<double>(type: "REAL", nullable: false),
                     Username = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     UserImageLink = table.Column<string>(type: "TEXT", nullable: true),

@@ -4,7 +4,6 @@ using DesktopApplication.Contracts.Services;
 using DesktopApplication.Core.Contracts.Services;
 using DesktopApplication.Core.Services;
 using DesktopApplication.Data;
-using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
@@ -15,7 +14,6 @@ using DesktopApplication.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-using Windows.Storage;
 
 namespace DesktopApplication;
 
@@ -103,6 +101,7 @@ public partial class App : Application
 
             // Form View Models
             services.AddTransient<BankAccountFormViewModel>();
+            services.AddTransient<TransactionFormViewModel>();
             services.AddTransient<DeleteItemViewModel>();
 
             // Configuration

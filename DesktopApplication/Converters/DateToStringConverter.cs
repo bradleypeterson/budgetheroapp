@@ -1,8 +1,13 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 
 namespace DesktopApplication.Converters;
-public sealed class DecimalToStringConverter : IValueConverter
+public class DateToStringConverter : IValueConverter
 {
     public static readonly DependencyProperty FormatProperty =
         DependencyProperty.Register(nameof(Format), typeof(bool), typeof(DecimalToStringConverter), new PropertyMetadata("G"));
@@ -11,24 +16,20 @@ public sealed class DecimalToStringConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is decimal d && value != null)
+        if (value is DateTime datetime && value is not null)
         {
-            if (d == 0) { return string.Empty; }
-            return d.ToString(Format);
+            return datetime.ToString(Format);
         }
-
         return null!;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        if (value is string s && value != null)
+        if (value is string dateString && value is not null)
         {
-            decimal d;
-            if (s == string.Empty) { return 0; }
-            if (Decimal.TryParse(s, out d)) { return d; }
+            return DateTime.Parse(dateString);
         }
 
-        return -1;
+        return null!;
     }
 }

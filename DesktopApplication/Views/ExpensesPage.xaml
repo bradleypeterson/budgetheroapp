@@ -5,7 +5,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    mc:Ignorable="d">
+    xmlns:converters="using:DesktopApplication.Converters"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <converters:DateToStringConverter
+                x:Name="DateToStringConverter"
+                Format="MM/dd/yyyy"/>
+            <converters:DecimalToStringConverter
+                x:Name="DecimalToStringConverter"
+                Format="C2"/>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid x:Name="ContentArea">
         <Grid.ColumnDefinitions>
@@ -29,7 +42,10 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddExpense_Btn" Grid.Column="0" Content="Add Transaction" Margin="20,20,150,20" HorizontalAlignment="Right" />
+                    <Button x:Name="AddExpense_Btn" Grid.Column="0" 
+                            Content="Add Transaction" Margin="20,20,150,20" 
+                            HorizontalAlignment="Right" 
+                            Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
                     <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
                 </Grid>
@@ -39,7 +55,9 @@
             <StackPanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="2">
                 <controls:DataGrid x:Name="TransactionData" AutoGenerateColumns="False" IsReadOnly="False" CanUserReorderColumns="True" 
                                    CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
-                                   GridLinesVisibility="All" SelectionMode="Extended">
+                                   GridLinesVisibility="All" SelectionMode="Extended"
+                                   ItemsSource="{x:Bind ViewModel.Transactions, Mode=OneWay}"
+                                   SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
@@ -48,11 +66,21 @@
                     </controls:DataGrid.Resources>
 
                     <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Date" Width="1*" Binding="{Binding Date}"/>
-                        <controls:DataGridTextColumn Header="Transaction" Width="2*" Binding="{Binding Item}"/>
-                        <controls:DataGridTextColumn Header="Amount" Width="1*" Binding="{Binding Amount}"/>
-                        <controls:DataGridTextColumn Header="Category" Width="1*" Binding="{Binding Category}"/>
-                        <controls:DataGridTextColumn Header="Payee" Width="2*" Binding="{Binding Payee}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Date" Width="1*" 
+                            Binding="{Binding TransactionDate, Converter={StaticResource DateToStringConverter}}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Payee" Width="2*" 
+                            Binding="{Binding TransactionPayee}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Category" Width="1*" Binding="{Binding CategoryName}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Memo" Width="2*" 
+                            Binding="{Binding TransactionMemo}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Outflow" Width="1*" Binding="{Binding ExpenseAmount, Converter={StaticResource DecimalToStringConverter}}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Inflow" Width="1*" Binding="{Binding DepositAmount, Converter={StaticResource DecimalToStringConverter}}"/>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
             </StackPanel>
@@ -85,8 +113,17 @@
 
             <!-- This is the stack panel that contains editing buttons-->
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <Button x:Name="EditTransaction_Btn" Content="Edit Transaction" HorizontalAlignment="Center" Width="137" Margin="5 0 10 0" />
-                <Button x:Name="DeleteTransaction_Btn" Content="Delete Transaction" HorizontalAlignment="Center" Width="137" />
+                <Button x:Name="EditTransaction_Btn" 
+                        Content="Edit Transaction" 
+                        HorizontalAlignment="Center" 
+                        Width="137" Margin="5 0 10 0" 
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Command="{x:Bind ViewModel.ShowEditDialogCommand}"/>
+                <Button x:Name="DeleteTransaction_Btn" 
+                        Content="Delete Transaction" 
+                        HorizontalAlignment="Center" Width="137"
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Command="{x:Bind ViewModel.ShowDeleteDialogCommand}"/>
             </StackPanel>
 
             <!-- this is the data grid for the bank account items-->
