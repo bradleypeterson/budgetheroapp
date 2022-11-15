@@ -13,5 +13,8 @@ namespace ModelsLibrary
 
         [Required]
         public string CategoryGroupDesc { get; set; } = null!;
+
+        [Required]
+        public ICollection<Budget>? Budgets { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DesktopApplication.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,6 +37,25 @@ namespace DesktopApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
+                    PercentageMod = table.Column<double>(type: "REAL", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    UserImageLink = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BudgetCategories",
                 columns: table => new
                 {
@@ -58,28 +77,27 @@ namespace DesktopApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "BudgetBudgetCategoryGroup",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    PercentageMod = table.Column<double>(type: "REAL", nullable: false),
-                    Username = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    UserImageLink = table.Column<string>(type: "TEXT", nullable: true),
-                    BudgetId = table.Column<int>(type: "INTEGER", nullable: true)
+                    BudgetCategoryGroupsBudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false),
+                    BudgetsBudgetId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_BudgetBudgetCategoryGroup", x => new { x.BudgetCategoryGroupsBudgetCategoryGroupID, x.BudgetsBudgetId });
                     table.ForeignKey(
-                        name: "FK_Users_Budgets_BudgetId",
-                        column: x => x.BudgetId,
+                        name: "FK_BudgetBudgetCategoryGroup_BudgetCategoryGroups_BudgetCategoryGroupsBudgetCategoryGroupID",
+                        column: x => x.BudgetCategoryGroupsBudgetCategoryGroupID,
+                        principalTable: "BudgetCategoryGroups",
+                        principalColumn: "BudgetCategoryGroupID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BudgetBudgetCategoryGroup_Budgets_BudgetsBudgetId",
+                        column: x => x.BudgetsBudgetId,
                         principalTable: "Budgets",
-                        principalColumn: "BudgetId");
+                        principalColumn: "BudgetId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,6 +117,30 @@ namespace DesktopApplication.Migrations
                     table.ForeignKey(
                         name: "FK_BankAccounts_Users_UserId",
                         column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BudgetUser",
+                columns: table => new
+                {
+                    BudgetsBudgetId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UsersUserId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BudgetUser", x => new { x.BudgetsBudgetId, x.UsersUserId });
+                    table.ForeignKey(
+                        name: "FK_BudgetUser_Budgets_BudgetsBudgetId",
+                        column: x => x.BudgetsBudgetId,
+                        principalTable: "Budgets",
+                        principalColumn: "BudgetId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BudgetUser_Users_UsersUserId",
+                        column: x => x.UsersUserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
@@ -143,9 +185,19 @@ namespace DesktopApplication.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BudgetBudgetCategoryGroup_BudgetsBudgetId",
+                table: "BudgetBudgetCategoryGroup",
+                column: "BudgetsBudgetId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BudgetCategories_BudgetCategoryGroupID",
                 table: "BudgetCategories",
                 column: "BudgetCategoryGroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BudgetUser_UsersUserId",
+                table: "BudgetUser",
+                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_BankAccountId",
@@ -156,17 +208,21 @@ namespace DesktopApplication.Migrations
                 name: "IX_Transactions_BudgetCategoryId",
                 table: "Transactions",
                 column: "BudgetCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_BudgetId",
-                table: "Users",
-                column: "BudgetId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BudgetBudgetCategoryGroup");
+
+            migrationBuilder.DropTable(
+                name: "BudgetUser");
+
+            migrationBuilder.DropTable(
                 name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
 
             migrationBuilder.DropTable(
                 name: "BankAccounts");
@@ -179,9 +235,6 @@ namespace DesktopApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "BudgetCategoryGroups");
-
-            migrationBuilder.DropTable(
-                name: "Budgets");
         }
     }
 }
