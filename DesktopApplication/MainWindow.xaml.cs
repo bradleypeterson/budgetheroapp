@@ -22,11 +22,12 @@ public sealed partial class MainWindow : WindowEx
 
         _datastore = App.GetService<IDataStore>();
 
-        Task.Run(TestAdd);
+        //Task.Run(TestAdd);
 
 
     }
 
+    /* test method for adding budgets */
     public async void TestAdd()
     {
         var newUser = _datastore.User.Get(u => u.UserId == 1, false, "Budgets");
