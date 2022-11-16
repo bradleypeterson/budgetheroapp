@@ -1,12 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
-using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 

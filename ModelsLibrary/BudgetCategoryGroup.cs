@@ -13,5 +13,10 @@ namespace ModelsLibrary
 
         [Required]
         public string CategoryGroupDesc { get; set; } = null!;
+
+        public static implicit operator string(BudgetCategoryGroup v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

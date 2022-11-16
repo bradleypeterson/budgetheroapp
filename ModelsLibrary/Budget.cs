@@ -13,7 +13,8 @@ namespace ModelsLibrary
 
         [Required]
         public string BudgetName { get; set; } = null!;
-
+        
+        /* remove later */
         [Required]
         public string BudgetType { get; set; } = null!;
 
