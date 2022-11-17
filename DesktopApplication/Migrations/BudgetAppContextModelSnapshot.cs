@@ -17,6 +17,36 @@ namespace DesktopApplication.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
+            modelBuilder.Entity("BudgetBudgetCategoryGroup", b =>
+                {
+                    b.Property<int>("BudgetCategoryGroupsBudgetCategoryGroupID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BudgetsBudgetId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BudgetCategoryGroupsBudgetCategoryGroupID", "BudgetsBudgetId");
+
+                    b.HasIndex("BudgetsBudgetId");
+
+                    b.ToTable("BudgetBudgetCategoryGroup");
+                });
+
+            modelBuilder.Entity("BudgetUser", b =>
+                {
+                    b.Property<int>("BudgetsBudgetId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UsersUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BudgetsBudgetId", "UsersUserId");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("BudgetUser");
+                });
+
             modelBuilder.Entity("ModelsLibrary.BankAccount", b =>
                 {
                     b.Property<int>("BankAccountId")
@@ -159,9 +189,6 @@ namespace DesktopApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("BudgetId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -190,9 +217,37 @@ namespace DesktopApplication.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("BudgetId");
-
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BudgetBudgetCategoryGroup", b =>
+                {
+                    b.HasOne("ModelsLibrary.BudgetCategoryGroup", null)
+                        .WithMany()
+                        .HasForeignKey("BudgetCategoryGroupsBudgetCategoryGroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelsLibrary.Budget", null)
+                        .WithMany()
+                        .HasForeignKey("BudgetsBudgetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BudgetUser", b =>
+                {
+                    b.HasOne("ModelsLibrary.Budget", null)
+                        .WithMany()
+                        .HasForeignKey("BudgetsBudgetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelsLibrary.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ModelsLibrary.BankAccount", b =>
@@ -234,18 +289,6 @@ namespace DesktopApplication.Migrations
                     b.Navigation("BankAccount");
 
                     b.Navigation("BudgetCategory");
-                });
-
-            modelBuilder.Entity("ModelsLibrary.User", b =>
-                {
-                    b.HasOne("ModelsLibrary.Budget", null)
-                        .WithMany("Users")
-                        .HasForeignKey("BudgetId");
-                });
-
-            modelBuilder.Entity("ModelsLibrary.Budget", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

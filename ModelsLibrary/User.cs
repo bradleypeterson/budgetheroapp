@@ -30,5 +30,7 @@ namespace ModelsLibrary
         public string? Password { get; set; }
 
         public string? UserImageLink { get; set; }
+
+        public ICollection<Budget>? Budgets { get; set; } 
     }
 }
