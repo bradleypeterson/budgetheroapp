@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
@@ -98,7 +99,7 @@ public class RegistrationViewModel : ObservableRecipient
 
     private void CreateNewUserBudget()
     {
-        var userBudgets = _dataStore.User.Get(u => u.UserId == 1, false, "Budgets");
+        User userBudgets = _dataStore.User.Get(u => u.UserId == 1, false, "Budgets");
         var newBudget = userBudgets.Budgets;
 
         Budget budget = new Budget

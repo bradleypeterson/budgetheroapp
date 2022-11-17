@@ -5,22 +5,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModel="using:DesktopApplication.ViewModels.Models"
+    xmlns:Model="using:DesktopApplication.Models"
     xmlns:customControls="using:DesktopApplication.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Page_Loaded">
 
     <Grid x:Name="ContentArea">
         <Grid.Resources>
             <DataTemplate x:Key="AccordianDataTemplate"
-                          x:DataType="viewModel:BudgetCategoryGroupViewModel">
-                <Expander Width="1225" Header="{x:Bind CategoryGroupDesc}">
+                          x:DataType="Model:ObservableCategoryGroup">
+                <Expander Width="1225" Header="{x:Bind CategoryGroupDesc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True"
                                        CanUserReorderColumns="False" BorderBrush="Black" 
                                        BorderThickness="2" GridLinesVisibility="Horizontal" 
                                        HeadersVisibility="Column" VerticalAlignment="Bottom"
                                        SelectionMode="Single" AlternatingRowBackground="LightCyan"
                                        SelectionChanged="DataGrid_SelectionChanged"
-                                       ItemsSource="{x:Bind BudgetCategories, Mode=OneWay}">
+                                       ItemsSource="{Binding shit}">
+                                       <!--ItemsSource="{x:Bind BudgetCategories, Mode=OneWay}">-->
                         <controls:DataGrid.Resources>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -58,7 +59,7 @@
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="AddCategoryButton" Margin="20" Content="Add Category Group"/>
+                    <Button x:Name="AddCategoryButton" Margin="20" Content="Add Category Group" Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
                     <Button x:Name="EditCategoryButton" Margin="20" Content="Edit Category Group"/>
                     <Button x:Name="DeleteCategoryButton" Margin="20" Content="Delete Category Group"/>
                 </StackPanel>
@@ -91,7 +92,7 @@
 
             </Border>
             
-            <!-- This is the stack panel for any buttons needed to manipulate the selected item in the work area -->
+            <!-- This is the stack panel for any buttons needed to manipulate the selected item in the work area if needed-->
             <StackPanel Orientation="Horizontal" Grid.Row="2">
                 
             </StackPanel>

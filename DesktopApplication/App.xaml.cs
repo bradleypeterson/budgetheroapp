@@ -103,6 +103,7 @@ public partial class App : Application
             services.AddTransient<BankAccountFormViewModel>();
             services.AddTransient<TransactionFormViewModel>();
             services.AddTransient<DeleteItemViewModel>();
+            services.AddTransient<CategoryGroupFormViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

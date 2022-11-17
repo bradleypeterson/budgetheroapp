@@ -4,9 +4,12 @@ using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
+using DesktopApplication.Services;
 using DesktopApplication.ViewModels.Models;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
+using System.Collections.ObjectModel;
+
 
 namespace DesktopApplication.ViewModels;
 
@@ -15,23 +18,18 @@ public class BudgetViewModel : ObservableRecipient
     private readonly ISessionService _sessionService;
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
-        
+
+    public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
     //public IAsyncRelayCommand ShowEditDialogCommand { get; }
     //public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
-    
-    public List<BudgetCategoryGroupViewModel> BudgetCategoryGroups { get; }
-    
-    
+
     public BudgetViewModel()
     {
         _sessionService = App.GetService<ISessionService>();
         _dialogService = App.GetService<IDialogService>();
         _dataStore = App.GetService<IDataStore>();
         
-        /* Remove */
-        BudgetCategoryGroups = GenerateSampleBudgetCategoryGroups();
-
         ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
         //ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
         //ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
@@ -41,19 +39,27 @@ public class BudgetViewModel : ObservableRecipient
     //Load Category Groups into an observable collection
     public async Task LoadAsync()
     {
-        //if (BankAccounts.Any())
-        //{
-        //    return;
-        //}
+        if (BudgetCategoryGroups.Any())
+        {
+            return;
+        }
 
-        //var bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
-        //if (bankAccounts is not null)
-        //{
-        //    foreach (var bankAccount in bankAccounts)
-        //    {
-        //        BankAccounts.Add(new ObservableBankAccount(bankAccount!));
-        //    }
-        //}
+        //var categoryGroups = await _dataStore.Budget.ListAsync(b => b. == _sessionService.GetSessionUserId());
+
+        int? userId = _sessionService.GetSessionUserId();
+        User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
+        var userBudgets = user?.Budgets;
+        Budget? budget = userBudgets?.ToList()[0];
+        int? budgetId = budget!.BudgetId;
+        Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
+
+        if (personalBudget.BudgetCategoryGroups is not null)
+        {
+            foreach (var categoryGroup in personalBudget.BudgetCategoryGroups)
+            {
+                BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
+            }
+        }
     }
 
     private static BudgetCategoryGroup GetCategoryGroup(DialogServiceEventArgs e)
@@ -74,13 +80,23 @@ public class BudgetViewModel : ObservableRecipient
 
     private async void AddCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
-        var newCategoryGroup = GetCategoryGroup(e);
+        BudgetCategoryGroup newCategoryGroup = GetCategoryGroup(e);
         
-       
-        
+        int? userId = _sessionService.GetSessionUserId();
+        User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
+        var userBudgets = user?.Budgets;
+        Budget? budget = userBudgets?.ToList()[0];
+        int? budgetId = budget!.BudgetId;   
+        Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
+        personalBudget!.BudgetCategoryGroups!.Add(newCategoryGroup);
 
+        var result = await _dataStore.BudgetCategoryGroup.AddAsync(newCategoryGroup);
 
+        if (result == 2)
+        {
+            BudgetCategoryGroups?.Add(new ObservableCategoryGroup(newCategoryGroup));
+        }
     }
 
     //private async Task ShowEditDialog()
@@ -129,8 +145,8 @@ public class BudgetViewModel : ObservableRecipient
     //    BankAccounts.Remove(_selectedBankAccount);
     //}
 
-
-    private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()
+    //REMOVE: TESTING//
+    private static List<BudgetCategoryGroupViewModel> GetBudgetCategoryGroups()
     {
         List<BudgetCategoryGroupViewModel> list = new()
         {

@@ -55,7 +55,6 @@
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
             </StackPanel>
-
         </Grid>
 
         <!-- This stack panel will show the details of any selected item from the work area -->
@@ -72,7 +71,8 @@
 
             <!-- This border contains the details textbox-->
             <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275"  CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
-                <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
+            
+            <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
             </Border>
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
                 <Button Margin="10" 
