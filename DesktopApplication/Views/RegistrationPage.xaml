@@ -12,9 +12,9 @@
         <StackPanel Orientation="Vertical" Background="#023e8a" >
             <controls:AppLogoControl/>
             <ProgressRing IsActive="{x:Bind ViewModel.SignUpCommand.IsRunning}" />
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbFirstNameBlankError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
-                       Text="All fields cannot be blank."/>
+                       Text="Enter a first name"/>
             <TextBox x:Name="txtFirstname" 
                      Width="300" 
                      Header="Firstname" 
@@ -24,6 +24,9 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
+            <TextBlock x:Name="tbLastNameBlankError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Enter a last name"/>
             <TextBox x:Name="txtLastname" 
                      Width="300" 
                      Header="Lastname" 
@@ -33,9 +36,12 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbUsernameTakenError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
-                       Text="Username is taken."/>
+                       Text="Username is taken"/>
+            <TextBlock x:Name="tbUsernameBlankError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Enter a username"/>
             <TextBox x:Name="txtUsername" 
                      Width="300" 
                      Header="Username" 
@@ -45,9 +51,12 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbEmailBlankError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
-                       Text="Email is invalid."/>
+                       Text="Enter an email"/>
+            <TextBlock x:Name="tbEmailInvalidError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Not a valid email"/>
             <TextBox x:Name="txtEmail" 
                      Width="300" 
                      Header="Email" 
@@ -57,9 +66,12 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbPasswordsMismatchedError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
                        Text="Passwords do not match."/>
+            <TextBlock x:Name="tbPasswordBlankError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Enter a password"/>
             <PasswordBox x:Name="pwbPassword" 
                          Width="300" 
                          Header="Password" 
@@ -69,6 +81,9 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </PasswordBox.Resources>
             </PasswordBox>
+            <TextBlock x:Name="tbConfirmPasswordBlankError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Confirm your password"/>
             <PasswordBox Width="300" 
                          Header="Confirm Password" 
                          PlaceholderText="Confirm Password"

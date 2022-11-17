@@ -72,9 +72,13 @@ public class RegistrationViewModel : ObservableRecipient
 
     public async Task AddUser()
     {
+        
         await Task.Delay(1500);
 
+        //if password isn't blank run this
         var hashedPassword = _passwordService.HashPassword(_password!);
+        //
+
 
         User newUser = new()
         {
