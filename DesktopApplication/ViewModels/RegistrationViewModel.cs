@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.Data;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels;
@@ -13,6 +14,8 @@ public class RegistrationViewModel : ObservableRecipient
     private readonly IDataStore _dataStore;
     private readonly IPasswordService _passwordService;
     private readonly ISessionService _sessionService;
+    public IAsyncRelayCommand SignUpCommand { get; }
+    public ICommand CancelSignupCommand { get; }
 
     public RegistrationViewModel()
     {
@@ -23,10 +26,6 @@ public class RegistrationViewModel : ObservableRecipient
         SignUpCommand = new AsyncRelayCommand(AddUser);
         CancelSignupCommand = new RelayCommand(NavigateBack);
     }
-
-    public IAsyncRelayCommand SignUpCommand { get; }
-
-    public ICommand CancelSignupCommand { get; }
 
     private string? _firstName;
     public string? FirstName
@@ -91,8 +90,28 @@ public class RegistrationViewModel : ObservableRecipient
         if (result == 1)
         {
             _sessionService.CreateSession(newUser);
+            CreateNewUserBudget();
             _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
         }
+
+    }
+
+    private void CreateNewUserBudget()
+    {
+        var userBudgets = _dataStore.User.Get(u => u.UserId == 1, false, "Budgets");
+        var newBudget = userBudgets.Budgets;
+
+        Budget budget = new Budget
+        {
+            BudgetName = "Personal Budget",
+            BudgetType = "personal",
+        };
+
+        newBudget.Add(budget);
+
+        userBudgets.Budgets = newBudget;
+
+        _dataStore.User.Update(userBudgets);
     }
 
     private void NavigateBack() => _navigationService.GoBack();
