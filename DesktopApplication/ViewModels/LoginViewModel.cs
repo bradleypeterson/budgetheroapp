@@ -26,6 +26,8 @@ public class LoginViewModel : ObservableRecipient
         IsSubmitting = false;
     }
 
+    public event EventHandler? OnUserNotFound;
+    public event EventHandler? OnValidLogin;
     public ICommand SignUpCommand { get; }
 
     public IAsyncRelayCommand LoginCommand { get; }
@@ -58,35 +60,34 @@ public class LoginViewModel : ObservableRecipient
         set => SetProperty(ref _isSubmitting, value);
     }
     public bool IsFormComplete { get; set; }
-    public bool CanLogin => HasUsername && HasPassword && !LoginCommand.IsRunning;
-    private bool HasUsername => !string.IsNullOrEmpty(Username);
-    private bool HasPassword => !string.IsNullOrEmpty(Password);
+
 
     private async Task Login()
     {
-        var existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
+            var existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
 
-        await Task.Delay(1500);
 
-        if (existingUser is not null)
-        {
-            var isValidPassword = _passwordService.VerifyPassword(_password!, existingUser.Password!);
-
-            if (isValidPassword)
+            if (existingUser is not null)
             {
-                Debug.WriteLine("You have successfully logged in!");
-                _sessionService.CreateSession(existingUser);
-                _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
+                bool isValidPassword = _passwordService.VerifyPassword(_password!, existingUser.Password!);
+
+                if (isValidPassword)
+                {
+                    OnValidLogin?.Invoke(this, EventArgs.Empty);
+                    await Task.Delay(1500);
+                    _sessionService.CreateSession(existingUser);
+                    _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
+                }
+                else
+                {
+                    OnUserNotFound?.Invoke(this,EventArgs.Empty);
+                }
             }
             else
             {
-                Debug.WriteLine("Invalid username or password.");
+                OnUserNotFound?.Invoke(this, EventArgs.Empty);
             }
-        }
-        else
-        {
-            Debug.WriteLine("Invalid username or password.");
-        }
+        
     }
 
     private void NavigateToSignUpView() => _navigationService.NavigateTo(typeof(RegistrationViewModel).FullName!);
