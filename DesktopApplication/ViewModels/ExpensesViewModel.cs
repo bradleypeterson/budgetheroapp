@@ -60,23 +60,27 @@ public class ExpensesViewModel : ObservableRecipient
 
     public async Task LoadAsync()
     {
-        await Task.Delay(1500);
-        Transactions.Add(new ObservableTransaction(new Transaction()
+        if (Transactions.Any()) return;
+
+        int userId = _sessionService.GetSessionUserId();
+        IEnumerable<Transaction?> transactions = 
+            await _dataStore.Transaction.ListAsync(t => t.BankAccount.UserId == userId);
+
+        if (transactions is not null)
         {
-            TransactionDate = DateTime.Now,
-            TransactionPayee = "Walmart",
-            TransactionMemo = "Toaster",
-            ExpenseAmount = 20.34m,
-            DepositAmount = 30.43m,
-            BudgetCategory = new() { CategoryName = "Household Item"},
-        }));
+            foreach (var transaction in transactions)
+            {
+                if (transaction is not null) 
+                    Transactions.Add(new ObservableTransaction(transaction));
+            }
+        }
     }
 
     private async Task ShowAddDialog()
     {
         _dialogService.OnSaved += AddTransactionAsync;
 
-        var dialogTitle = "Add Transaction";
+        string dialogTitle = "Add Transaction";
         await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle);
 
         _dialogService.OnSaved -= AddTransactionAsync;
@@ -86,8 +90,8 @@ public class ExpensesViewModel : ObservableRecipient
     {
         _dialogService.OnSaved += EditTransactionAsync;
 
-        var dialogTitle = "Edit Transaction";
-        var _selectedBankAccount = SelectedTransaction!.Transaction;
+        string dialogTitle = "Edit Transaction";
+        Transaction _selectedBankAccount = SelectedTransaction!.Transaction;
         await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedBankAccount);
 
         _dialogService.OnSaved -= EditTransactionAsync;
@@ -97,47 +101,54 @@ public class ExpensesViewModel : ObservableRecipient
     {
         _dialogService.OnSaved += DeleteTransactionAsync;
 
-        var dialogTitle = "Delete Transaction";
-        var _selectedBankAccount = SelectedTransaction!.Transaction;
+        string dialogTitle = "Delete Transaction";
+        Transaction _selectedBankAccount = SelectedTransaction!.Transaction;
         await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedBankAccount, true);
 
         _dialogService.OnSaved -= DeleteTransactionAsync;
     }
 
-    private void AddTransactionAsync(object? sender, DialogServiceEventArgs e)
+    private async void AddTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
-        //var newBankAccount = GetBankAccount(e);
-        //newBankAccount.UserId = _sessionService.GetSessionUserId();
+        Transaction newTransaction = GetTransaction(e);
 
-        //var result = await _dataStore.BankAccount.AddAsync(newBankAccount);
+        int result = await _dataStore.Transaction.AddAsync(newTransaction);
 
-        //if (result == 1)
-        //{
-        //    BankAccounts.Add(new ObservableBankAccount(newBankAccount));
-        //}
+        if (result == 1)
+        {
+            Transactions.Add(new ObservableTransaction(newTransaction));
+        }
     }
 
-    private void EditTransactionAsync(object? sender, DialogServiceEventArgs e)
+    private async void EditTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
-        //var editedBankAccount = GetBankAccount(e);
-        //var listedBankAccount = BankAccounts.FirstOrDefault(
-        //    a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
-        //int index;
+        Transaction editedTransaction = GetTransaction(e);
+        var listedTransaction = Transactions.FirstOrDefault(
+            a => a.Transaction.TransactionId == editedTransaction.TransactionId);
+        int index;
 
-        //if (listedBankAccount is not null)
-        //{
-        //    await _dataStore.BankAccount.Update(editedBankAccount);
+        if (listedTransaction is not null)
+        {
+            await _dataStore.Transaction.Update(editedTransaction);
 
-        //    index = BankAccounts.IndexOf(listedBankAccount);
-        //    BankAccounts[index].BankAccount = editedBankAccount;
-        //}
+            index = Transactions.IndexOf(listedTransaction);
+            Transactions[index].Transaction = editedTransaction;
+        }
     }
 
-    private void DeleteTransactionAsync(object? sender, DialogServiceEventArgs e)
+    private async void DeleteTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
-        //var selectedBankAccount = _selectedBankAccount!.BankAccount;
-        //await _dataStore.BankAccount.DeleteAsync(selectedBankAccount);
+        Transaction selectedTransaction = _selectedTransaction!.Transaction;
+        await _dataStore.Transaction.DeleteAsync(selectedTransaction);
 
-        //BankAccounts.Remove(_selectedBankAccount);
+        Transactions.Remove(_selectedTransaction);
+    }
+
+    private static Transaction GetTransaction(DialogServiceEventArgs e)
+    {
+        TransactionForm form = (TransactionForm)e.Content;
+        Transaction transaction = form.ViewModel.ObservableTransaction.Transaction;
+        //transaction.BankAccountId = form.ViewModel.SelectedBankAccount!.BankAccountId;
+        return transaction;
     }
 }

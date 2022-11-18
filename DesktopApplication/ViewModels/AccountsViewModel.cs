@@ -60,12 +60,9 @@ public class AccountsViewModel : ObservableRecipient
 
     public async Task LoadAsync()
     {
-        if (BankAccounts.Any())
-        {
-            return;
-        }
+        if (BankAccounts.Any()) return;
 
-        var bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
         if (bankAccounts is not null)
         {
             foreach (var bankAccount in bankAccounts)

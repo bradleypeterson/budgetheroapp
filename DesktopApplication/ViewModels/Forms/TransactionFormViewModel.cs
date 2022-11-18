@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using ModelsLibrary;
 
@@ -54,42 +55,43 @@ public class TransactionFormViewModel : ObservableRecipient
     public bool HasExpenseChecked
     {
         get => _hasExpenseChecked;
-        set => SetProperty(ref _hasExpenseChecked, value);
+        set
+        {
+            SetProperty(ref _hasExpenseChecked, value);
+            if (ObservableTransaction.DepositAmount != string.Empty && 
+                ObservableTransaction.ExpenseAmount != string.Empty)
+                ObservableTransaction.DepositAmount = "0";
+        }
     }
 
     private bool _hasDepositChecked;
     public bool HasDepositChecked
     {
         get => _hasDepositChecked;
-        set => SetProperty(ref _hasDepositChecked, value);
+        set
+        {
+            SetProperty(ref _hasDepositChecked, value);
+            if (ObservableTransaction.ExpenseAmount != string.Empty &&
+                ObservableTransaction.DepositAmount != string.Empty)
+                ObservableTransaction.ExpenseAmount = "0";
+        }
     }
 
     public async Task LoadAsync()
     {
+        // Load Bank Accounts
         if (BankAccounts.Any()) return;
 
-        IEnumerable<BankAccount?>? _usersBankAccounts = await _dataStore.BankAccount
+        IEnumerable<BankAccount?> _userBankAccounts = await _dataStore.BankAccount
             .ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
 
-        if (_usersBankAccounts is not null)
-        {
-            foreach (BankAccount? bankAccount in _usersBankAccounts)
-            {
-                BankAccounts.Add(bankAccount!);
-            }
-        }
+        CollectionUtilities.LoadObservableCollection(_userBankAccounts, BankAccounts!);
 
+        // Load Budget Categories
         if (BudgetCategories.Any()) return;
 
-        IEnumerable<BudgetCategory>? _userCategories = _dataStore.BudgetCategory.List();
+        IEnumerable<BudgetCategory> _userCategories = _dataStore.BudgetCategory.List();
 
-        if (_userCategories is not null)
-        {
-            foreach (var category in _userCategories)
-            {
-                //BudgetCategories.Add(category!);
-                Debug.WriteLine("Item found!");
-            }
-        }
+        CollectionUtilities.LoadObservableCollection(_userCategories, BudgetCategories);
     }
 }
