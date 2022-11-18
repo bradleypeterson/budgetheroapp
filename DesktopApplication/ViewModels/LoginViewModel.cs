@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels;
 
@@ -64,7 +65,7 @@ public class LoginViewModel : ObservableRecipient
 
     private async Task Login()
     {
-        var existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
+        User? existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
 
         await Task.Delay(1500);
 
