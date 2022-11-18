@@ -58,7 +58,7 @@ public class ExpensesViewModel : ObservableRecipient
 
         int userId = _sessionService.GetSessionUserId();
         IEnumerable<Transaction?> transactions = 
-            await _dataStore.Transaction.ListAsync(t => t.BankAccount.UserId == userId);
+            await _dataStore.Transaction.ListAsync(t => t.BankAccount.UserId == userId, null!, "BankAccount,BudgetCategory");
 
         if (transactions is not null)
         {

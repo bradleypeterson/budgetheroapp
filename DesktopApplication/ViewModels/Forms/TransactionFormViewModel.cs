@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
@@ -18,14 +12,13 @@ public class TransactionFormViewModel : ObservableRecipient
     private readonly IDataStore _dataStore;
     private readonly ISessionService _sessionService;
 
-    public TransactionFormViewModel(ObservableTransaction observableTransaction = null!)
+    public TransactionFormViewModel()
     {
-        ObservableTransaction = observableTransaction ?? new ObservableTransaction();
         _dataStore = App.GetService<IDataStore>();
         _sessionService = App.GetService<ISessionService>();
     }
 
-    public ObservableTransaction ObservableTransaction { get; set; }
+    public ObservableTransaction? ObservableTransaction { get; set; } = new();
     public ObservableCollection<BankAccount> BankAccounts { get; } = new();
     public ObservableCollection<BudgetCategory> BudgetCategories { get; } = new();
 
@@ -36,7 +29,8 @@ public class TransactionFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedBankAccount, value);
-            ObservableTransaction.Transaction.BankAccountId = value!.BankAccountId;
+            if (value is not null)
+                ObservableTransaction!.Transaction.BankAccountId = value.BankAccountId;
         }
     }
 
@@ -47,7 +41,8 @@ public class TransactionFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedCategory, value);
-            ObservableTransaction.Transaction.BudgetCategoryId = value!.BudgetCategoryID;
+            if (value is not null)
+                ObservableTransaction!.Transaction.BudgetCategoryId = value.BudgetCategoryID;
         }
     }
 
@@ -58,9 +53,9 @@ public class TransactionFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _hasExpenseChecked, value);
-            if (ObservableTransaction.DepositAmount != string.Empty && 
-                ObservableTransaction.ExpenseAmount != string.Empty)
-                ObservableTransaction.DepositAmount = "0";
+            if (ObservableTransaction!.DepositAmount != string.Empty && 
+                ObservableTransaction!.ExpenseAmount != string.Empty)
+                ObservableTransaction!.DepositAmount = "0";
         }
     }
 
@@ -71,7 +66,7 @@ public class TransactionFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _hasDepositChecked, value);
-            if (ObservableTransaction.ExpenseAmount != string.Empty &&
+            if (ObservableTransaction!.ExpenseAmount != string.Empty &&
                 ObservableTransaction.DepositAmount != string.Empty)
                 ObservableTransaction.ExpenseAmount = "0";
         }
@@ -79,19 +74,55 @@ public class TransactionFormViewModel : ObservableRecipient
 
     public async Task LoadAsync()
     {
-        // Load Bank Accounts
+        await LoadBankAccountsCollectionAsync();
+        LoadCategoriesCollection();
+        OnCollectionsLoaded();
+    }
+
+    private async Task LoadBankAccountsCollectionAsync()
+    {
         if (BankAccounts.Any()) return;
 
         IEnumerable<BankAccount?> _userBankAccounts = await _dataStore.BankAccount
             .ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
 
         CollectionUtilities.LoadObservableCollection(_userBankAccounts, BankAccounts!);
+    }
 
-        // Load Budget Categories
+    private void LoadCategoriesCollection()
+    {
         if (BudgetCategories.Any()) return;
 
         IEnumerable<BudgetCategory> _userCategories = _dataStore.BudgetCategory.List();
 
         CollectionUtilities.LoadObservableCollection(_userCategories, BudgetCategories);
+    }
+
+    private void OnCollectionsLoaded()
+    {
+        SetSelectedBankAccount();
+        SetSelectedCategory();
+    }
+
+    private void SetSelectedBankAccount()
+    {
+        int bankAccountId = 0;
+
+        if (ObservableTransaction is not null)
+            if (ObservableTransaction.Transaction is not null)
+                bankAccountId = ObservableTransaction.Transaction.BankAccountId;
+
+        SelectedBankAccount = BankAccounts.FirstOrDefault(b => b.BankAccountId == bankAccountId);
+    }
+
+    private void SetSelectedCategory()
+    {
+        int categoryId = 0;
+
+        if (ObservableTransaction is not null)
+            if (ObservableTransaction.Transaction is not null)
+                categoryId = ObservableTransaction.Transaction.BudgetCategoryId;
+
+        SelectedCategory = BudgetCategories.FirstOrDefault(c => c.BudgetCategoryID == categoryId);
     }
 }
