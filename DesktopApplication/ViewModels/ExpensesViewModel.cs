@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -40,14 +41,7 @@ public class ExpensesViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedTransaction, value);
-            if (value is not null)
-            {
-                HasItemSelected = true;
-            }
-            else
-            {
-                HasItemSelected = false;
-            }
+            HasItemSelected = value is not null;
         }
     }
 
@@ -91,8 +85,8 @@ public class ExpensesViewModel : ObservableRecipient
         _dialogService.OnSaved += EditTransactionAsync;
 
         string dialogTitle = "Edit Transaction";
-        Transaction _selectedBankAccount = SelectedTransaction!.Transaction;
-        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedBankAccount);
+        Transaction _selectedTransaction = SelectedTransaction!.Transaction;
+        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedTransaction);
 
         _dialogService.OnSaved -= EditTransactionAsync;
     }
@@ -102,8 +96,8 @@ public class ExpensesViewModel : ObservableRecipient
         _dialogService.OnSaved += DeleteTransactionAsync;
 
         string dialogTitle = "Delete Transaction";
-        Transaction _selectedBankAccount = SelectedTransaction!.Transaction;
-        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedBankAccount, true);
+        Transaction _selectedTransaction = SelectedTransaction!.Transaction;
+        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedTransaction, true);
 
         _dialogService.OnSaved -= DeleteTransactionAsync;
     }
@@ -123,7 +117,7 @@ public class ExpensesViewModel : ObservableRecipient
     private async void EditTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
         Transaction editedTransaction = GetTransaction(e);
-        var listedTransaction = Transactions.FirstOrDefault(
+        ObservableTransaction? listedTransaction = Transactions.FirstOrDefault(
             a => a.Transaction.TransactionId == editedTransaction.TransactionId);
         int index;
 

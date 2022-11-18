@@ -41,13 +41,7 @@ public class AccountsViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedBankAccount, value);
-            if (value is not null)
-            {
-                HasItemSelected = true;
-            } else
-            {
-                HasItemSelected = false;
-            }
+            HasItemSelected = value is not null;
         }
     }
 

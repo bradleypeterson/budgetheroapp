@@ -77,11 +77,11 @@
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
                 <Button Margin="10" 
                         Content="Edit Account" 
-                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=OneWay}"
                         Command="{x:Bind ViewModel.ShowEditDialogCommand}"/>
                 <Button Margin="10" 
                         Content="Delete Account"
-                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=OneWay}"
                         Command="{x:Bind ViewModel.ShowDeleteDialogCommand}"/>
             </StackPanel>
         </Grid>
