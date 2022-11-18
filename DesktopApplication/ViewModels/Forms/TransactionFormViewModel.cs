@@ -46,6 +46,13 @@ public class TransactionFormViewModel : ObservableRecipient
         }
     }
 
+    private int _transactionType = 0;
+    public int TransactionType
+    {
+        get => _transactionType;
+        set => SetProperty(ref _transactionType, value);
+    }
+
     private bool _hasExpenseChecked;
     public bool HasExpenseChecked
     {
@@ -102,6 +109,7 @@ public class TransactionFormViewModel : ObservableRecipient
     {
         SetSelectedBankAccount();
         SetSelectedCategory();
+        SetTransactionType();
     }
 
     private void SetSelectedBankAccount()
@@ -124,5 +132,18 @@ public class TransactionFormViewModel : ObservableRecipient
                 categoryId = ObservableTransaction.Transaction.BudgetCategoryId;
 
         SelectedCategory = BudgetCategories.FirstOrDefault(c => c.BudgetCategoryID == categoryId);
+    }
+
+    private void SetTransactionType()
+    {
+        string expenseAmount = ObservableTransaction.ExpenseAmount;
+        string depositAmount = ObservableTransaction.DepositAmount;
+
+        if (ObservableTransaction is not null)
+            if (string.IsNullOrEmpty(expenseAmount) && !string.IsNullOrEmpty(depositAmount))
+            {
+                HasDepositChecked = true;
+                TransactionType = 1;
+            }    
     }
 }

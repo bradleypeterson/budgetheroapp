@@ -24,9 +24,12 @@
             <RowDefinition Height="2.5*" />
         </Grid.RowDefinitions>
         
-        <RadioButtons x:Name="TransactionType" Grid.Row="0" SelectedIndex="0" MaxColumns="2" Header="Transaction Type:">
+        <RadioButtons x:Name="TransactionType" 
+                      Header="Transaction Type:"
+                      MaxColumns="2" Grid.Row="0" 
+                      SelectedIndex="{x:Bind ViewModel.TransactionType, Mode=TwoWay}">
             <RadioButton x:Name="ExpenseRadButton" Content="Expense"
-                         IsChecked="{x:Bind ViewModel.HasExpenseChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                         IsChecked="{x:Bind ViewModel.HasExpenseChecked, Mode=TwoWay}"/>
             <RadioButton x:Name="DepositRadButton" Content="Deposit"
                          IsChecked="{x:Bind ViewModel.HasDepositChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </RadioButtons>
