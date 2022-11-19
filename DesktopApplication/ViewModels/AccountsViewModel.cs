@@ -4,8 +4,10 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.Views.Forms;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels;
@@ -39,13 +41,7 @@ public class AccountsViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedBankAccount, value);
-            if (value is not null)
-            {
-                HasItemSelected = true;
-            } else
-            {
-                HasItemSelected = false;
-            }
+            HasItemSelected = value is not null;
         }
     }
 
@@ -58,12 +54,9 @@ public class AccountsViewModel : ObservableRecipient
 
     public async Task LoadAsync()
     {
-        if (BankAccounts.Any())
-        {
-            return;
-        }
+        if (BankAccounts.Any()) return;
 
-        var bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
         if (bankAccounts is not null)
         {
             foreach (var bankAccount in bankAccounts)
@@ -77,7 +70,7 @@ public class AccountsViewModel : ObservableRecipient
     {
         _dialogService.OnSaved += AddBankAccountAsync;
         
-        var dialogTitle = "Add Account";        
+        string dialogTitle = "Add Account";        
         await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle);
 
         _dialogService.OnSaved -= AddBankAccountAsync;
@@ -87,9 +80,9 @@ public class AccountsViewModel : ObservableRecipient
     {
         _dialogService.OnSaved += EditBankAccountAsync;
         
-        var dialogTitle = "Edit Account";
-        var _selectedBankAccount = SelectedBankAccount!.BankAccount;
-        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount);
+        string dialogTitle = "Edit Account";
+        BankAccount mutableBankAccount = EntityUtilities.Duplicate(SelectedBankAccount!.BankAccount);
+        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, mutableBankAccount);
         
         _dialogService.OnSaved -= EditBankAccountAsync;
     }
@@ -98,8 +91,8 @@ public class AccountsViewModel : ObservableRecipient
     {
         _dialogService.OnSaved += DeleteBankAccountAsync;
 
-        var dialogTitle = "Delete Account";
-        var _selectedBankAccount = SelectedBankAccount!.BankAccount;
+        string dialogTitle = "Delete Account";
+        BankAccount _selectedBankAccount = SelectedBankAccount!.BankAccount;
         await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount, true);
 
         _dialogService.OnSaved -= DeleteBankAccountAsync;
@@ -107,10 +100,10 @@ public class AccountsViewModel : ObservableRecipient
 
     private async void AddBankAccountAsync(object? sender, DialogServiceEventArgs e)
     {
-        var newBankAccount = GetBankAccount(e);
+        BankAccount newBankAccount = GetBankAccount(e);
         newBankAccount.UserId = _sessionService.GetSessionUserId();
 
-        var result = await _dataStore.BankAccount.AddAsync(newBankAccount);
+        int result = await _dataStore.BankAccount.AddAsync(newBankAccount);
 
         if (result == 1)
         {
@@ -120,23 +113,25 @@ public class AccountsViewModel : ObservableRecipient
 
     private async void EditBankAccountAsync(object? sender, DialogServiceEventArgs e)
     {
-        var editedBankAccount = GetBankAccount(e);
-        var listedBankAccount = BankAccounts.FirstOrDefault(
-            a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
+        BankAccount existingBankAccount = SelectedBankAccount!.BankAccount;
+        existingBankAccount = EntityUtilities.Update(existingBankAccount, GetBankAccount(e));
+
+        ObservableBankAccount? listedBankAccount = BankAccounts.FirstOrDefault(
+            a => a.BankAccount.BankAccountId == existingBankAccount.BankAccountId);
         int index;
 
         if (listedBankAccount is not null)
         {
-            await _dataStore.BankAccount.Update(editedBankAccount);
+            await _dataStore.BankAccount.Update(existingBankAccount);
 
             index = BankAccounts.IndexOf(listedBankAccount);
-            BankAccounts[index].BankAccount = editedBankAccount;
+            BankAccounts[index].BankAccount = existingBankAccount;
         }
     }
 
     private async void DeleteBankAccountAsync(object? sender, DialogServiceEventArgs e)
     {
-        var selectedBankAccount = _selectedBankAccount!.BankAccount;
+        BankAccount selectedBankAccount = _selectedBankAccount!.BankAccount;
         await _dataStore.BankAccount.DeleteAsync(selectedBankAccount);
 
         BankAccounts.Remove(_selectedBankAccount);
@@ -144,7 +139,7 @@ public class AccountsViewModel : ObservableRecipient
 
     private static BankAccount GetBankAccount(DialogServiceEventArgs e)
     {
-        var accountForm = (BankAccountForm)e.Content;
+        BankAccountForm accountForm = (BankAccountForm)e.Content;
         return accountForm.ViewModel.BankAccount;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -36,5 +37,6 @@ public sealed partial class TransactionForm : Page
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         await ViewModel.LoadAsync();
+        Debug.WriteLine($"Expense: {ExpenseRadButton.IsChecked} | Deposit: {DepositRadButton.IsChecked}");
     }
 }

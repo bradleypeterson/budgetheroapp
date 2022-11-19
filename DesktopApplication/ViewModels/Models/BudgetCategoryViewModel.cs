@@ -9,7 +9,7 @@ namespace DesktopApplication.ViewModels.Models;
 public class BudgetCategoryViewModel
 {
     private readonly BudgetCategory _budgetCategory;
-    public string CategoryName => _budgetCategory.CategoryName;
+    public string? CategoryName => _budgetCategory.CategoryName;
     public decimal CategoryAmount => _budgetCategory.CategoryAmount;
 
     public BudgetCategoryViewModel(BudgetCategory budgetCategory)

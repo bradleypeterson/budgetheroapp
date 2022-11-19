@@ -57,7 +57,8 @@
                                    CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
                                    GridLinesVisibility="All" SelectionMode="Extended"
                                    ItemsSource="{x:Bind ViewModel.Transactions, Mode=OneWay}"
-                                   SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                   SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay}">
+                                   <!--SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">-->
                     
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
@@ -117,12 +118,12 @@
                         Content="Edit Transaction" 
                         HorizontalAlignment="Center" 
                         Width="137" Margin="5 0 10 0" 
-                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=OneWay}"
                         Command="{x:Bind ViewModel.ShowEditDialogCommand}"/>
                 <Button x:Name="DeleteTransaction_Btn" 
                         Content="Delete Transaction" 
                         HorizontalAlignment="Center" Width="137"
-                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{x:Bind ViewModel.HasItemSelected, Mode=OneWay}"
                         Command="{x:Bind ViewModel.ShowDeleteDialogCommand}"/>
             </StackPanel>
 
