@@ -1,11 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
@@ -85,8 +84,9 @@ public class ExpensesViewModel : ObservableRecipient
         _dialogService.OnSaved += EditTransactionAsync;
 
         string dialogTitle = "Edit Transaction";
-        Transaction _selectedTransaction = SelectedTransaction!.Transaction;
-        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedTransaction);
+        Transaction mutableTransaction = EntityUtilities.Duplicate(SelectedTransaction!.Transaction);
+
+        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, mutableTransaction);
 
         _dialogService.OnSaved -= EditTransactionAsync;
     }
@@ -116,17 +116,19 @@ public class ExpensesViewModel : ObservableRecipient
 
     private async void EditTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
-        Transaction editedTransaction = GetTransaction(e);
+        Transaction existingTransaction = SelectedTransaction!.Transaction;
+        existingTransaction = EntityUtilities.Update(existingTransaction, GetTransaction(e));
+
         ObservableTransaction? listedTransaction = Transactions.FirstOrDefault(
-            a => a.Transaction.TransactionId == editedTransaction.TransactionId);
+            a => a.Transaction.TransactionId == existingTransaction.TransactionId);
         int index;
 
         if (listedTransaction is not null)
         {
-            await _dataStore.Transaction.Update(editedTransaction);
+            await _dataStore.Transaction.Update(existingTransaction);
 
             index = Transactions.IndexOf(listedTransaction);
-            Transactions[index].Transaction = editedTransaction;
+            Transactions[index].Transaction = existingTransaction;
         }
     }
 
@@ -141,8 +143,7 @@ public class ExpensesViewModel : ObservableRecipient
     private static Transaction GetTransaction(DialogServiceEventArgs e)
     {
         TransactionForm form = (TransactionForm)e.Content;
-        Transaction transaction = form.ViewModel.ObservableTransaction.Transaction;
-        //transaction.BankAccountId = form.ViewModel.SelectedBankAccount!.BankAccountId;
+        Transaction transaction = form.ViewModel.ObservableTransaction!.Transaction;
         return transaction;
     }
 }

@@ -5,9 +5,11 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels;
@@ -81,8 +83,8 @@ public class AccountsViewModel : ObservableRecipient
         _dialogService.OnSaved += EditBankAccountAsync;
         
         string dialogTitle = "Edit Account";
-        BankAccount _selectedBankAccount = SelectedBankAccount!.BankAccount;
-        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount);
+        BankAccount mutableBankAccount = EntityUtilities.Duplicate(SelectedBankAccount!.BankAccount);
+        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, mutableBankAccount);
         
         _dialogService.OnSaved -= EditBankAccountAsync;
     }
@@ -113,17 +115,19 @@ public class AccountsViewModel : ObservableRecipient
 
     private async void EditBankAccountAsync(object? sender, DialogServiceEventArgs e)
     {
-        BankAccount editedBankAccount = GetBankAccount(e);
+        BankAccount existingBankAccount = SelectedBankAccount!.BankAccount;
+        existingBankAccount = EntityUtilities.Update(existingBankAccount, GetBankAccount(e));
+
         ObservableBankAccount? listedBankAccount = BankAccounts.FirstOrDefault(
-            a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
+            a => a.BankAccount.BankAccountId == existingBankAccount.BankAccountId);
         int index;
 
         if (listedBankAccount is not null)
         {
-            await _dataStore.BankAccount.Update(editedBankAccount);
+            await _dataStore.BankAccount.Update(existingBankAccount);
 
             index = BankAccounts.IndexOf(listedBankAccount);
-            BankAccounts[index].BankAccount = editedBankAccount;
+            BankAccounts[index].BankAccount = existingBankAccount;
         }
     }
 
