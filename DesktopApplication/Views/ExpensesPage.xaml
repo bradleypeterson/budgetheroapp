@@ -46,7 +46,7 @@
                             Content="Add Transaction" Margin="20,20,150,20" 
                             HorizontalAlignment="Right" 
                             Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
-                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions"/>
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions" TextChanged="SearchTextBox_TextChanged"/>
                     <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
                 </Grid>
             </Border>

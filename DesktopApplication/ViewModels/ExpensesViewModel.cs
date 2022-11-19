@@ -10,6 +10,7 @@ using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
+using Windows.System;
 
 namespace DesktopApplication.ViewModels;
 
@@ -158,5 +159,33 @@ public class ExpensesViewModel : ObservableRecipient
         Transaction transaction = form.ViewModel.ObservableTransaction.Transaction;
         //transaction.BankAccountId = form.ViewModel.SelectedBankAccount!.BankAccountId;
         return transaction;
+    }
+
+    public async void filterList(string filter)
+    {
+        int userId = _sessionService.GetSessionUserId();
+
+        ObservableCollection<ObservableTransaction> filteredList = new ObservableCollection<ObservableTransaction>();
+
+        IEnumerable<Transaction?> transactions =
+            _dataStore.Transaction.List(t => t.BankAccount.UserId == userId, null!, "BankAccount,BudgetCategory");
+
+        if (transactions is not null)
+        {
+            foreach (var transaction in transactions)
+            {
+                if (transaction is not null)
+                    if (!filter.Equals(""))
+                    {
+                        if (transaction.TransactionPayee.Contains(filter)) filteredList.Add(new ObservableTransaction(transaction));
+                    }
+                    else
+                    {
+                        filteredList.Add(new ObservableTransaction(transaction));
+                    }
+            }
+        }
+
+        Transactions= filteredList;
     }
 }

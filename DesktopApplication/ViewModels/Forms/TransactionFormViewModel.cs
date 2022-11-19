@@ -4,6 +4,9 @@ using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
+using DesktopApplication.Services;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels.Forms;
@@ -16,11 +19,20 @@ public class TransactionFormViewModel : ObservableRecipient
     {
         _dataStore = App.GetService<IDataStore>();
         _sessionService = App.GetService<ISessionService>();
+        IsFormComplete= false;
     }
 
     public ObservableTransaction? ObservableTransaction { get; set; } = new();
     public ObservableCollection<BankAccount> BankAccounts { get; } = new();
     public ObservableCollection<BudgetCategory> BudgetCategories { get; } = new();
+
+    public event EventHandler? OnInvalidNumber;
+    public event EventHandler? OnInvalidAccount;
+    public event EventHandler? OnInvalidCategory;
+    public event EventHandler? OnValidNumber;
+    public event EventHandler? OnValidAccount;
+    public event EventHandler? OnValidCategory;
+
 
     private BankAccount? _selectedBankAccount;
     public BankAccount? SelectedBankAccount
@@ -31,6 +43,7 @@ public class TransactionFormViewModel : ObservableRecipient
             SetProperty(ref _selectedBankAccount, value);
             if (value is not null)
                 ObservableTransaction!.Transaction.BankAccountId = value.BankAccountId;
+            ValidateFormCompletion();
         }
     }
 
@@ -43,6 +56,7 @@ public class TransactionFormViewModel : ObservableRecipient
             SetProperty(ref _selectedCategory, value);
             if (value is not null)
                 ObservableTransaction!.Transaction.BudgetCategoryId = value.BudgetCategoryID;
+            ValidateFormCompletion();
         }
     }
 
@@ -63,6 +77,7 @@ public class TransactionFormViewModel : ObservableRecipient
             if (ObservableTransaction!.DepositAmount != string.Empty && 
                 ObservableTransaction!.ExpenseAmount != string.Empty)
                 ObservableTransaction!.DepositAmount = "0";
+            ValidateFormCompletion();
         }
     }
 
@@ -76,6 +91,7 @@ public class TransactionFormViewModel : ObservableRecipient
             if (ObservableTransaction!.ExpenseAmount != string.Empty &&
                 ObservableTransaction.DepositAmount != string.Empty)
                 ObservableTransaction.ExpenseAmount = "0";
+            ValidateFormCompletion();
         }
     }
 
@@ -146,4 +162,32 @@ public class TransactionFormViewModel : ObservableRecipient
                 TransactionType = 1;
             }    
     }
+
+
+    //Data Validation
+    public bool IsFormComplete { get; set; }
+    private bool dataValid = false;
+
+    public async Task Transaction()
+    {
+
+    }
+
+    private void ValidateFormCompletion()
+    {
+        if (!string.IsNullOrEmpty(ObservableTransaction.CategoryName)
+            && !string.IsNullOrEmpty(ObservableTransaction.ExpenseAmount)
+            && !string.IsNullOrEmpty(ObservableTransaction.DepositAmount)
+            && !string.IsNullOrEmpty(_selectedBankAccount.BankName))
+        {
+            IsFormComplete = true;
+        }
+        else
+        {
+            IsFormComplete = false;
+            
+        }
+        OnPropertyChanged(nameof(IsFormComplete));
+    }
+
 }

@@ -58,6 +58,9 @@
                      Visibility="{x:Bind ViewModel.HasDepositChecked, Mode=OneWay}"
                      Text="{x:Bind ViewModel.ObservableTransaction.DepositAmount,
                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock x:Name="tbInvalidNumberError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please enter a number."/>
 
             <TextBlock Text="Bank Account:"/>
 
@@ -65,6 +68,9 @@
                       SelectedValue="{x:Bind ViewModel.SelectedBankAccount, Mode=TwoWay}"
                       ItemsSource="{x:Bind ViewModel.BankAccounts}"
                       DisplayMemberPath="BankName"/>
+            <TextBlock x:Name="tbInvalidAccountError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please select an account."/>
 
             <TextBlock Text="Category"/>
 
@@ -72,6 +78,9 @@
                       SelectedValue="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay}"
                       ItemsSource="{x:Bind ViewModel.BudgetCategories}"
                       DisplayMemberPath="CategoryName"/>
+            <TextBlock x:Name="tbInvalidCategoryError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please select a category."/>
 
             <TextBox x:Name="TransactionMemo" Header="Memo:" 
                      TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"
