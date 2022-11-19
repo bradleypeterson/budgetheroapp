@@ -4,8 +4,6 @@ using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
-using DesktopApplication.Services;
-using DesktopApplication.ViewModels.Models;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
@@ -63,11 +61,16 @@ public class BudgetViewModel : ObservableRecipient
         }
     }
 
-    private static BudgetCategoryGroup GetCategoryGroup(DialogServiceEventArgs e, bool isDeleting = false)
+    private static BudgetCategoryGroup GetCategoryGroup(DialogServiceEventArgs e, bool isDeleting = false, bool isEditing = false)
     {
         if (isDeleting)
         {
             var categoryGroupForm = (DeleteCategoryGroupForm)e.Content;
+            return categoryGroupForm.ViewModel.SelectedCategoryGroup;
+        }
+        else if (isEditing)
+        {
+            var categoryGroupForm = (EditCategoryGroupForm)e.Content;
             return categoryGroupForm.ViewModel.SelectedCategoryGroup;
         }
         else
@@ -75,6 +78,12 @@ public class BudgetViewModel : ObservableRecipient
             var categoryGroupForm = (AddCategoryGroupForm)e.Content;
             return categoryGroupForm.ViewModel.BudgetCategoryGroup;
         }
+    }
+
+    private static string GetGroupDescEditTxt(DialogServiceEventArgs e)
+    {
+        var categoryGroupForm = (EditCategoryGroupForm)e.Content;
+        return categoryGroupForm.ViewModel.CategoryGroupDescText;
     }
 
     private async Task ShowAddDialog()
@@ -130,7 +139,7 @@ public class BudgetViewModel : ObservableRecipient
     
     private async void DeleteCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
-        BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, true);
+        BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, true, false);
 
         ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(
             c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
@@ -147,17 +156,23 @@ public class BudgetViewModel : ObservableRecipient
     
     private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
-        //var editedBankAccount = GetBankAccount(e);
-        //var listedBankAccount = BankAccounts.FirstOrDefault(a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
-        //int index;
+        BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, false, true);
 
-        //if (listedBankAccount is not null)
-        //{
-        //    await _dataStore.BankAccount.Update(editedBankAccount);
+        ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(
+            c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        int index;
 
-        //    index = BankAccounts.IndexOf(listedBankAccount);
-        //    BankAccounts[index].BankAccount = editedBankAccount;
-        //}
+        if (listedCategoryGroup != null)
+        {
+
+            index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
+            BudgetCategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
+
+            selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e);
+            await _dataStore.BudgetCategoryGroup.Update(selectedCategoryGroup);
+
+            //TODO: Need to add code to add or remove Category items to the selected Category Group 
+        }
     }
 
    

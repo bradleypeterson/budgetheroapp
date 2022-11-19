@@ -18,9 +18,11 @@ public class BudgetCategoryGroupViewModel
     {
         _budgetCategoryGroup = budgetCategoryGroup;
         CategoryGroupDesc = _budgetCategoryGroup.CategoryGroupDesc;
-        BudgetCategories = GenerateSampleBudgetCategories();
+        BudgetCategories = GenerateSampleBudgetCategories(); // TEST: Delete when not needed
     }
 
+   
+    //TEST: Delete when not needed
     private List<BudgetCategoryViewModel> GenerateSampleBudgetCategories()
     {
         List<BudgetCategoryViewModel> budgetCategories = new()

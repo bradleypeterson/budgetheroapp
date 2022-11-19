@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-using CommunityToolkit.WinUI.UI.Controls;
+﻿using CommunityToolkit.WinUI.UI.Controls;
 using DesktopApplication.ViewModels;
-using DesktopApplication.ViewModels.Models;
 using Microsoft.UI.Xaml.Controls;
-using ModelsLibrary;
 
 namespace DesktopApplication.Views;
 
@@ -18,7 +15,6 @@ public sealed partial class BudgetPage : Page
         ViewModel = App.GetService<BudgetViewModel>();
         InitializeComponent();
     }
-
 
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

@@ -5,7 +5,7 @@
     xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -16,9 +16,12 @@
         </Grid.RowDefinitions>
 
 
-        <ComboBox Grid.Row="0" x:Name="EditCombo" PlaceholderText="Choose Group To Edit" SelectionChanged="EditCombo_SelectionChanged"></ComboBox>
+        <ComboBox Grid.Row="0" x:Name="EditGroupCombo" PlaceholderText="Choose Group To Edit" 
+                  SelectionChanged="EditCombo_SelectionChanged" SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}"
+                  DisplayMemberPath="CategoryGroupDesc"/>
 
-        <TextBox Grid.Row="1" x:Name="GroupNameText"  Header="Group Name:" Margin="0,10,0,10"/>
+        <TextBox Grid.Row="1" x:Name="GroupNameText"  Header="Group Name:" Margin="0,10,0,10" TextChanged="GroupNameText_TextChanged"/>
 
         <RadioButtons Grid.Row="2" x:Name="CatEditRadButtons"  MaxColumns="2" Header="Options:">
             <RadioButton x:Name="AddCatRadio" Content="Add Category Item" Checked="RadioButton_Checked"/>
@@ -31,7 +34,7 @@
         </StackPanel>
 
         <StackPanel x:Name="RemoveItemPanel" Grid.Row="3" Visibility="Collapsed">
-            <ComboBox Grid.Row="0" x:Name="RemoveCombo" PlaceholderText="Choose Item To Remove"/>
+            <ComboBox Grid.Row="0" x:Name="RemoveItemCombo" PlaceholderText="Choose Item To Remove"/>
         </StackPanel>
         
     </Grid>

@@ -7,14 +7,14 @@ using System.Collections.ObjectModel;
 
 namespace DesktopApplication.ViewModels.Forms
 {
-    public class DeleteCategoryGroupFormViewModel : ObservableRecipient
+    public class EditCategoryGroupFormViewModel : ObservableRecipient
     {
         private readonly IDataStore _dataStore;
         private readonly ISessionService _sessionService;
 
         public ObservableCollection<BudgetCategoryGroup> BudgetCategoryGroups { get; } = new();
 
-        public DeleteCategoryGroupFormViewModel()
+        public EditCategoryGroupFormViewModel()
         {
             _dataStore = App.GetService<IDataStore>();
             _sessionService = App.GetService<ISessionService>();
@@ -30,6 +30,16 @@ namespace DesktopApplication.ViewModels.Forms
             }
         }
 
+        private string? _categoryGroupDescText;
+        public string? CategoryGroupDescText
+        {
+            get => _categoryGroupDescText;
+            set
+            {
+               SetProperty(ref _categoryGroupDescText, value);
+            }
+        }
+
         private void SetSelectedGroup()
         {
             int categoryGroupId = 0;
@@ -38,7 +48,7 @@ namespace DesktopApplication.ViewModels.Forms
             {
                 categoryGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
             }
-            
+
             SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
         }
 
@@ -65,6 +75,15 @@ namespace DesktopApplication.ViewModels.Forms
             }
 
             SetSelectedGroup();
+
+            //TODO: Still need to add the category group items to the drop down in Remove Item that match the corresponding category group
+
         }
+
+
+
+
+
+
     }
 }

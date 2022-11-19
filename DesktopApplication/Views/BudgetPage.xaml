@@ -20,7 +20,7 @@
                                        HeadersVisibility="Column" VerticalAlignment="Bottom"
                                        SelectionMode="Single" AlternatingRowBackground="LightCyan"
                                        SelectionChanged="DataGrid_SelectionChanged"
-                                       ItemsSource="{Binding shit}">
+                                       ItemsSource="{Binding temp}">
                                        <!--ItemsSource="{x:Bind BudgetCategories, Mode=OneWay}">-->
                         <controls:DataGrid.Resources>
                             <Style TargetType="TextBlock">
