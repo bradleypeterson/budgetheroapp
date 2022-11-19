@@ -19,7 +19,6 @@ namespace DesktopApplication.ViewModels.Forms
         private readonly ISessionService _sessionService;
 
         public ObservableCollection<BudgetCategoryGroup> BudgetCategoryGroups { get; } = new();
-        public ObservableCategoryGroup ObservableCategoryGroup { get; set; }
 
         public DeleteCategoryGroupFormViewModel()
         {
@@ -27,15 +26,24 @@ namespace DesktopApplication.ViewModels.Forms
             _sessionService = App.GetService<ISessionService>();
         }
 
-        private BudgetCategoryGroup? _selectedCategoryGroup;
+        private BudgetCategoryGroup? _selectedCategoryGroup = new();
         public BudgetCategoryGroup? SelectedCategoryGroup
         {
             get => _selectedCategoryGroup;
             set
             {
                 SetProperty(ref _selectedCategoryGroup, value);
-                ObservableCategoryGroup.BudgetCategoryGroup.BudgetCategoryGroupID = value!.BudgetCategoryGroupID;
             }
+        }
+
+        private void SetSelectedGroup()
+        {
+            int categoryGroupId = 0;
+
+            if(SelectedCategoryGroup is not null)
+                categoryGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
+
+            SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
         }
 
 
@@ -61,6 +69,7 @@ namespace DesktopApplication.ViewModels.Forms
                 }
             }
 
+            SetSelectedGroup();
         }
     }
 }

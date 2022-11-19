@@ -20,6 +20,7 @@ public class BudgetViewModel : ObservableRecipient
     private readonly IDataStore _dataStore;
 
     public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
+    
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
@@ -62,10 +63,18 @@ public class BudgetViewModel : ObservableRecipient
         }
     }
 
-    private static BudgetCategoryGroup GetCategoryGroup(DialogServiceEventArgs e)
+    private static BudgetCategoryGroup GetCategoryGroup(DialogServiceEventArgs e, bool isDeleting = false)
     {
-        var categoryGroupForm = (AddCategoryGroupForm)e.Content;
-        return categoryGroupForm.ViewModel.BudgetCategoryGroup;
+        if (isDeleting)
+        {
+            var categoryGroupForm = (DeleteCategoryGroupForm)e.Content;
+            return categoryGroupForm.ViewModel.SelectedCategoryGroup;
+        }
+        else
+        {
+            var categoryGroupForm = (AddCategoryGroupForm)e.Content;
+            return categoryGroupForm.ViewModel.BudgetCategoryGroup;
+        }
     }
 
     private async Task ShowAddDialog()
@@ -118,12 +127,22 @@ public class BudgetViewModel : ObservableRecipient
             BudgetCategoryGroups?.Add(new ObservableCategoryGroup(newCategoryGroup));
         }
     }
+    
     private async void DeleteCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
-        //TODO: Get Selected Category Group From Drop Down
-        //await _dataStore.BankAccount.DeleteAsync(selectedBankAccount); //TODO: Delete selected Category Group From database
+        BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, true);
 
-        //BankAccounts.Remove(_selectedBankAccount); //TODO: REmove selected Category group from list
+        ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(
+            c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        int index;
+
+        if(listedCategoryGroup != null)
+        {
+            await _dataStore.BudgetCategoryGroup.DeleteAsync(selectedCategoryGroup);
+
+            index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
+            BudgetCategoryGroups.RemoveAt(index);
+        }
     }
     
     private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
@@ -142,18 +161,4 @@ public class BudgetViewModel : ObservableRecipient
     }
 
    
-
-    //REMOVE: TESTING//
-    private static List<BudgetCategoryGroupViewModel> GetBudgetCategoryGroups()
-    {
-        List<BudgetCategoryGroupViewModel> list = new()
-        {
-            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Housing" }),
-            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Utilities" }),
-            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Food" }),
-            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Transportation" }),
-        };
-
-        return list;
-    }
 }

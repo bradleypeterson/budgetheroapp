@@ -12,6 +12,6 @@
         <ComboBox Grid.Row="0" x:Name="DeleteCategoryGroupCombo" PlaceholderText="Choose Group To Delete"
                    SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}"
-                   DisplayMemberPath="BudgetCategoryGroup"/>
+                   DisplayMemberPath="CategoryGroupDesc"/>
     </StackPanel>
 </Page>
