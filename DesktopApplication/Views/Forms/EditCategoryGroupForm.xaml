@@ -14,14 +14,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        
-        <ComboBox Grid.Row="0" x:Name="EditCombo" PlaceholderText="Choose Group To Edit" SelectionChanged="EditCombo_SelectionChanged">
-            <x:String>Housing</x:String>
-            <x:String>Utilities</x:String>
-            <x:String>Food</x:String>
-            <x:String>Transportation</x:String>
-        </ComboBox>
+
+
+        <ComboBox Grid.Row="0" x:Name="EditCombo" PlaceholderText="Choose Group To Edit" SelectionChanged="EditCombo_SelectionChanged"></ComboBox>
 
         <TextBox Grid.Row="1" x:Name="GroupNameText"  Header="Group Name:" Margin="0,10,0,10"/>
 
@@ -36,12 +31,7 @@
         </StackPanel>
 
         <StackPanel x:Name="RemoveItemPanel" Grid.Row="3" Visibility="Collapsed">
-            <ComboBox Grid.Row="0" x:Name="RemoveCombo" PlaceholderText="Choose Item To Remove">
-                <!-- TODO: The items that show up in this combo box will be populated with all items belonging to selected group-->
-                    <!--PLACEHOLDER --><x:String>Item1</x:String>
-                    <!--PLACEHOLDER --><x:String>Item2</x:String>
-                    <!--PLACEHOLDER --><x:String>Item3</x:String>
-            </ComboBox>
+            <ComboBox Grid.Row="0" x:Name="RemoveCombo" PlaceholderText="Choose Item To Remove"/>
         </StackPanel>
         
     </Grid>

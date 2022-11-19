@@ -23,7 +23,8 @@
                      Header="Username" 
                      PlaceholderText="Username" 
                      Foreground="{StaticResource PrimaryForegroundBrush}"
-                     Text="{x:Bind ViewModel.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{x:Bind ViewModel.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     />
             <TextBlock x:Name="tbPasswordError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
                 Password incorrect
             </TextBlock>

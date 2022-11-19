@@ -104,6 +104,7 @@ public partial class App : Application
             services.AddTransient<TransactionFormViewModel>();
             services.AddTransient<DeleteItemViewModel>();
             services.AddTransient<CategoryGroupFormViewModel>();
+            services.AddTransient<DeleteCategoryGroupFormViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

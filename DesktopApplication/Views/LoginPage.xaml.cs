@@ -2,7 +2,9 @@
 using DesktopApplication.Helpers;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace DesktopApplication.Views;
 

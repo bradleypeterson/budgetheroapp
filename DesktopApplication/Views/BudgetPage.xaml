@@ -60,8 +60,8 @@
             <Border Grid.Row="0" x:Name="Toolbar" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="AddCategoryButton" Margin="20" Content="Add Category Group" Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
-                    <Button x:Name="EditCategoryButton" Margin="20" Content="Edit Category Group"/>
-                    <Button x:Name="DeleteCategoryButton" Margin="20" Content="Delete Category Group"/>
+                    <Button x:Name="EditCategoryButton" Margin="20" Content="Edit Category Group" Command="{x:Bind ViewModel.ShowEditDialogCommand}"/>
+                    <Button x:Name="DeleteCategoryButton" Margin="20" Content="Delete Category Group" Command="{x:Bind ViewModel.ShowDeleteDialogCommand}"/>
                 </StackPanel>
             </Border>
 

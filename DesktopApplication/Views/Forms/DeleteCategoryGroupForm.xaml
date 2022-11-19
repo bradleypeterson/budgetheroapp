@@ -5,15 +5,13 @@
     xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Page_Loaded">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Content body -->
-        <ComboBox Grid.Row="0" x:Name="EditCombo" PlaceholderText="Choose Group To Delete">
-            <x:String>Housing</x:String>
-            <x:String>Utilities</x:String>
-            <x:String>Food</x:String>
-            <x:String>Transportation</x:String>
-        </ComboBox>
+        <ComboBox Grid.Row="0" x:Name="DeleteCategoryGroupCombo" PlaceholderText="Choose Group To Delete"
+                   SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}"
+                   DisplayMemberPath="BudgetCategoryGroup"/>
     </StackPanel>
 </Page>

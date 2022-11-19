@@ -21,8 +21,8 @@ public class BudgetViewModel : ObservableRecipient
 
     public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
-    //public IAsyncRelayCommand ShowEditDialogCommand { get; }
-    //public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
+    public IAsyncRelayCommand ShowEditDialogCommand { get; }
+    public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
 
     public BudgetViewModel()
     {
@@ -31,8 +31,8 @@ public class BudgetViewModel : ObservableRecipient
         _dataStore = App.GetService<IDataStore>();
         
         ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
-        //ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
-        //ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
+        ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
+        ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
 
     }
 
@@ -78,15 +78,35 @@ public class BudgetViewModel : ObservableRecipient
         _dialogService.OnSaved -= AddCategoryGroupAsync;
     }
 
+    private async Task ShowEditDialog()
+    {
+        _dialogService.OnSaved += EditCategoryGroupAsync;
+
+        var dialogTitle = "Edit Category Group";
+        await _dialogService.ShowDialogAsync<EditCategoryGroupForm>(dialogTitle);
+
+        _dialogService.OnSaved -= EditCategoryGroupAsync;
+    }
+
+    private async Task ShowDeleteDialog()
+    {
+        _dialogService.OnSaved += DeleteCategoryGroupAsync;
+
+        var dialogTitle = "Delete Category Group";
+        await _dialogService.ShowDialogAsync<DeleteCategoryGroupForm>(dialogTitle);
+
+        _dialogService.OnSaved -= DeleteCategoryGroupAsync;
+    }
+
     private async void AddCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
         BudgetCategoryGroup newCategoryGroup = GetCategoryGroup(e);
-        
+
         int? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
         var userBudgets = user?.Budgets;
         Budget? budget = userBudgets?.ToList()[0];
-        int? budgetId = budget!.BudgetId;   
+        int? budgetId = budget!.BudgetId;
         Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
         personalBudget!.BudgetCategoryGroups!.Add(newCategoryGroup);
@@ -98,52 +118,30 @@ public class BudgetViewModel : ObservableRecipient
             BudgetCategoryGroups?.Add(new ObservableCategoryGroup(newCategoryGroup));
         }
     }
+    private async void DeleteCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
+    {
+        //TODO: Get Selected Category Group From Drop Down
+        //await _dataStore.BankAccount.DeleteAsync(selectedBankAccount); //TODO: Delete selected Category Group From database
 
-    //private async Task ShowEditDialog()
-    //{
-    //    _dialogService.OnSaved += EditBankAccountAsync;
+        //BankAccounts.Remove(_selectedBankAccount); //TODO: REmove selected Category group from list
+    }
+    
+    private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
+    {
+        //var editedBankAccount = GetBankAccount(e);
+        //var listedBankAccount = BankAccounts.FirstOrDefault(a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
+        //int index;
 
-    //    var dialogTitle = "Edit Account";
-    //    var _selectedBankAccount = SelectedBankAccount!.BankAccount;
-    //    await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount);
+        //if (listedBankAccount is not null)
+        //{
+        //    await _dataStore.BankAccount.Update(editedBankAccount);
 
-    //    _dialogService.OnSaved -= EditBankAccountAsync;
-    //}
+        //    index = BankAccounts.IndexOf(listedBankAccount);
+        //    BankAccounts[index].BankAccount = editedBankAccount;
+        //}
+    }
 
-    //private async Task ShowDeleteDialog()
-    //{
-    //    _dialogService.OnSaved += DeleteBankAccountAsync;
-
-    //    var dialogTitle = "Delete Account";
-    //    var _selectedBankAccount = SelectedBankAccount!.BankAccount;
-    //    await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount, true);
-
-    //    _dialogService.OnSaved -= DeleteBankAccountAsync;
-    //}
-
-    //private async void EditBankAccountAsync(object? sender, DialogServiceEventArgs e)
-    //{
-    //    var editedBankAccount = GetBankAccount(e);
-    //    var listedBankAccount = BankAccounts.FirstOrDefault(
-    //        a => a.BankAccount.BankAccountId == editedBankAccount.BankAccountId);
-    //    int index;
-
-    //    if (listedBankAccount is not null)
-    //    {
-    //        await _dataStore.BankAccount.Update(editedBankAccount);
-
-    //        index = BankAccounts.IndexOf(listedBankAccount);
-    //        BankAccounts[index].BankAccount = editedBankAccount;
-    //    }
-    //}
-
-    //private async void DeleteBankAccountAsync(object? sender, DialogServiceEventArgs e)
-    //{
-    //    var selectedBankAccount = _selectedBankAccount!.BankAccount;
-    //    await _dataStore.BankAccount.DeleteAsync(selectedBankAccount);
-
-    //    BankAccounts.Remove(_selectedBankAccount);
-    //}
+   
 
     //REMOVE: TESTING//
     private static List<BudgetCategoryGroupViewModel> GetBudgetCategoryGroups()

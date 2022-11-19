@@ -68,8 +68,7 @@ public class TransactionFormViewModel : ObservableRecipient
     {
         if (BankAccounts.Any()) return;
 
-        var _usersBankAccounts = await _dataStore.BankAccount
-            .ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        var _usersBankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
 
         if (_usersBankAccounts is not null)
         {
