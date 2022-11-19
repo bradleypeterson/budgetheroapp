@@ -19,6 +19,11 @@ public sealed partial class BudgetPage : Page
         InitializeComponent();
     }
 
+    private async void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        await ViewModel.LoadAsync();
+    }
+
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if(storedSender is null)

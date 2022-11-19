@@ -34,7 +34,8 @@ public class ExpensesViewModel : ObservableRecipient
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
     public ObservableCollection<ObservableTransaction> Transactions { get; set; } = new();
-    
+    public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
+
     private ObservableTransaction? _selectedTransaction;
     public ObservableTransaction? SelectedTransaction
     {
@@ -55,9 +56,21 @@ public class ExpensesViewModel : ObservableRecipient
 
     public async Task LoadAsync()
     {
+        if (BankAccounts.Any()) return;
         if (Transactions.Any()) return;
 
         int userId = _sessionService.GetSessionUserId();
+
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        if (bankAccounts is not null)
+        {
+            foreach (var bankAccount in bankAccounts)
+            {
+                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
+            }
+        }
+
+        
         IEnumerable<Transaction?> transactions = 
             await _dataStore.Transaction.ListAsync(t => t.BankAccount.UserId == userId, null!, "BankAccount,BudgetCategory");
 

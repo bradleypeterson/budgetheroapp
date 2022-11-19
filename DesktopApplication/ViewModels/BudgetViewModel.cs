@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.Models;
 using DesktopApplication.ViewModels.Models;
 using ModelsLibrary;
+using System.Collections.ObjectModel;
 
 namespace DesktopApplication.ViewModels;
 
@@ -20,7 +22,24 @@ public class BudgetViewModel : ObservableRecipient
         BudgetCategoryGroups = GenerateSampleBudgetCategoryGroups();
     }
 
-    private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()
+    public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
+
+    public async Task LoadAsync()
+    {
+        if (BankAccounts.Any()) return;
+        int userId = _sessionService.GetSessionUserId();
+
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        if (bankAccounts is not null)
+        {
+            foreach (var bankAccount in bankAccounts)
+            {
+                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
+            }
+        }
+    }
+
+        private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()
     {
         List<BudgetCategoryGroupViewModel> list = new()
         {

@@ -130,7 +130,7 @@
             <!-- this is the data grid for the bank account items-->
             <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                 CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                HeadersVisibility="Column" VerticalAlignment="Center" Height="150" Width="275">
+                                HeadersVisibility="Column" VerticalAlignment="Center" Height="150" Width="275" ItemsSource="{x:Bind ViewModel.BankAccounts, Mode=OneWay}">
 
                 <controls:DataGrid.Resources>
                     <Style TargetType="TextBlock">
@@ -150,8 +150,8 @@
                 </controls:DataGrid.RowStyle>
 
                 <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*"/>
-                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*"/>
+                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding BankName}"/>
+                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance, Converter={StaticResource DecimalToStringConverter}}"/>
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
         </Grid>
