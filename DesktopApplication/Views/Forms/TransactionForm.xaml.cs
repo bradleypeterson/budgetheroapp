@@ -25,6 +25,8 @@ namespace DesktopApplication.Views.Forms;
 /// </summary>
 public sealed partial class TransactionForm : Page
 {
+    private readonly IDialogService _dialogService;
+
     public TransactionFormViewModel ViewModel
     {
         get;
@@ -33,17 +35,9 @@ public sealed partial class TransactionForm : Page
     {
         ViewModel = App.GetService<TransactionFormViewModel>();
         InitializeComponent();
-        ViewModel.OnInvalidNumber += addInvalidNumberError;
-        ViewModel.OnValidNumber += removeInvalidNumberError;
-        ViewModel.OnInvalidAccount += addInvalidAccountError;
-        ViewModel.OnValidAccount += removeInvalidAccountError;
-        ViewModel.OnInvalidCategory += addInvalidCategoryError;
-        ViewModel.OnValidCategory += removeInvalidCategoryError;
         _dialogService = App.GetService<IDialogService>();
-
+        
     }
-
-    private readonly IDialogService _dialogService;
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
@@ -51,30 +45,120 @@ public sealed partial class TransactionForm : Page
         Debug.WriteLine($"Expense: {ExpenseRadButton.IsChecked} | Deposit: {DepositRadButton.IsChecked}");
     }
 
-    private void addInvalidNumberError(object? sender, EventArgs e)
+    private void addInvalidNumberError()
     {
         tbInvalidNumberError.Visibility = Visibility.Visible;
     }
-    private void removeInvalidNumberError(object? sender, EventArgs e)
+    private void removeInvalidNumberError()
     {
         tbInvalidNumberError.Visibility = Visibility.Collapsed;
     }
 
-    private void addInvalidAccountError(object? sender, EventArgs e)
+    private void addInvalidAccountError()
     {
         tbInvalidAccountError.Visibility = Visibility.Visible;
     }
-    private void removeInvalidAccountError(object? sender, EventArgs e)
+    private void removeInvalidAccountError()
     {
         tbInvalidAccountError.Visibility = Visibility.Collapsed;
     }
 
-    private void addInvalidCategoryError(object? sender, EventArgs e)
+    private void addInvalidCategoryError()
     {
         tbInvalidCategoryError.Visibility = Visibility.Visible;
     }
-    private void removeInvalidCategoryError(object? sender, EventArgs e)
+    private void removeInvalidCategoryError()
     {
         tbInvalidCategoryError.Visibility = Visibility.Collapsed;
+    }
+    private void addInvalidPayeeError()
+    {
+        tbInvalidPayeeError.Visibility = Visibility.Visible;
+    }
+    private void removeInvalidPayeeError()
+    {
+        tbInvalidPayeeError.Visibility = Visibility.Collapsed;
+    }
+
+
+    //Validation
+    private void TransactionPayeeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (TransactionPayeeTextBox.Text.Equals(""))
+        {
+            addInvalidPayeeError();
+        }
+        else
+        {
+            removeInvalidPayeeError();
+        }
+    }
+
+    private void ExpenseAmount_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        
+        try
+        {
+            if (!Double.IsNaN(Decimal.ToDouble(Decimal.Parse(ExpenseAmount.Text))))
+            {
+                if (ExpenseAmount.Text.Split(".")[1].Length > 3)
+                {
+                    addInvalidNumberError();
+                }
+                else
+                {
+                    removeInvalidNumberError();
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            addInvalidNumberError();
+        }
+        
+    }
+
+    private void BankAccountComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (BankAccountComboBox.SelectedItem.ToString() == null)
+        {
+            addInvalidAccountError();
+        }
+        else
+        {
+            removeInvalidAccountError();
+        }
+    }
+
+    private void ExpenseCategoryCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ExpenseCategoryCombo.SelectedItem.ToString() == null)
+        {
+            addInvalidCategoryError();
+        }
+        else
+        {
+            removeInvalidCategoryError();
+        }
+    }
+
+    private void validData()
+    {
+        if (TransactionPayeeTextBox.Text.Equals("")) return;
+        try
+        {
+            if (!Double.IsNaN(Decimal.ToDouble(Decimal.Parse(ExpenseAmount.Text))))
+            {
+                removeInvalidNumberError();
+            }
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+        if (BankAccountComboBox.SelectedItem.ToString() == null) return;
+        if (ExpenseCategoryCombo.SelectedItem.ToString() == null) return;
+
+
     }
 }

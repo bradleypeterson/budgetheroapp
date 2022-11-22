@@ -8,6 +8,7 @@ using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
+using DesktopApplication.Services;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using Windows.System;
@@ -36,6 +37,9 @@ public class ExpensesViewModel : ObservableRecipient
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
     public ObservableCollection<ObservableTransaction> Transactions { get; set; } = new();
     public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
+
+    //Check if the form can be closed
+    private bool allowClose = false;
 
     private ObservableTransaction? _selectedTransaction;
     public ObservableTransaction? SelectedTransaction
@@ -88,6 +92,7 @@ public class ExpensesViewModel : ObservableRecipient
     private async Task ShowAddDialog()
     {
         _dialogService.OnSaved += AddTransactionAsync;
+        
 
         string dialogTitle = "Add Transaction";
         await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle);
@@ -120,6 +125,8 @@ public class ExpensesViewModel : ObservableRecipient
     private async void AddTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
         Transaction newTransaction = GetTransaction(e);
+        //TODO Check Valid data here
+        TransactionForm form = (TransactionForm)e.Content;
 
         int result = await _dataStore.Transaction.AddAsync(newTransaction);
 
@@ -127,6 +134,8 @@ public class ExpensesViewModel : ObservableRecipient
         {
             Transactions.Add(new ObservableTransaction(newTransaction));
         }
+        allowClose= true;
+
     }
 
     private async void EditTransactionAsync(object? sender, DialogServiceEventArgs e)
@@ -161,7 +170,8 @@ public class ExpensesViewModel : ObservableRecipient
         return transaction;
     }
 
-    public async void filterList(string filter)
+    //Used to filter the tranaction list
+    public async void filterList(string filter, string category)
     {
         int userId = _sessionService.GetSessionUserId();
 
@@ -177,7 +187,20 @@ public class ExpensesViewModel : ObservableRecipient
                 if (transaction is not null)
                     if (!filter.Equals(""))
                     {
-                        if (transaction.TransactionPayee.Contains(filter)) filteredList.Add(new ObservableTransaction(transaction));
+                        switch (category)
+                        {
+                            case "Payee":
+                                if (transaction.TransactionPayee.Contains(filter)) filteredList.Add(new ObservableTransaction(transaction));
+                                break;
+                            case "Category":
+                                if (transaction.BudgetCategory.CategoryName.Contains(filter)) filteredList.Add(new ObservableTransaction(transaction));
+                                break;
+                            default:
+                                Console.Error.WriteLine("You did done f'd up");
+                                break;
+
+                        }
+                        
                     }
                     else
                     {
@@ -188,4 +211,5 @@ public class ExpensesViewModel : ObservableRecipient
 
         Transactions= filteredList;
     }
+
 }

@@ -46,7 +46,12 @@
                             Content="Add Transaction" Margin="20,20,150,20" 
                             HorizontalAlignment="Right" 
                             Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
-                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions" TextChanged="SearchTextBox_TextChanged"/>
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="250" Margin="0 20 0 20" PlaceholderText="Search Transactions" TextChanged="SearchTextBox_TextChanged"/>
+                    <ComboBox x:Name="SearchCategoryCB" Grid.Column="2" Width="110" Margin="0 20 0 20" SelectionChanged="SearchCategoryCB_SelectionChanged" SelectedItem="Payee">
+                        <x:String>Payee</x:String>
+                        <x:String>Category</x:String>
+
+                    </ComboBox>
                 </Grid>
             </Border>
             

@@ -12,6 +12,8 @@ public class DialogService : IDialogService
 
     public event EventHandler<DialogServiceEventArgs>? OnSaved;
 
+    public bool IsPrimaryButtonEnabled { get; set; }
+
     public DialogService()
     {
         _root = MainWindowHelper.GetXamlRoot();
@@ -32,6 +34,9 @@ public class DialogService : IDialogService
 
         var dialog = BuildContentDialog(dialogTitle, dialogContent);
 
+        dialog.IsPrimaryButtonEnabled = IsPrimaryButtonEnabled;
+        IsPrimaryButtonEnabled = false;
+
         var result = await dialog.ShowAsync();
 
         if (result == ContentDialogResult.Primary && dialogContent is not null)
@@ -39,6 +44,7 @@ public class DialogService : IDialogService
             OnSaved?.Invoke(this, new DialogServiceEventArgs(dialogContent));
         }
     }
+
 
     private ContentDialog BuildContentDialog(string dialogTitle, Page? dialogContent)
     {

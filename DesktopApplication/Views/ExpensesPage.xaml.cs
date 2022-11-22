@@ -24,11 +24,30 @@ public sealed partial class ExpensesPage : Page
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        TextBox textBox = (TextBox)sender;
+        TextBox textBox = SearchTextBox;
+        ComboBox combo = SearchCategoryCB;
 
-        ViewModel.filterList(textBox.Text);
+        ViewModel.filterList(textBox.Text, combo.SelectedItem.ToString()!);
         TransactionData.ItemsSource = null;
         TransactionData.ItemsSource = ViewModel.Transactions;
     }
 
+    private void SearchCategoryCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        TextBox textBox = SearchTextBox;
+        ComboBox combo = SearchCategoryCB;
+
+        ViewModel.filterList(textBox.Text, combo.SelectedItem.ToString()!);
+        try{
+            if (TransactionData != null)
+            {
+                TransactionData.ItemsSource = null;
+                TransactionData.ItemsSource = ViewModel.Transactions;
+            }        
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+        }
+    }
 }
