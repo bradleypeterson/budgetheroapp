@@ -29,8 +29,8 @@
         </RadioButtons>
 
         <StackPanel Grid.Row="3" x:Name="AddItemPanel"  Visibility="Collapsed">
-            <TextBox x:Name="CatItemText" Header="Category Item Name:" PlaceholderText="Enter Name of Category Item" Margin="0,10,0,0"/>
-            <TextBox x:Name="CatAmountText" Header="Category Item Budget:" PlaceholderText="Enter Amount to Budget" Margin="0,10,0,0"/>
+            <TextBox x:Name="CatItemText" Header="Category Item Name:" PlaceholderText="Enter Name of Category Item" Margin="0,10,0,0" TextChanged="CatItemText_TextChanged"/>
+            <TextBox x:Name="CatAmountText" Header="Category Item Budget:" PlaceholderText="Enter Amount to Budget" Margin="0,10,0,0" TextChanged="CatAmountText_TextChanged"/>
         </StackPanel>
 
         <StackPanel x:Name="RemoveItemPanel" Grid.Row="3" Visibility="Collapsed">

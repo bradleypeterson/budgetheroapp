@@ -10,34 +10,26 @@
     Loaded="OnLoaded">
 
     <Grid>
+
+            <Grid x:Name="AppTitleBar" Canvas.ZIndex="1" Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
+                  IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Right" Padding="0,0,20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>                
+                </Grid.ColumnDefinitions>
+
+                <!-- TODO: These are hidden and need to be shown after a successful login -->
+                <Image x:Name="LogoutIcon" Grid.Column ="0"  Source="/Assets/WindowIcon.ico"
+                       HorizontalAlignment="Left" Width="16" Height="16" Visibility="Collapsed" />
+                <TextBlock x:Name="AppTitleBarText" Grid.Column="1" 
+                           VerticalAlignment="Center" TextWrapping="NoWrap"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Margin="28,0,0,0" Visibility="Collapsed"/>
+                <Button x:Name="LogoutButton" Grid.Column="2" Content="Log Out" Margin="10,0,0,0"
+                        Visibility="Collapsed"/>
+            </Grid>
         
-        <Grid x:Name="AppTitleBar"
-              Canvas.ZIndex="1"
-              Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
-              IsHitTestVisible="True"
-              VerticalAlignment="Top"
-              HorizontalAlignment="Right"
-              Padding="0,0,20,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>                
-            </Grid.ColumnDefinitions>
-
-            
-            <Image Grid.Column ="0"  Source="/Assets/WindowIcon.ico"
-                   HorizontalAlignment="Left"
-                   Width="16"
-                   Height="16" 
-                   />
-            <TextBlock Grid.Column="1" x:Name="AppTitleBarText"
-                       VerticalAlignment="Center"
-                       TextWrapping="NoWrap"
-                       Style="{StaticResource CaptionTextBlockStyle}"
-                       Margin="28,0,0,0"/>
-            <Button Grid.Column="2" Content="Log Out" Margin="10,0,0,0"/>
-        </Grid>
-
         <NavigationView
             x:Name="NavigationViewControl"
             Canvas.ZIndex="0"
@@ -51,10 +43,6 @@
             Background="Gainsboro">
 
             <NavigationView.MenuItems>
-                <!--
-                TODO: Update item titles by updating <x:Uid>.Content entries in Strings/en-us/Resources.resw.
-                https://docs.microsoft.com/windows/uwp/app-resources/localize-strings-ui-manifest#refer-to-a-string-resource-identifier-from-xaml
-                -->
                 <NavigationViewItem x:Uid="Shell_Login" 
                                     helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.LoginViewModel"
                                     Visibility="Collapsed">

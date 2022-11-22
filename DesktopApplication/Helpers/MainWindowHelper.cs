@@ -10,7 +10,7 @@ namespace DesktopApplication.Helpers;
 public class MainWindowHelper
 {
     private static bool isFirstTimeLoad = true;
-    
+
     public static XamlRoot GetXamlRoot()
     {
         return App.MainWindow.Content.XamlRoot;
@@ -18,7 +18,7 @@ public class MainWindowHelper
 
     public static void ResizeWindow(Page pageType)
     {
-        const double PERCENT_HEIGHT_LOGIN = .63;
+        const double PERCENT_HEIGHT_LOGIN = .65;
         const double PERCENT_WIDTH_LOGIN_AND_REG = .23;
         const double PERCENT_HEIGHT_REG = .80;
         const double DEFAULT_HEIGHT = .75;
@@ -47,6 +47,7 @@ public class MainWindowHelper
         {
             App.MainWindow.SetWindowSize(width, height);
             App.MainWindow.CenterOnScreen();
+            
         }
 
     }

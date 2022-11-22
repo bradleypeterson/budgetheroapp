@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.Converters;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
 using DesktopApplication.Views.Forms;
@@ -17,11 +18,12 @@ public class BudgetViewModel : ObservableRecipient
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
 
-    public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
-    
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
+
+    public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
+    public ObservableCollection<ObservableCategoryItem>? CategoryItems { get; set; } = new();
 
     public BudgetViewModel()
     {
@@ -32,18 +34,15 @@ public class BudgetViewModel : ObservableRecipient
         ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
         ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
         ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
-
     }
 
-    //Load Category Groups into an observable collection
+    //Load Category Groups into observable collection
     public async Task LoadAsync()
     {
         if (BudgetCategoryGroups.Any())
         {
             return;
         }
-
-        //var categoryGroups = await _dataStore.Budget.ListAsync(b => b. == _sessionService.GetSessionUserId());
 
         int? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
@@ -57,6 +56,15 @@ public class BudgetViewModel : ObservableRecipient
             foreach (var categoryGroup in personalBudget.BudgetCategoryGroups)
             {
                 BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
+
+                //TODO: Add all items associated to category group
+                var groupID = categoryGroup.BudgetCategoryGroupID;
+                var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryID == groupID);
+
+                foreach (var item in BudgetItems)
+                {
+                    CategoryItems.Add(new ObservableCategoryItem(item));
+                }
             }
         }
     }
@@ -84,6 +92,27 @@ public class BudgetViewModel : ObservableRecipient
     {
         var categoryGroupForm = (EditCategoryGroupForm)e.Content;
         return categoryGroupForm.ViewModel.CategoryGroupDescText;
+    }
+
+    private static string GetRadioButtonStatus(DialogServiceEventArgs e)
+    {
+        var categoryGroupForm = (EditCategoryGroupForm)e.Content;
+        return categoryGroupForm.ViewModel.CategoryGroupRadStatus;
+    }
+
+    private static string GetCategoryItemNameTxt(DialogServiceEventArgs e)
+    {
+        var categoryGroupForm = (EditCategoryGroupForm)e.Content;
+        return categoryGroupForm.ViewModel.CategoryItemName;
+    }
+
+    DecimalToStringConverter Converter { get; set; }
+    private static decimal GetCategoryItemBudgetAmt(DialogServiceEventArgs e)
+    {
+        var categoryGroupForm = (EditCategoryGroupForm)e.Content;
+        decimal convertedCategoryAmount = Convert.ToDecimal(categoryGroupForm.ViewModel.CategoryItemBudgetAmt);
+
+        return convertedCategoryAmount;
     }
 
     private async Task ShowAddDialog()
@@ -158,22 +187,41 @@ public class BudgetViewModel : ObservableRecipient
     {
         BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, false, true);
 
-        ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(
-            c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
         int index;
 
         if (listedCategoryGroup != null)
         {
-
             index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
+
             BudgetCategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
+            
+            selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e); 
 
-            selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e);
-            await _dataStore.BudgetCategoryGroup.Update(selectedCategoryGroup);
+            await _dataStore.BudgetCategoryGroup.Update(selectedCategoryGroup); /* updates the database value */
 
-            //TODO: Need to add code to add or remove Category items to the selected Category Group 
+            /* Get status of radio button for Category Item Editing */
+            var radStatus = GetRadioButtonStatus(e);
+
+            if (radStatus != null)
+            {
+                if (radStatus == "Add Category Item")
+                {
+                    //TODO: add User input category item to database under selected category group
+                    BudgetCategory newCategoryItem = new BudgetCategory();
+
+                    newCategoryItem.CategoryName = GetCategoryItemNameTxt(e);
+                    newCategoryItem.BudgetCategoryGroupID = selectedCategoryGroup.BudgetCategoryGroupID;
+                    newCategoryItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
+                    CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
+                    var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
+                }
+                else if (radStatus == "Remove Category Item")
+                {
+
+                }
+            }
         }
     }
-
    
 }

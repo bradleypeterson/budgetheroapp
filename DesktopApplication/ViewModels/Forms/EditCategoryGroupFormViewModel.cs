@@ -40,6 +40,36 @@ namespace DesktopApplication.ViewModels.Forms
             }
         }
 
+        private string? _categoryGroupRadStatus;
+        public string? CategoryGroupRadStatus
+        {
+            get => _categoryGroupRadStatus;
+            set
+            {
+                SetProperty(ref _categoryGroupRadStatus, value);
+            }
+        }
+        
+        private string? _categoryItemName;
+        public string? CategoryItemName
+        {
+            get => _categoryItemName;
+            set
+            {
+                SetProperty(ref _categoryItemName, value);
+            }
+        }
+
+        private string? _categoryItemBudgetAmt;
+        public string? CategoryItemBudgetAmt
+        {
+            get => _categoryItemBudgetAmt;
+            set
+            {
+                SetProperty(ref _categoryItemBudgetAmt, value);
+            }
+        }
+
         private void SetSelectedGroup()
         {
             int categoryGroupId = 0;

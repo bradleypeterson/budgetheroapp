@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-
+using System.Diagnostics.Metrics;
 using Windows.System;
 
 namespace DesktopApplication.Views;
@@ -14,6 +14,7 @@ namespace DesktopApplication.Views;
 // TODO: Update NavigationViewItem titles and icons in ShellPage.xaml.
 public sealed partial class ShellPage : Page
 {
+   
     public ShellViewModel ViewModel
     {
         get;
@@ -27,13 +28,11 @@ public sealed partial class ShellPage : Page
         ViewModel.NavigationService.Frame = NavigationFrame;
         ViewModel.NavigationViewService.Initialize(NavigationViewControl);
 
-        // TODO: Set the title bar icon by updating /Assets/WindowIcon.ico.
-        // A custom title bar is required for full window theme and Mica support.
-        // https://docs.microsoft.com/windows/apps/develop/title-bar?tabs=winui3#full-customization
         App.MainWindow.ExtendsContentIntoTitleBar = false;
         App.MainWindow.SetTitleBar(AppTitleBar);
         App.MainWindow.Activated += MainWindow_Activated;
-        AppTitleBarText.Text = "BudgetHero";
+        AppTitleBarText.Text = ViewModel.GetUserName();
+
     }
 
     private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -59,6 +58,15 @@ public sealed partial class ShellPage : Page
             Right = AppTitleBar.Margin.Right,
             Bottom = AppTitleBar.Margin.Bottom
         };
+    }
+
+    //Not Sure where to call this method as we only need to show the logout bar after we have successfully logged in
+    public void ShowLogoutBar()
+    {
+        AppTitleBarText.Text = ViewModel.GetUserName();
+        AppTitleBarText.Visibility= Visibility.Visible;
+        LogoutButton.Visibility= Visibility.Visible;
+        LogoutIcon.Visibility= Visibility.Visible;
     }
 
     private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
