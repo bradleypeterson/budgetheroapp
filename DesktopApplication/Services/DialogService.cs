@@ -33,7 +33,7 @@ public class DialogService : IDialogService
         var dialog = BuildContentDialog(dialogTitle, dialogContent);
 
         var result = await dialog.ShowAsync();
-
+        
         if (result == ContentDialogResult.Primary && dialogContent is not null)
         {
             OnSaved?.Invoke(this, new DialogServiceEventArgs(dialogContent));
