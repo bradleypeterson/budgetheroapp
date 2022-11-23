@@ -12,6 +12,8 @@ using DesktopApplication.Services;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using Windows.System;
+using Windows.UI.Popups;
+using WinUIEx.Messaging;
 
 namespace DesktopApplication.ViewModels;
 
@@ -59,8 +61,7 @@ public class ExpensesViewModel : ObservableRecipient
     public async Task LoadAsync()
     {
         if (BankAccounts.Any()) return;
-        if (Transactions.Any()) return;
-
+        
         int userId = _sessionService.GetSessionUserId();
 
         IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
@@ -72,7 +73,7 @@ public class ExpensesViewModel : ObservableRecipient
             }
         }
 
-        
+        if (Transactions.Any()) return;
         IEnumerable<Transaction?> transactions = 
             await _dataStore.Transaction.ListAsync(t => t.BankAccount.UserId == userId, null!, "BankAccount,BudgetCategory");
 
@@ -122,12 +123,13 @@ public class ExpensesViewModel : ObservableRecipient
     private async void AddTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
         Transaction newTransaction = GetTransaction(e);
-        //TODO Check Valid data here
-        TransactionForm form = (TransactionForm)e.Content;
+        
+        if (validateDate(newTransaction))
+        {
+            int result = await _dataStore.Transaction.AddAsync(newTransaction);
 
-        int result = await _dataStore.Transaction.AddAsync(newTransaction);
-
-        Transactions.Add(new ObservableTransaction(newTransaction));
+            Transactions.Add(new ObservableTransaction(newTransaction));
+        }
 
     }
 
@@ -140,10 +142,15 @@ public class ExpensesViewModel : ObservableRecipient
 
         if (listedTransaction is not null)
         {
-            await _dataStore.Transaction.Update(editedTransaction);
 
-            index = Transactions.IndexOf(listedTransaction);
-            Transactions[index].Transaction = editedTransaction;
+            if (validateDate(editedTransaction))
+            {
+                await _dataStore.Transaction.Update(editedTransaction);
+
+                index = Transactions.IndexOf(listedTransaction);
+                Transactions[index].Transaction = editedTransaction;
+            }
+            
         }
     }
 
@@ -205,9 +212,21 @@ public class ExpensesViewModel : ObservableRecipient
         Transactions= filteredList;
     }
 
-    public void setButton(bool status)
+    public bool validateDate(Transaction transaction)
     {
-
+        try
+        {
+            if (transaction.TransactionPayee == null) { return false; }
+            if (transaction.BankAccountId == 0) { return false; }
+            if (transaction== null) { return false; }
+            if (transaction.BudgetCategoryId == 0) { return false; }
+            if (transaction.DepositAmount== 0 && transaction.ExpenseAmount == 0) { return false; }
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
 }

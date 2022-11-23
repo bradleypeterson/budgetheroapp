@@ -14,6 +14,8 @@ public class DialogService : IDialogService
 
     public bool IsEnabled { get; set; }
 
+    public ContentDialog ContentDialog => Dialog;
+
     public ContentDialog Dialog;
 
     public DialogService()
@@ -39,8 +41,6 @@ public class DialogService : IDialogService
         var dialog = BuildContentDialog(dialogTitle, dialogContent);
 
         Dialog = dialog;
-
-        dialog.IsPrimaryButtonEnabled = false;
 
         var result = await dialog.ShowAsync();
 

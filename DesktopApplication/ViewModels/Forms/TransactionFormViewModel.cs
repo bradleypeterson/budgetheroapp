@@ -15,7 +15,7 @@ public class TransactionFormViewModel : ObservableRecipient
 {
     private readonly IDataStore _dataStore;
     private readonly ISessionService _sessionService;
-    private IDialogService _dialogservice;
+    public IDialogService _dialogservice;
 
     public TransactionFormViewModel()
     {
