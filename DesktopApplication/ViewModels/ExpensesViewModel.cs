@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
@@ -40,7 +41,12 @@ public class ExpensesViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedTransaction, value);
-            HasItemSelected = value is not null;
+            if (value is not null)
+            {
+                HasItemSelected = true;
+                BankAccountName = value.Transaction.BankAccount.BankName;
+                BankAccountBalance = value.Transaction.BankAccount.Balance.ToString("C2");
+            }
         }
     }
 
@@ -50,6 +56,20 @@ public class ExpensesViewModel : ObservableRecipient
         get => _hasItemSelected;
         set => SetProperty(ref _hasItemSelected, value);
     }
+
+    private string? _bankAccountName;
+    public string BankAccountName
+    {
+        get => _bankAccountName ?? string.Empty;
+        set => SetProperty(ref _bankAccountName, value);
+    }
+
+    private string? _bankAccountBalance;
+    public string BankAccountBalance
+    {
+        get => _bankAccountBalance ?? string.Empty;
+        set => SetProperty(ref _bankAccountBalance, value);
+    } 
 
     public async Task LoadAsync()
     {
@@ -129,6 +149,8 @@ public class ExpensesViewModel : ObservableRecipient
 
             index = Transactions.IndexOf(listedTransaction);
             Transactions[index].Transaction = existingTransaction;
+            BankAccountName = existingTransaction.BankAccount.BankName;
+            BankAccountBalance = existingTransaction.BankAccount.Balance.ToString("C2");
         }
     }
 

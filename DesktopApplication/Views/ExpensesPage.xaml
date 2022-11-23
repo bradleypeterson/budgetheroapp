@@ -58,8 +58,7 @@
                                    GridLinesVisibility="All" SelectionMode="Extended"
                                    ItemsSource="{x:Bind ViewModel.Transactions, Mode=OneWay}"
                                    SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay}">
-                                   <!--SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">-->
-                    
+
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Black"/>
@@ -128,7 +127,7 @@
             </StackPanel>
 
             <!-- this is the data grid for the bank account items-->
-            <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
+            <!--<controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                 CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
                                 HeadersVisibility="Column" VerticalAlignment="Center" Height="150" Width="275">
 
@@ -153,7 +152,69 @@
                     <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*"/>
                     <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*"/>
                 </controls:DataGrid.Columns>
-            </controls:DataGrid>
+            </controls:DataGrid>-->
+            
+            <!--<Border Background="LightGray" Grid.Row="3">
+                <StackPanel x:Name="BankAccountContainer"
+                            Orientation="Vertical" 
+                            BorderBrush="Black"
+                            BorderThickness="2"
+                            Width="275">
+                    <StackPanel x:Name="BankAccountDetailHeader" Orientation="Horizontal">
+                        <Border BorderThickness="1" BorderBrush="Black">
+                            <TextBlock x:Name="TextBlockBankNameHeader" Text="Account" Width="138" TextAlignment="Center" Padding="10" FontWeight="Bold"/>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Black">
+                            <TextBlock x:Name="TextBlockBalanceHeader" Text="Balance" Width="137" TextAlignment="Center" Padding="10" FontWeight="Bold"/>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel x:Name="BankAccountDetail" Orientation="Horizontal">
+                        <Border BorderThickness="1" BorderBrush="Black">
+                            <TextBlock x:Name="TextBlockBankName" Width="138" TextAlignment="Center" Padding="10"
+                                       Text="{x:Bind ViewModel.BankAccountName, Mode=OneWay}"/>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Black">
+                            <TextBlock x:Name="TextBlockBalance" Width="137" TextAlignment="Center" Padding="10"
+                                       Text="{x:Bind ViewModel.BankAccountBalance, Mode=OneWay}"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>-->
+            
+            <Grid Grid.Row="3" Background="LightGray" Height="100" Width="275" BorderThickness="1" BorderBrush="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Column="0" Grid.Row="0" Background="GhostWhite" BorderThickness="1" BorderBrush="Black">
+                    <TextBlock x:Name="TextBlockBankNameHeader"
+                               VerticalAlignment="Center"
+                               Text="Account" TextAlignment="Center" Padding="10" FontWeight="Bold"/>
+                </Border>
+                <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock x:Name="TextBlockBankName"
+                           Grid.Column="0" Grid.Row="1"
+                           TextAlignment="Center" Padding="10"
+                           TextWrapping="WrapWholeWords"
+                           VerticalAlignment="Center"
+                           Text="{x:Bind ViewModel.BankAccountName, Mode=OneWay}"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="0" Background="GhostWhite" BorderThickness="1" BorderBrush="Black">
+                    <TextBlock x:Name="TextBlockBalanceHeader" 
+                               VerticalAlignment="Center"
+                               Text="Balance" TextAlignment="Center" Padding="10" FontWeight="Bold"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock x:Name="TextBlockBalance"
+                           TextAlignment="Center" Padding="10"
+                           VerticalAlignment="Center"
+                           Text="{x:Bind ViewModel.BankAccountBalance, Mode=OneWay}"/>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Page>
