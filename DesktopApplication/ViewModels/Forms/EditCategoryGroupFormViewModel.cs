@@ -15,6 +15,7 @@ namespace DesktopApplication.ViewModels.Forms
 
         public ObservableCollection<BudgetCategoryGroup> BudgetCategoryGroups { get; } = new();
         public ObservableCollection<BudgetCategory> BudgetCategories { get; } = new();
+        public ObservableCollection<BudgetCategory> CategoriesToShow { get; } = new();
 
         public EditCategoryGroupFormViewModel()
         {
@@ -104,6 +105,11 @@ namespace DesktopApplication.ViewModels.Forms
             }
             
             SelectedCategoryItem = BudgetCategories.FirstOrDefault(i => i.BudgetCategoryID == categoryItemId);
+        }
+
+        public void SetCategoriesToShow()
+        {
+            //TODO: Write code to update show list (make sure to clear first)
         }
 
         public async Task LoadAsync()

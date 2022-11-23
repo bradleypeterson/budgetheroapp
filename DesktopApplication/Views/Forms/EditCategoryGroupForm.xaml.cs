@@ -65,8 +65,7 @@ public sealed partial class EditCategoryGroupForm : Page
         }
 
         //Call viewmodel function to populate the appropriate items
-        
-
+        ViewModel.SetCategoriesToShow();
     }
 
     private void GroupNameText_TextChanged(object sender, TextChangedEventArgs e)
