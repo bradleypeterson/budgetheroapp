@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.Models;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
 
@@ -13,6 +14,7 @@ namespace DesktopApplication.ViewModels.Forms
         private readonly ISessionService _sessionService;
 
         public ObservableCollection<BudgetCategoryGroup> BudgetCategoryGroups { get; } = new();
+        public ObservableCollection<BudgetCategory> BudgetCategories { get; } = new();
 
         public EditCategoryGroupFormViewModel()
         {
@@ -27,6 +29,16 @@ namespace DesktopApplication.ViewModels.Forms
             set
             {
                 SetProperty(ref _selectedCategoryGroup, value);
+            }
+        }
+        
+        private BudgetCategory? _selectedCategoryItem = new();
+        public BudgetCategory? SelectedCategoryItem
+        {
+            get => _selectedCategoryItem;
+            set
+            {
+                SetProperty(ref _selectedCategoryItem, value);
             }
         }
 
@@ -82,9 +94,21 @@ namespace DesktopApplication.ViewModels.Forms
             SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
         }
 
+        private void SetSelectedItem() 
+        {
+            int categoryItemId = 0;
+            
+            if (SelectedCategoryItem is not null)
+            {
+                categoryItemId = SelectedCategoryItem.BudgetCategoryID;
+            }
+            
+            SelectedCategoryItem = BudgetCategories.FirstOrDefault(i => i.BudgetCategoryID == categoryItemId);
+        }
+
         public async Task LoadAsync()
         {
-            if (BudgetCategoryGroups.Any()) return;
+            if (BudgetCategoryGroups.Any() || BudgetCategories.Any()) return;
 
             int? userId = _sessionService.GetSessionUserId();
             User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
@@ -97,23 +121,25 @@ namespace DesktopApplication.ViewModels.Forms
 
             if (_usersCategoryGroups is not null)
             {
-                foreach (BudgetCategoryGroup? categoryGroup in _usersCategoryGroups
-)
+                foreach (BudgetCategoryGroup? categoryGroup in _usersCategoryGroups)
                 {
                     BudgetCategoryGroups.Add(categoryGroup!);
+
+                    var groupID = categoryGroup.BudgetCategoryGroupID;
+                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryID == groupID);
+
+                    foreach (var item in BudgetItems)
+                    {
+                        BudgetCategories.Add(item);
+                    }
                 }
             }
 
             SetSelectedGroup();
+            SetSelectedItem();
 
             //TODO: Still need to add the category group items to the drop down in Remove Item that match the corresponding category group
 
         }
-
-
-
-
-
-
     }
 }

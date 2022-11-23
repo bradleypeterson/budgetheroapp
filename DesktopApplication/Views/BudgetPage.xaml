@@ -20,8 +20,7 @@
                                        HeadersVisibility="Column" VerticalAlignment="Bottom"
                                        SelectionMode="Single" AlternatingRowBackground="LightCyan"
                                        SelectionChanged="DataGrid_SelectionChanged"
-                                       ItemsSource="{Binding temp}">
-                                       <!--ItemsSource="{x:Bind BudgetCategories, Mode=OneWay}">-->
+                                       ItemsSource="{Binding CategoryItems, Mode=OneWay}">
                         <controls:DataGrid.Resources>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>

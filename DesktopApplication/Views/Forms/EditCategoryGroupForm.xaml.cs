@@ -63,6 +63,10 @@ public sealed partial class EditCategoryGroupForm : Page
            GroupNameText.IsReadOnly = false;
            GroupNameText.Text = ViewModel.SelectedCategoryGroup.CategoryGroupDesc.ToString();
         }
+
+        //Call viewmodel function to populate the appropriate items
+        
+
     }
 
     private void GroupNameText_TextChanged(object sender, TextChangedEventArgs e)
@@ -79,4 +83,6 @@ public sealed partial class EditCategoryGroupForm : Page
     {
         ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
     }
+
+    
 }

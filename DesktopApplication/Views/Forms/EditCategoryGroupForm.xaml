@@ -1,9 +1,8 @@
 ﻿<Page
     x:Class="DesktopApplication.Views.Forms.EditCategoryGroupForm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Loaded="Page_Loaded">
 
@@ -15,11 +14,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
         <ComboBox Grid.Row="0" x:Name="EditGroupCombo" PlaceholderText="Choose Group To Edit" 
-                  SelectionChanged="EditCombo_SelectionChanged" SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}"
-                  DisplayMemberPath="CategoryGroupDesc"/>
+                  SelectionChanged="EditCombo_SelectionChanged" 
+                  SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}" DisplayMemberPath="CategoryGroupDesc"/>
 
         <TextBox Grid.Row="1" x:Name="GroupNameText"  Header="Group Name:" Margin="0,10,0,10" TextChanged="GroupNameText_TextChanged"/>
 
@@ -34,7 +32,9 @@
         </StackPanel>
 
         <StackPanel x:Name="RemoveItemPanel" Grid.Row="3" Visibility="Collapsed">
-            <ComboBox Grid.Row="0" x:Name="RemoveItemCombo" PlaceholderText="Choose Item To Remove"/>
+            <ComboBox Grid.Row="0" x:Name="RemoveItemCombo" PlaceholderText="Choose Item To Remove" 
+                      SelectedItem="{x:Bind ViewModel.SelectedCategoryItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{x:Bind ViewModel.BudgetCategories}" DisplayMemberPath="CategoryName"/>
         </StackPanel>
         
     </Grid>
