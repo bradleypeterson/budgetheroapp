@@ -15,16 +15,13 @@ public class TransactionFormViewModel : ObservableRecipient
 {
     private readonly IDataStore _dataStore;
     private readonly ISessionService _sessionService;
-    private IDialogService _dialogService;
-    public ExpensesViewModel viewModel { get; set; }
-    public bool buttonDisabled { get; set; }
-
+    private IDialogService _dialogservice;
 
     public TransactionFormViewModel()
     {
         _dataStore = App.GetService<IDataStore>();
         _sessionService = App.GetService<ISessionService>();
-        _dialogService = App.GetService<IDialogService>();
+        _dialogservice= App.GetService<IDialogService>();
     }
 
     public ObservableTransaction? ObservableTransaction { get; set; } = new();

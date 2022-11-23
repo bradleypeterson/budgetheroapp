@@ -38,9 +38,6 @@ public class ExpensesViewModel : ObservableRecipient
     public ObservableCollection<ObservableTransaction> Transactions { get; set; } = new();
     public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
 
-    //Check if the form can be closed
-    private bool allowClose = false;
-
     private ObservableTransaction? _selectedTransaction;
     public ObservableTransaction? SelectedTransaction
     {
@@ -130,11 +127,7 @@ public class ExpensesViewModel : ObservableRecipient
 
         int result = await _dataStore.Transaction.AddAsync(newTransaction);
 
-        if (result == 1)
-        {
-            Transactions.Add(new ObservableTransaction(newTransaction));
-        }
-        allowClose= true;
+        Transactions.Add(new ObservableTransaction(newTransaction));
 
     }
 
@@ -210,6 +203,11 @@ public class ExpensesViewModel : ObservableRecipient
         }
 
         Transactions= filteredList;
+    }
+
+    public void setButton(bool status)
+    {
+
     }
 
 }

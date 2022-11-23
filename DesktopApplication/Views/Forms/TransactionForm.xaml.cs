@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.ViewModels;
 using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -25,18 +26,13 @@ namespace DesktopApplication.Views.Forms;
 /// </summary>
 public sealed partial class TransactionForm : Page
 {
-    private readonly IDialogService _dialogService;
 
-    public TransactionFormViewModel ViewModel
-    {
-        get;
-    }
+    public TransactionFormViewModel ViewModel{ get; }
+
     public TransactionForm()
     {
         ViewModel = App.GetService<TransactionFormViewModel>();
         InitializeComponent();
-        _dialogService = App.GetService<IDialogService>();
-        
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -91,6 +87,7 @@ public sealed partial class TransactionForm : Page
         else
         {
             removeInvalidPayeeError();
+            validData();
         }
     }
 
@@ -108,6 +105,7 @@ public sealed partial class TransactionForm : Page
                 else
                 {
                     removeInvalidNumberError();
+                    validData();
                 }
             }
         }
@@ -127,6 +125,7 @@ public sealed partial class TransactionForm : Page
         else
         {
             removeInvalidAccountError();
+            validData();
         }
     }
 
@@ -139,26 +138,28 @@ public sealed partial class TransactionForm : Page
         else
         {
             removeInvalidCategoryError();
+            validData();
         }
     }
 
     private void validData()
     {
-        if (TransactionPayeeTextBox.Text.Equals("")) return;
+       if (TransactionPayeeTextBox.Text.Equals("")) return;
         try
         {
-            if (!Double.IsNaN(Decimal.ToDouble(Decimal.Parse(ExpenseAmount.Text))))
+            if (Double.IsNaN(Decimal.ToDouble(Decimal.Parse(ExpenseAmount.Text))))
             {
-                removeInvalidNumberError();
+                return;
             }
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             return;
         }
-        if (BankAccountComboBox.SelectedItem.ToString() == null) return;
-        if (ExpenseCategoryCombo.SelectedItem.ToString() == null) return;
+        if (BankAccountComboBox.SelectedItem == null) return;
+        if (ExpenseCategoryCombo.SelectedItem == null) return;
 
-
+        
     }
 }

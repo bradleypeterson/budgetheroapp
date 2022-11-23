@@ -12,11 +12,15 @@ public class DialogService : IDialogService
 
     public event EventHandler<DialogServiceEventArgs>? OnSaved;
 
-    public bool IsPrimaryButtonEnabled { get; set; }
+    public bool IsEnabled { get; set; }
+
+    public ContentDialog Dialog;
 
     public DialogService()
     {
         _root = MainWindowHelper.GetXamlRoot();
+        IsEnabled= false;
+        Dialog = new ContentDialog();
     }
 
     public async Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null, bool isDeleting = false)
@@ -34,8 +38,9 @@ public class DialogService : IDialogService
 
         var dialog = BuildContentDialog(dialogTitle, dialogContent);
 
-        dialog.IsPrimaryButtonEnabled = IsPrimaryButtonEnabled;
-        IsPrimaryButtonEnabled = false;
+        Dialog = dialog;
+
+        dialog.IsPrimaryButtonEnabled = false;
 
         var result = await dialog.ShowAsync();
 
@@ -61,4 +66,10 @@ public class DialogService : IDialogService
 
         return contentDialog;
     }
+
+    //void IDialogService.ButtonEnabled(bool status)
+    //{
+    //    Dialog.IsPrimaryButtonEnabled = status;
+    //}
+
 }
