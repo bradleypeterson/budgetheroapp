@@ -164,6 +164,6 @@ public sealed partial class TransactionForm : Page
         if (BankAccountComboBox.SelectedItem == null) return;
         if (ExpenseCategoryCombo.SelectedItem == null) return;
 
-        
+        //Enable button here
     }
 }

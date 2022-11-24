@@ -124,11 +124,11 @@ public class ExpensesViewModel : ObservableRecipient
     {
         Transaction newTransaction = GetTransaction(e);
         
-        if (validateDate(newTransaction))
+        if (validateDate(newTransaction))//Remove this validation once buttons can be enabled and disabled
         {
-            int result = await _dataStore.Transaction.AddAsync(newTransaction);
+            int result = await _dataStore.Transaction.AddAsync(newTransaction);//keep this
 
-            Transactions.Add(new ObservableTransaction(newTransaction));
+            Transactions.Add(new ObservableTransaction(newTransaction));//keep this
         }
 
     }
@@ -140,15 +140,15 @@ public class ExpensesViewModel : ObservableRecipient
             a => a.Transaction.TransactionId == editedTransaction.TransactionId);
         int index;
 
-        if (listedTransaction is not null)
+        if (listedTransaction is not null)//Remove this validation  once buttons can be enabled and disabled
         {
 
-            if (validateDate(editedTransaction))
+            if (validateDate(editedTransaction))//keep this
             {
-                await _dataStore.Transaction.Update(editedTransaction);
+                await _dataStore.Transaction.Update(editedTransaction);//keep this
 
-                index = Transactions.IndexOf(listedTransaction);
-                Transactions[index].Transaction = editedTransaction;
+                index = Transactions.IndexOf(listedTransaction);//keep this 
+                Transactions[index].Transaction = editedTransaction;//keep this
             }
             
         }
@@ -212,6 +212,7 @@ public class ExpensesViewModel : ObservableRecipient
         Transactions= filteredList;
     }
 
+    //Once buttons can be disbled and enabled this can be deleted.
     public bool validateDate(Transaction transaction)
     {
         try
