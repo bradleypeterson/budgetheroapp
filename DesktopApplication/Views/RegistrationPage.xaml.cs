@@ -32,6 +32,8 @@ public sealed partial class RegistrationPage : Page
     private void showMismatchingPasswordsError(object? sender, EventArgs e)
     {
         tbPasswordsMismatchedError.Visibility = Visibility.Visible;
+        pwbPassword.Password = "";
+        pwdConfirmPassword.Password = "";
     }
 
     private void removeEmailInvalidError(object? sender, EventArgs e)
@@ -42,6 +44,7 @@ public sealed partial class RegistrationPage : Page
     private void showEmailInvalidError(object? sender, EventArgs e)
     {
         tbEmailInvalidError.Visibility= Visibility.Visible;
+        txtEmail.Text = "";
     }
 
     private void removeUsernameTakenError(object? sender, EventArgs e)
@@ -52,6 +55,7 @@ public sealed partial class RegistrationPage : Page
     private void showUsernameTakenError(object? sender, EventArgs e)
     {
         tbUsernameTakenError.Visibility = Visibility.Visible;
+        txtUsername.Text = "";
     }
 
     private void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

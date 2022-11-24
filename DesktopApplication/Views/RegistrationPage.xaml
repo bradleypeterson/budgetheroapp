@@ -66,7 +66,7 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </PasswordBox.Resources>
             </PasswordBox>
-            <PasswordBox Width="300" 
+            <PasswordBox x:Name="pwdConfirmPassword" Width="300" 
                          Header="Confirm Password" 
                          PlaceholderText="Confirm Password"
                          Password="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
