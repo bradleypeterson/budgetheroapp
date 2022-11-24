@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
@@ -8,6 +9,7 @@ using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.Views.Forms;
+using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels;
@@ -81,9 +83,9 @@ public class ExpensesViewModel : ObservableRecipient
 
         if (transactions is not null)
         {
-            foreach (var transaction in transactions)
+            foreach (Transaction? transaction in transactions)
             {
-                if (transaction is not null) 
+                if (transaction is not null && transaction.BankAccount.UserId == userId) 
                     Transactions.Add(new ObservableTransaction(transaction));
             }
         }
@@ -125,10 +127,17 @@ public class ExpensesViewModel : ObservableRecipient
     private async void AddTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
         Transaction newTransaction = GetTransaction(e);
+        BankAccount? bankAccount = _dataStore.BankAccount.GetById(newTransaction.BankAccountId);
+
+        if (bankAccount is not null)
+        {
+            newTransaction.BankAccount = bankAccount;
+            UpdateAccountBalance(newTransaction);
+        }
 
         int result = await _dataStore.Transaction.AddAsync(newTransaction);
 
-        if (result == 1)
+        if (result > 0)
         {
             Transactions.Add(new ObservableTransaction(newTransaction));
         }
@@ -138,6 +147,7 @@ public class ExpensesViewModel : ObservableRecipient
     {
         Transaction existingTransaction = SelectedTransaction!.Transaction;
         existingTransaction = EntityUtilities.Update(existingTransaction, GetTransaction(e));
+        UpdateAccountBalance(existingTransaction);
 
         ObservableTransaction? listedTransaction = Transactions.FirstOrDefault(
             a => a.Transaction.TransactionId == existingTransaction.TransactionId);
@@ -157,6 +167,7 @@ public class ExpensesViewModel : ObservableRecipient
     private async void DeleteTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
         Transaction selectedTransaction = _selectedTransaction!.Transaction;
+        UpdateAccountBalance(selectedTransaction, true);
         await _dataStore.Transaction.DeleteAsync(selectedTransaction);
 
         Transactions.Remove(_selectedTransaction);
@@ -167,5 +178,27 @@ public class ExpensesViewModel : ObservableRecipient
         TransactionForm form = (TransactionForm)e.Content;
         Transaction transaction = form.ViewModel.ObservableTransaction!.Transaction;
         return transaction;
+    }
+
+    private void UpdateAccountBalance(Transaction transaction, bool isDeleting = false)
+    {
+        if (transaction.ExpenseAmount is 0 && transaction.DepositAmount is not 0)
+        {
+            if (isDeleting)
+                transaction.BankAccount.Balance -= transaction.DepositAmount;
+            else
+                transaction.BankAccount.Balance += transaction.DepositAmount;
+        }
+        else if (transaction.ExpenseAmount is not 0 && transaction.DepositAmount is 0)
+        {
+            if (isDeleting)
+                transaction.BankAccount.Balance += transaction.ExpenseAmount;
+            else
+                transaction.BankAccount.Balance -= transaction.ExpenseAmount;
+        }
+        else
+        {
+            Debug.WriteLine("The bank account balance could not be updated.");
+        }
     }
 }
