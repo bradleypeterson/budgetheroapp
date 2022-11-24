@@ -24,6 +24,7 @@ public class BudgetViewModel : ObservableRecipient
 
     public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
     public ObservableCollection<ObservableCategoryItem>? CategoryItems { get; set; } = new();
+    public ObservableCollection<ObservableExpander>? Expanders { get; set; } = new();
 
     public BudgetViewModel()
     {
@@ -56,6 +57,7 @@ public class BudgetViewModel : ObservableRecipient
             foreach (var categoryGroup in personalBudget.BudgetCategoryGroups)
             {
                 BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
+                Expanders.Add(new ObservableExpander(categoryGroup!));
 
                 var groupID = categoryGroup.BudgetCategoryGroupID;
                 var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
@@ -197,9 +199,15 @@ public class BudgetViewModel : ObservableRecipient
 
             BudgetCategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
             
-            selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e); 
+            selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e);
 
             await _dataStore.BudgetCategoryGroup.Update(selectedCategoryGroup); /* updates the database value */
+
+            
+            //TODO: Get the expander for later data manipulation
+            //var expander = Expanders.FirstOrDefault(e => e.CategoryGroupID == newCategoryItem.BudgetCategoryGroupID);
+
+
 
             /* Get status of radio button for Category Item Editing */
             var radStatus = GetRadioButtonStatus(e);
@@ -208,7 +216,6 @@ public class BudgetViewModel : ObservableRecipient
             {
                 if (radStatus == "Add Category Item")
                 {
-                    //TODO: add User input category item to database under selected category group
                     BudgetCategory newCategoryItem = new BudgetCategory();
 
                     //Set the data members
@@ -220,6 +227,8 @@ public class BudgetViewModel : ObservableRecipient
                     CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
                     var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
 
+                    //TODO: uncomment after getting the expander tied to the specific category group
+                    //expander.AddToExpanderList(newCategoryItem);
                 }
                 else if (radStatus == "Remove Category Item")
                 {

@@ -21,11 +21,6 @@ public class BudgetCategoryGroupViewModel
         //BudgetCategories = //TODO: pull all budget items associated with category
     }
 
-   
-
-
-
-
     //TEST: Delete when not needed
     private List<BudgetCategoryViewModel> GenerateSampleBudgetCategories()
     {
