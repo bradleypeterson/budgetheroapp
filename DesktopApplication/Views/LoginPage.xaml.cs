@@ -30,6 +30,8 @@ public sealed partial class LoginPage : Page
     private void showInvalidUsernameOrPassword(object? sender, EventArgs e)
     {
         tbUsernameOrPasswordInvalid.Visibility = Visibility.Visible;
+        txtUsername.Text = "";
+        pwbPassword.Password = "";
     }
 
     private void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
