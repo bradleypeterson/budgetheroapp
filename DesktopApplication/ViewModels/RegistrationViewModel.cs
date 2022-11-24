@@ -237,20 +237,26 @@ public class RegistrationViewModel : ObservableRecipient
 
     private void CreateNewUserBudget()
     {
-        User userBudgets = _dataStore.User.Get(u => u.UserId == 1, false, "Budgets");
-        var newBudget = userBudgets.Budgets;
+        int userId = _sessionService.GetSessionUserId();
+        User? user = _dataStore.User.Get(u => u.UserId == userId, false, "Budgets");
+        IEnumerable<Budget> userBudgets;
 
-        Budget budget = new Budget
+        if (user is not null && user.Budgets is not null)
+            userBudgets = user.Budgets;
+        else
+            userBudgets = new List<Budget>();
+
+        Budget budget = new()
         {
             BudgetName = "Personal Budget",
             BudgetType = "personal",
         };
 
-        newBudget.Add(budget);
+        userBudgets.Add(budget);
 
-        userBudgets.Budgets = newBudget;
+        user.Budgets = userBudgets;
 
-        _dataStore.User.Update(userBudgets);
+        _dataStore.User.Update(user);
     }
 
     private void NavigateBack() => _navigationService.GoBack();
