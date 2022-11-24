@@ -16,6 +16,11 @@ public sealed class DecimalToStringConverter : IValueConverter
             if (d == 0) { return string.Empty; }
             return d.ToString(Format);
         }
+        else if (value is string s && value != null)
+        {
+            object obj = ConvertBack(value, targetType, parameter, language);
+            return Convert(obj, targetType, parameter, language);
+        }
 
         return null!;
     }

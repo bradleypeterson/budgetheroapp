@@ -7,11 +7,15 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:converters="using:DesktopApplication.Converters"
     xmlns:viemodels="using:DesktopApplication.ViewModels.Models"
+    xmlns:models="using:ModelsLibrary"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
     <Page.Resources>
         <ResourceDictionary>
+            <converters:DateToStringConverter
+                x:Name="DateToStringConverter"
+                Format="MM/dd/yyyy"/>
             <converters:DecimalToStringConverter
                 x:Name="DecimalToStringConverter"
                 Format="C2"/>
@@ -71,8 +75,67 @@
 
             <!-- This border contains the details textbox-->
             <Border Grid.Row="1" x:Name="Details_TxtBox" Background="White" Width="275"  CornerRadius="10" BorderBrush="Black" Margin="0 20 0 0" >
-            
-            <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
+                <!-- There will be a datagrid located here that will show the current transactions related to the selected account in the work area -->
+                
+                <!--DataGrid Option-->
+                
+                <!--<controls:DataGrid x:Name="TransactionData" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="True" 
+                                   CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="LightGray" 
+                                   GridLinesVisibility="All" SelectionMode="Extended"
+                                   ItemsSource="{x:Bind ViewModel.AccountTransactions, Mode=OneWay}">
+
+                    <controls:DataGrid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Style>
+                    </controls:DataGrid.Resources>
+
+                    <controls:DataGrid.Columns>
+                        <controls:DataGridTextColumn 
+                            Header="Date" Width="1*" 
+                            Binding="{Binding TransactionDate, Converter={StaticResource DateToStringConverter}}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Payee" Width="2*" 
+                            Binding="{Binding TransactionPayee}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Category" Width="1*" Binding="{Binding CategoryName}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Memo" Width="2*" 
+                            Binding="{Binding TransactionMemo}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Outflow" Width="1*" Binding="{Binding ExpenseAmount, Converter={StaticResource DecimalToStringConverter}}"/>
+                        <controls:DataGridTextColumn 
+                            Header="Inflow" Width="1*" Binding="{Binding DepositAmount, Converter={StaticResource DecimalToStringConverter}}"/>
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>-->
+                
+                <!--ListView Option-->
+
+                <ListView ItemsSource="{x:Bind ViewModel.AccountTransactions, Mode=OneWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:Name="AccountDetailsTemplate" x:DataType="models:Transaction">
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Date:" Width="75"  FontWeight="Black"/>
+                                    <TextBlock Text="{x:Bind TransactionDate, Converter={StaticResource DateToStringConverter}}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Payee:" Width="75"  FontWeight="Bold"/>
+                                    <TextBlock Text="{x:Bind TransactionPayee}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Expensed:" Width="75" FontWeight="Bold"/>
+                                    <TextBlock Text="{x:Bind ExpenseAmount, Converter={StaticResource DecimalToStringConverter}}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Deposited:" Width="75" FontWeight="Bold"/>
+                                    <TextBlock Text="{x:Bind DepositAmount, Converter={StaticResource DecimalToStringConverter}}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
             </Border>
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
                 <Button Margin="10" 
