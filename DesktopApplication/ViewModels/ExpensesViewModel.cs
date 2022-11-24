@@ -1,9 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
@@ -11,13 +7,9 @@ using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
-using DesktopApplication.Services;
+using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
-using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
-using Windows.System;
-using Windows.UI.Popups;
-using WinUIEx.Messaging;
 
 namespace DesktopApplication.ViewModels;
 
@@ -139,7 +131,7 @@ public class ExpensesViewModel : ObservableRecipient
 
         string dialogTitle = "Delete Transaction";
         Transaction _selectedTransaction = SelectedTransaction!.Transaction;
-        await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle, _selectedTransaction, true);
+        await _dialogService.ShowDialogAsync<DeleteItemForm>(dialogTitle, _selectedTransaction);
 
         _dialogService.OnSaved -= DeleteTransactionAsync;
     }
@@ -155,18 +147,10 @@ public class ExpensesViewModel : ObservableRecipient
             UpdateAccountBalance(newTransaction);
         }
 
-        int result = 0;
-
-        if (validateDate(newTransaction))//Remove this validation once buttons can be enabled and disabled
-        {
-            result = await _dataStore.Transaction.AddAsync(newTransaction);
-        }
+        int result = await _dataStore.Transaction.AddAsync(newTransaction);
 
         if (result > 0)
-        {
             Transactions.Add(new ObservableTransaction(newTransaction));
-            Transactions.Add(new ObservableTransaction(newTransaction));
-        }
 
     }
 
@@ -207,8 +191,8 @@ public class ExpensesViewModel : ObservableRecipient
         return transaction;
     }
 
-    //Used to filter the tranaction list
-    public async void filterList(string filter, string category)
+    //Used to filter the transaction list
+    public void FilterList(string filter, string category)
     {
         int userId = _sessionService.GetSessionUserId();
 
@@ -235,9 +219,7 @@ public class ExpensesViewModel : ObservableRecipient
                             default:
                                 Console.Error.WriteLine("You did done f'd up");
                                 break;
-
                         }
-                        
                     }
                     else
                     {
@@ -248,25 +230,6 @@ public class ExpensesViewModel : ObservableRecipient
 
         Transactions= filteredList;
     }
-
-    //Once buttons can be disbled and enabled this can be deleted.
-    public bool validateDate(Transaction transaction)
-    {
-        try
-        {
-            if (transaction.TransactionPayee == null) { return false; }
-            if (transaction.BankAccountId == 0) { return false; }
-            if (transaction== null) { return false; }
-            if (transaction.BudgetCategoryId == 0) { return false; }
-            if (transaction.DepositAmount== 0 && transaction.ExpenseAmount == 0) { return false; }
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
 
     private void UpdateAccountBalance(Transaction transaction, bool isDeleting = false)
     {

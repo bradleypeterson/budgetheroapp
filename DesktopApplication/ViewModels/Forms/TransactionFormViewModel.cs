@@ -146,8 +146,8 @@ public class TransactionFormViewModel : ObservableRecipient
 
     private void SetTransactionType()
     {
-        string expenseAmount = ObservableTransaction.ExpenseAmount;
-        string depositAmount = ObservableTransaction.DepositAmount;
+        string? expenseAmount = ObservableTransaction!.ExpenseAmount;
+        string? depositAmount = ObservableTransaction!.DepositAmount;
 
         if (ObservableTransaction is not null)
             if (string.IsNullOrEmpty(expenseAmount) && !string.IsNullOrEmpty(depositAmount))

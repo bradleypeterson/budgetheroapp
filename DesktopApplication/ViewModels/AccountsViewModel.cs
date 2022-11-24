@@ -6,6 +6,7 @@ using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
+using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 
@@ -43,7 +44,8 @@ public class AccountsViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _selectedBankAccount, value);
-            FilterAccountTransactions(value!.BankAccount.BankAccountId);
+            if (value is not null)
+                FilterAccountTransactions(value.BankAccount.BankAccountId);
             HasItemSelected = value is not null;
         }
     }
@@ -98,7 +100,7 @@ public class AccountsViewModel : ObservableRecipient
 
         string dialogTitle = "Delete Account";
         BankAccount _selectedBankAccount = SelectedBankAccount!.BankAccount;
-        await _dialogService.ShowDialogAsync<BankAccountForm>(dialogTitle, _selectedBankAccount, true);
+        await _dialogService.ShowDialogAsync<DeleteItemForm>(dialogTitle, _selectedBankAccount);
 
         _dialogService.OnSaved -= DeleteBankAccountAsync;
     }

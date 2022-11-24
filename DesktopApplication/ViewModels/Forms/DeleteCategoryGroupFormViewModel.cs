@@ -42,7 +42,7 @@ namespace DesktopApplication.ViewModels.Forms
             SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
         }
 
-        public async Task LoadAsync()
+        public void LoadAsync()
         {
             if (BudgetCategoryGroups.Any()) return;
 

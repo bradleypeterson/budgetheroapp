@@ -1,15 +1,10 @@
-﻿using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using DesktopApplication.Contracts.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels.Forms;
 public class BankAccountFormViewModel : ObservableRecipient
 {
     private BankAccount _bankAccount = new();
-
-    public event EventHandler? OnValidForm;
-    public event EventHandler? OnInvalidForm;
     public BankAccount BankAccount
     {
         get => _bankAccount!;
@@ -30,13 +25,10 @@ public class BankAccountFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _bankName, value);
-            if (ValidFormCompletion())
-            {
-                _bankAccount.BankName = _bankName!;
-            }
+            _bankAccount.BankName = _bankName!;
         }
     }
-    
+
     private string? _accountType;
     public string? AccountType
     {
@@ -44,10 +36,7 @@ public class BankAccountFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _accountType, value);
-            if (ValidFormCompletion())
-            {
-                _bankAccount.AccountType = _accountType!;
-            }
+            _bankAccount.AccountType = _accountType!;
         }
     }
 
@@ -58,10 +47,7 @@ public class BankAccountFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _balance, value);
-            if (ValidFormCompletion())
-            {
-                _bankAccount.Balance = _balance!;
-            }
+            _bankAccount.Balance = _balance!;
         }
     }
 
@@ -72,10 +58,7 @@ public class BankAccountFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _balanceString, value);
-            if (ValidFormCompletion())
-            {
-                ConvertToDecimal(value!);
-            }
+            ConvertToDecimal(value!);
         }
     }
 
@@ -83,28 +66,6 @@ public class BankAccountFormViewModel : ObservableRecipient
     {
         decimal tempBalance;
         if (decimal.TryParse(value, out tempBalance))
-        {
             Balance = tempBalance;
-        }
-        else
-        {
-            Debug.WriteLine("Error: You must provide a decimal value.");
-        }
-    }
-
-    private bool ValidFormCompletion()
-    {
-        if (!string.IsNullOrEmpty(_bankName)
-            && !string.IsNullOrEmpty(_accountType)
-            && !string.IsNullOrEmpty(_balanceString))
-        {
-            OnValidForm?.Invoke(this, EventArgs.Empty);
-            return true;
-        }
-        else
-        {
-            OnInvalidForm?.Invoke(this, EventArgs.Empty);
-            return false;
-        }
     }
 }

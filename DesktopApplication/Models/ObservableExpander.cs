@@ -16,7 +16,7 @@ namespace DesktopApplication.Models
     {
         private readonly BudgetCategoryGroup _budgetCategoryGroup;
         private readonly IDataStore _dataStore;
-        public ObservableCollection<BudgetCategory>? CategoryItems { get; set; } = new();
+        public ObservableCollection<BudgetCategory> CategoryItems { get; set; } = new();
 
         public ObservableExpander(BudgetCategoryGroup budgetCategoryGroup)
         {

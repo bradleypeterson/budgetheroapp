@@ -27,7 +27,7 @@ public sealed partial class ExpensesPage : Page
         TextBox textBox = SearchTextBox;
         ComboBox combo = SearchCategoryCB;
 
-        ViewModel.filterList(textBox.Text, combo.SelectedItem.ToString()!);
+        ViewModel.FilterList(textBox.Text, combo.SelectedItem.ToString()!);
         TransactionData.ItemsSource = null;
         TransactionData.ItemsSource = ViewModel.Transactions;
     }
@@ -37,7 +37,7 @@ public sealed partial class ExpensesPage : Page
         TextBox textBox = SearchTextBox;
         ComboBox combo = SearchCategoryCB;
 
-        ViewModel.filterList(textBox.Text, combo.SelectedItem.ToString()!);
+        ViewModel.FilterList(textBox.Text, combo.SelectedItem.ToString()!);
         try{
             if (TransactionData != null)
             {

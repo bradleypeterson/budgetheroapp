@@ -13,15 +13,14 @@
         </TextBlock>
         <TextBox x:Name="txtAccountName" Header="Account Name" 
                  PlaceholderText="Enter Account Name" 
-                 Text="{x:Bind ViewModel.BankName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="txtAccountName_TextChanged"/>
+                 Text="{x:Bind ViewModel.BankName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock x:Name="tbAccountTypeEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
                 Select a account type
         </TextBlock>
         <ComboBox x:Name="txtAccountType" 
                   PlaceholderText="Choose Account Type" 
                   Margin="0,10,0,10" 
-                  SelectedValue="{x:Bind ViewModel.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectionChanged="txtAccountType_SelectionChanged">
+                  SelectedValue="{x:Bind ViewModel.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <x:String>Checking</x:String>
             <x:String>Savings</x:String>
         </ComboBox>
@@ -33,7 +32,7 @@
         </TextBlock>
         <TextBox x:Name="txtAccountBalance" Header="Account Balance" 
                  PlaceholderText="Enter Account Balance" 
-                 Text="{x:Bind ViewModel.BalanceString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="txtAccountBalance_TextChanged"/>
+                 Text="{x:Bind ViewModel.BalanceString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </StackPanel>
     
 </Page>

@@ -50,11 +50,11 @@ public class ShellViewModel : ObservableRecipient
     public string GetUserName()
     {
         int uID = _sessionService.GetSessionUserId();
-        User user = _dataStore.User.Get(u => u.UserId == uID);
+        User? user = _dataStore.User.Get(u => u.UserId == uID);
 
         if (user is not null)
         {
-            return user.Username;
+            return user.Username!;
         }
         else
         {

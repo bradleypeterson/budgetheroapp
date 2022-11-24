@@ -10,5 +10,5 @@ namespace DesktopApplication.Contracts.Services;
 public interface IDialogService
 {
     event EventHandler<DialogServiceEventArgs> OnSaved;
-    Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null, bool isDeleting = false);
+    Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null);
 }

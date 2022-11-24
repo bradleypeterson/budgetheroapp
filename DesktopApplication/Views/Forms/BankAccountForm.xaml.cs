@@ -1,114 +1,94 @@
 ﻿using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
-using static System.Net.Mime.MediaTypeNames;
-using CommunityToolkit.Common;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using DesktopApplication.Contracts.Views;
+using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BankAccountForm : Page
+public sealed partial class BankAccountForm : Page, IDialogForm
 {
     public BankAccountFormViewModel ViewModel { get; }
-    private bool validInput;
+
+    private bool isValidAccountName;
+    private bool isValidAccountSelection;
+    private bool isValidBalance;
+
     public BankAccountForm()
     {
         ViewModel = App.GetService<BankAccountFormViewModel>();
         InitializeComponent();
-        ViewModel.OnValidForm += EnableButton;
-        ViewModel.OnInvalidForm += DisableButton;
-        if (txtAccountType.SelectedIndex == -1)
-        {
-            tbAccountTypeEmptyError.Visibility = Visibility.Visible;
-            validInput = false;
-            CheckValidInput();
-        }
     }
 
-
-    private void txtAccountName_TextChanged(object sender, TextChangedEventArgs e)
+    public void ValidateForm()
     {
-        if(txtAccountName.Text == "")
-        {
-            tbAccountNameEmptyError.Visibility = Visibility.Visible;
-            validInput = false;
-            CheckValidInput();
-        }
-        else
-        {
-            tbAccountNameEmptyError.Visibility = Visibility.Collapsed;
-            validInput = true;
-            CheckValidInput();
-        }
+        ValidateAccountNameField();
+        ValidateAccountSelection();
+        ValidateAccountBalanceField();
     }
 
-    private void txtAccountBalance_TextChanged(object sender, TextChangedEventArgs e)
+    private void ValidateAccountBalanceField()
     {
         string balance = txtAccountBalance.Text;
 
-        if (balance == "")
+        if (balance == string.Empty)
         {
             tbAccountBalanceEmptyError.Visibility = Visibility.Visible;
             tbAccountBalanceInvalidError.Visibility = Visibility.Collapsed;
-            validInput = false;
-            CheckValidInput();
+            isValidBalance = false;
         }
         else
         {
             tbAccountBalanceEmptyError.Visibility = Visibility.Collapsed;
-            validInput = true;
-            CheckValidInput();
-            decimal tempBalance;
-            if (decimal.TryParse(balance, out tempBalance))
+            if (decimal.TryParse(balance, out decimal _))
             {
                 tbAccountBalanceInvalidError.Visibility = Visibility.Collapsed;
-                validInput = true;
-                CheckValidInput();
+                isValidBalance = true;
             }
             else
             {
                 tbAccountBalanceInvalidError.Visibility = Visibility.Visible;
-                validInput = false;
-                CheckValidInput();
+                isValidBalance = false;
             }
         }
     }
 
-    private void txtAccountType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ValidateAccountNameField()
     {
-        tbAccountTypeEmptyError.Visibility = Visibility.Collapsed;
-        validInput = true;
-        CheckValidInput();
-    }
-
-    private void CheckValidInput()
-    {
-        if (validInput)
+        if (txtAccountName.Text == string.Empty)
         {
-            //enable save button
-            Debug.Write("valid form");
+            tbAccountNameEmptyError.Visibility = Visibility.Visible;
+            isValidAccountName = false;
         }
         else
         {
-            //disable save button
-            Debug.Write("INVALID form");
+            tbAccountNameEmptyError.Visibility = Visibility.Collapsed;
+            isValidAccountName = true;
         }
     }
 
-
-    //Enable/Disable button event handlers are used to disable the button behind the scenes when the user hasn't touched the form at all (initial launch of dialog)
-    private void EnableButton(object? sender, EventArgs e)
+    private void ValidateAccountSelection()
     {
-        //enable button
+        int selection = txtAccountType.SelectedIndex;
+
+        if (selection == -1)
+        {
+            tbAccountTypeEmptyError.Visibility = Visibility.Visible;
+            isValidAccountSelection = false;
+        }
+        else
+        {
+            tbAccountTypeEmptyError.Visibility = Visibility.Collapsed;
+            isValidAccountSelection = true;
+        }
     }
 
-    private void DisableButton(object? sender, EventArgs e)
+    public bool IsValidForm() => isValidAccountName && isValidAccountSelection && isValidBalance;
+
+    public void SetModel(object model)
     {
-        //disable button
+        ViewModel.BankAccount = (BankAccount)model;
     }
 }

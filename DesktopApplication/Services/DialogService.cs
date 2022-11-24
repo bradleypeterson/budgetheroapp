@@ -1,4 +1,5 @@
 ﻿using DesktopApplication.Contracts.Services;
+using DesktopApplication.Contracts.Views;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
 using Microsoft.UI.Xaml;
@@ -17,30 +18,46 @@ public class DialogService : IDialogService
         _root = MainWindowHelper.GetXamlRoot();
     }
 
-    public async Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null, bool isDeleting = false)
+    public async Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null)
     {
-        Page? dialogContent;
+        IDialogForm? content;
+        ContentDialog dialog;
 
-        if (model is not null)
+        try
         {
-            dialogContent = DialogFormHelper.GetFormWithData(typeof(TForm), model, isDeleting);
+            content = (IDialogForm?)Activator.CreateInstance(typeof(TForm));
         }
-        else
+        catch (InvalidCastException ex)
         {
-            dialogContent = (Page?)Activator.CreateInstance(typeof(TForm));
+            throw new Exception($"The dialog form you are trying to show does not implement IDialogForm >>> {ex.Message}");
         }
 
-        var dialog = BuildContentDialog(dialogTitle, dialogContent);
-
-        var result = await dialog.ShowAsync();
-
-        if (result == ContentDialogResult.Primary && dialogContent is not null)
+        if (content is not null)
         {
-            OnSaved?.Invoke(this, new DialogServiceEventArgs(dialogContent));
+            if (model is not null)
+                content.SetModel(model);
+
+            dialog = BuildContentDialog(dialogTitle, content);
+            await ShowDialogAsync(dialog, content);
         }
     }
 
-    private ContentDialog BuildContentDialog(string dialogTitle, Page? dialogContent)
+    private async Task ShowDialogAsync(ContentDialog dialog, IDialogForm content)
+    {
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary && content is not null)
+        {
+            content.ValidateForm();
+
+            if (content.IsValidForm())
+                OnSaved?.Invoke(this, new DialogServiceEventArgs(content));
+            else
+                await ShowDialogAsync(dialog, content);
+        }
+    }
+
+    private ContentDialog BuildContentDialog(string dialogTitle, IDialogForm dialogContent)
     {
         ContentDialog contentDialog = new()
         {
