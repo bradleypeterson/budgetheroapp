@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
+using DesktopApplication.Models;
+using DesktopApplication.ViewModels.Models;
 using DesktopApplication.Converters;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
@@ -185,6 +187,33 @@ public class BudgetViewModel : ObservableRecipient
             BudgetCategoryGroups.RemoveAt(index);
         }
     }
+
+    public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
+
+    public async Task LoadAsync()
+    {
+        if (BankAccounts.Any()) return;
+        int userId = _sessionService.GetSessionUserId();
+
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        if (bankAccounts is not null)
+        {
+            foreach (var bankAccount in bankAccounts)
+            {
+                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
+            }
+        }
+    }
+
+        private static List<BudgetCategoryGroupViewModel> GenerateSampleBudgetCategoryGroups()
+    {
+        List<BudgetCategoryGroupViewModel> list = new()
+        {
+            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Housing" }),
+            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Utilities" }),
+            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Food" }),
+            new BudgetCategoryGroupViewModel(new BudgetCategoryGroup(){ CategoryGroupDesc = "Transportation" }),
+        };
     
     private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {

@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
@@ -6,8 +9,12 @@ using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
+using DesktopApplication.Services;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
+using Windows.System;
+using Windows.UI.Popups;
+using WinUIEx.Messaging;
 
 namespace DesktopApplication.ViewModels;
 
@@ -32,7 +39,8 @@ public class ExpensesViewModel : ObservableRecipient
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
     public ObservableCollection<ObservableTransaction> Transactions { get; set; } = new();
-    
+    public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
+
     private ObservableTransaction? _selectedTransaction;
     public ObservableTransaction? SelectedTransaction
     {
@@ -53,9 +61,20 @@ public class ExpensesViewModel : ObservableRecipient
 
     public async Task LoadAsync()
     {
-        if (Transactions.Any()) return;
-
+        if (BankAccounts.Any()) return;
+        
         int userId = _sessionService.GetSessionUserId();
+
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        if (bankAccounts is not null)
+        {
+            foreach (var bankAccount in bankAccounts)
+            {
+                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
+            }
+        }
+
+        if (Transactions.Any()) return;
         IEnumerable<Transaction?> transactions = 
             await _dataStore.Transaction.ListAsync(t => t.BankAccount.UserId == userId, null!, "BankAccount,BudgetCategory");
 
@@ -72,6 +91,7 @@ public class ExpensesViewModel : ObservableRecipient
     private async Task ShowAddDialog()
     {
         _dialogService.OnSaved += AddTransactionAsync;
+        
 
         string dialogTitle = "Add Transaction";
         await _dialogService.ShowDialogAsync<TransactionForm>(dialogTitle);
@@ -105,13 +125,14 @@ public class ExpensesViewModel : ObservableRecipient
     private async void AddTransactionAsync(object? sender, DialogServiceEventArgs e)
     {
         Transaction newTransaction = GetTransaction(e);
-
-        int result = await _dataStore.Transaction.AddAsync(newTransaction);
-
-        if (result == 1)
+        
+        if (validateDate(newTransaction))//Remove this validation once buttons can be enabled and disabled
         {
-            Transactions.Add(new ObservableTransaction(newTransaction));
+            int result = await _dataStore.Transaction.AddAsync(newTransaction);//keep this
+
+            Transactions.Add(new ObservableTransaction(newTransaction));//keep this
         }
+
     }
 
     private async void EditTransactionAsync(object? sender, DialogServiceEventArgs e)
@@ -123,6 +144,17 @@ public class ExpensesViewModel : ObservableRecipient
             a => a.Transaction.TransactionId == existingTransaction.TransactionId);
         int index;
 
+        if (listedTransaction is not null)//Remove this validation  once buttons can be enabled and disabled
+        {
+
+            if (validateDate(editedTransaction))//keep this
+            {
+                await _dataStore.Transaction.Update(editedTransaction);//keep this
+
+                index = Transactions.IndexOf(listedTransaction);//keep this 
+                Transactions[index].Transaction = editedTransaction;//keep this
+            }
+            
         if (listedTransaction is not null)
         {
             await _dataStore.Transaction.Update(existingTransaction);
@@ -146,4 +178,65 @@ public class ExpensesViewModel : ObservableRecipient
         Transaction transaction = form.ViewModel.ObservableTransaction!.Transaction;
         return transaction;
     }
+
+    //Used to filter the tranaction list
+    public async void filterList(string filter, string category)
+    {
+        int userId = _sessionService.GetSessionUserId();
+
+        ObservableCollection<ObservableTransaction> filteredList = new ObservableCollection<ObservableTransaction>();
+
+        IEnumerable<Transaction?> transactions =
+            _dataStore.Transaction.List(t => t.BankAccount.UserId == userId, null!, "BankAccount,BudgetCategory");
+
+        if (transactions is not null)
+        {
+            foreach (var transaction in transactions)
+            {
+                if (transaction is not null)
+                    if (!filter.Equals(""))
+                    {
+                        switch (category)
+                        {
+                            case "Payee":
+                                if (transaction.TransactionPayee.Contains(filter)) filteredList.Add(new ObservableTransaction(transaction));
+                                break;
+                            case "Category":
+                                if (transaction.BudgetCategory.CategoryName.Contains(filter)) filteredList.Add(new ObservableTransaction(transaction));
+                                break;
+                            default:
+                                Console.Error.WriteLine("You did done f'd up");
+                                break;
+
+                        }
+                        
+                    }
+                    else
+                    {
+                        filteredList.Add(new ObservableTransaction(transaction));
+                    }
+            }
+        }
+
+        Transactions= filteredList;
+    }
+
+    //Once buttons can be disbled and enabled this can be deleted.
+    public bool validateDate(Transaction transaction)
+    {
+        try
+        {
+            if (transaction.TransactionPayee == null) { return false; }
+            if (transaction.BankAccountId == 0) { return false; }
+            if (transaction== null) { return false; }
+            if (transaction.BudgetCategoryId == 0) { return false; }
+            if (transaction.DepositAmount== 0 && transaction.ExpenseAmount == 0) { return false; }
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
 }

@@ -45,33 +45,45 @@
                      Header="Payee:" 
                      PlaceholderText="Enter Payee"
                      Text="{x:Bind ViewModel.ObservableTransaction.TransactionPayee, 
-                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TransactionPayeeTextBox_TextChanged"/>
+            <TextBlock x:Name="tbInvalidPayeeError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please enter a payee."/>
 
             <TextBox x:Name="ExpenseAmount" Header="Amount:" 
                      PlaceholderText="Enter Amount"
                      Visibility="{x:Bind ViewModel.HasExpenseChecked, Mode=OneWay}"
                      Text="{x:Bind ViewModel.ObservableTransaction.ExpenseAmount,
-                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="ExpenseAmount_TextChanged"/>
 
             <TextBox x:Name="DepositAmount" Header="Amount:" 
                      PlaceholderText="Enter Amount"
                      Visibility="{x:Bind ViewModel.HasDepositChecked, Mode=OneWay}"
                      Text="{x:Bind ViewModel.ObservableTransaction.DepositAmount,
-                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="ExpenseAmount_TextChanged"/>
+            <TextBlock x:Name="tbInvalidNumberError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please enter a number."/>
 
             <TextBlock Text="Bank Account:"/>
 
             <ComboBox x:Name="BankAccountComboBox" PlaceholderText="Select Bank Account"
                       SelectedValue="{x:Bind ViewModel.SelectedBankAccount, Mode=TwoWay}"
-                      ItemsSource="{x:Bind ViewModel.BankAccounts}"
-                      DisplayMemberPath="BankName"/>
+                      ItemsSource="{x:Bind ViewModel.BankAccounts}" SelectionChanged="BankAccountComboBox_SelectionChanged"
+                      DisplayMemberPath="BankName" />
+            <TextBlock x:Name="tbInvalidAccountError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please select an account."/>
 
             <TextBlock Text="Category"/>
 
             <ComboBox x:Name="ExpenseCategoryCombo" PlaceholderText="Select Category"
                       SelectedValue="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay}"
-                      ItemsSource="{x:Bind ViewModel.BudgetCategories}"
+                      ItemsSource="{x:Bind ViewModel.BudgetCategories}" SelectionChanged="ExpenseCategoryCombo_SelectionChanged"
                       DisplayMemberPath="CategoryName"/>
+            <TextBlock x:Name="tbInvalidCategoryError" Style="{StaticResource FormErrorTextStyle}" 
+                       Visibility="Collapsed"
+                       Text="Please select a category."/>
 
             <TextBox x:Name="TransactionMemo" Header="Memo:" 
                      TextWrapping="Wrap" PlaceholderText="Enter Memo (optional)"

@@ -5,9 +5,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:Model="using:DesktopApplication.Models"
+    xmlns:viewModel="using:DesktopApplication.ViewModels.Models"
+    xmlns:converters="using:DesktopApplication.Converters"
     xmlns:customControls="using:DesktopApplication.Controls"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <converters:DateToStringConverter
+                x:Name="DateToStringConverter"
+                Format="MM/dd/yyyy"/>
+            <converters:DecimalToStringConverter
+                x:Name="DecimalToStringConverter"
+                Format="C2"/>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid x:Name="ContentArea">
         <Grid.Resources>
@@ -99,7 +112,7 @@
             <!-- this is the data grid for the bank account items-->
             <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                 CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                HeadersVisibility="Column" VerticalAlignment="Center" Width="275" Height="150">
+                                HeadersVisibility="Column" VerticalAlignment="Center" Width="275" Height="150" ItemsSource="{x:Bind ViewModel.BankAccounts, Mode=OneWay}">
 
                 <controls:DataGrid.Resources>
                     <Style TargetType="TextBlock">
@@ -119,8 +132,8 @@
                 </controls:DataGrid.RowStyle>
 
                 <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*"/>
-                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*"/>
+                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding BankName}"/>
+                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance, Converter={StaticResource DecimalToStringConverter}}"/>
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
         </Grid>

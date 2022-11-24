@@ -46,8 +46,12 @@
                             Content="Add Transaction" Margin="20,20,150,20" 
                             HorizontalAlignment="Right" 
                             Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
-                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="300" Margin="0 20 0 20" PlaceholderText="Search Transactions"/>
-                    <Button x:Name="Submit_Btn" Grid.Column="2" Content="Submit" Margin="20" />
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Width="250" Margin="0 20 0 20" PlaceholderText="Search Transactions" TextChanged="SearchTextBox_TextChanged"/>
+                    <ComboBox x:Name="SearchCategoryCB" Grid.Column="2" Width="110" Margin="0 20 0 20" SelectionChanged="SearchCategoryCB_SelectionChanged" SelectedItem="Payee">
+                        <x:String>Payee</x:String>
+                        <x:String>Category</x:String>
+
+                    </ComboBox>
                 </Grid>
             </Border>
             
@@ -130,7 +134,7 @@
             <!-- this is the data grid for the bank account items-->
             <controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
                                 CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                HeadersVisibility="Column" VerticalAlignment="Center" Height="150" Width="275">
+                                HeadersVisibility="Column" VerticalAlignment="Center" Height="150" Width="275" ItemsSource="{x:Bind ViewModel.BankAccounts, Mode=OneWay}">
 
                 <controls:DataGrid.Resources>
                     <Style TargetType="TextBlock">
@@ -150,8 +154,8 @@
                 </controls:DataGrid.RowStyle>
 
                 <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*"/>
-                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*"/>
+                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding BankName}"/>
+                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance, Converter={StaticResource DecimalToStringConverter}}"/>
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
         </Grid>

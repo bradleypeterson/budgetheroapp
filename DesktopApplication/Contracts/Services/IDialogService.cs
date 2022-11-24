@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace DesktopApplication.Contracts.Services;
 public interface IDialogService
 {
+    ContentDialog ContentDialog { get; }
     event EventHandler<DialogServiceEventArgs> OnSaved;
     Task ShowDialogAsync<TForm>(string dialogTitle, object? model = null, bool isDeleting = false);
 }
