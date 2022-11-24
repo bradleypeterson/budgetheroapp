@@ -109,7 +109,20 @@ namespace DesktopApplication.ViewModels.Forms
 
         public void SetCategoriesToShow()
         {
-            //TODO: Write code to update show list (make sure to clear first)
+            if (CategoriesToShow.Any())
+            {
+                CategoriesToShow.Clear();
+            }
+            //Grab ID of selected Group
+            var catGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
+
+            foreach (BudgetCategory? item in BudgetCategories)
+            {
+                if (item.BudgetCategoryGroupID == catGroupId)
+                {
+                    CategoriesToShow.Add(item);
+                }
+            }
         }
 
         public async Task LoadAsync()
@@ -132,7 +145,7 @@ namespace DesktopApplication.ViewModels.Forms
                     BudgetCategoryGroups.Add(categoryGroup!);
 
                     var groupID = categoryGroup.BudgetCategoryGroupID;
-                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryID == groupID);
+                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
 
                     foreach (var item in BudgetItems)
                     {
@@ -143,9 +156,6 @@ namespace DesktopApplication.ViewModels.Forms
 
             SetSelectedGroup();
             SetSelectedItem();
-
-            //TODO: Still need to add the category group items to the drop down in Remove Item that match the corresponding category group
-
         }
     }
 }

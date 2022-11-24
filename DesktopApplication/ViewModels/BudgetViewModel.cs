@@ -58,7 +58,7 @@ public class BudgetViewModel : ObservableRecipient
                 BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
 
                 var groupID = categoryGroup.BudgetCategoryGroupID;
-                var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryID == groupID);
+                var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
 
                 foreach (var item in BudgetItems)
                 {
