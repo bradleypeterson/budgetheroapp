@@ -14,14 +14,10 @@ public sealed partial class TransactionForm : Page
 
     public TransactionFormViewModel ViewModel{ get; }
 
-    public IDialogService _dialogservice;
-
     public TransactionForm()
     {
         ViewModel = App.GetService<TransactionFormViewModel>();
         InitializeComponent();
-        _dialogservice = ViewModel._dialogservice;
-        _dialogservice.ContentDialog.IsPrimaryButtonEnabled = true;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)

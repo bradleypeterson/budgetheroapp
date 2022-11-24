@@ -6,8 +6,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModel="using:DesktopApplication.ViewModels.Models"
+    xmlns:Model="using:DesktopApplication.Models"
     xmlns:converters="using:DesktopApplication.Converters"
-    xmlns:customControls="using:DesktopApplication.Controls"
+    xmlns:customControls="using:DesktopApplication.Controls" 
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -24,8 +25,7 @@
 
     <Grid x:Name="ContentArea">
         <Grid.Resources>
-            <DataTemplate x:Key="AccordianDataTemplate"
-                          x:DataType="Model:ObservableExpander">
+            <DataTemplate x:Key="AccordianDataTemplate" x:DataType="Model:ObservableExpander">
                 <Expander Width="1225" Header="{x:Bind CategoryGroupDesc, Mode=OneWay}">
                     <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True"
                                        CanUserReorderColumns="False" BorderBrush="Black" 

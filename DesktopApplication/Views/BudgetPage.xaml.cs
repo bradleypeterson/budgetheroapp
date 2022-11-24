@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.WinUI.UI.Controls;
 using DesktopApplication.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace DesktopApplication.Views;
@@ -16,7 +17,7 @@ public sealed partial class BudgetPage : Page
         InitializeComponent();
     }
 
-    private async void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         await ViewModel.LoadAsync();
     }
@@ -38,10 +39,5 @@ public sealed partial class BudgetPage : Page
 
             storedSender = sender;
         }
-    }
-
-    private async void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        await ViewModel.LoadAsync();
     }
 }

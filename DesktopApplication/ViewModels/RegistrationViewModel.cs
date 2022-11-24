@@ -18,8 +18,6 @@ public class RegistrationViewModel : ObservableRecipient
     private readonly IDataStore _dataStore;
     private readonly IPasswordService _passwordService;
     private readonly ISessionService _sessionService;
-    public IAsyncRelayCommand SignUpCommand { get; }
-    public ICommand CancelSignupCommand { get; }
 
     public RegistrationViewModel()
     {
@@ -167,11 +165,11 @@ public class RegistrationViewModel : ObservableRecipient
                 if (result == 1)
                 {
                     _sessionService.CreateSession(newUser);
+                    CreateNewUserBudget();
                     _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
                 }
             }
-            
-                    
+                  
         }
     }
 
@@ -235,15 +233,6 @@ public class RegistrationViewModel : ObservableRecipient
         {
             return false;
         }
-    }
-
-        if (result == 1)
-        {
-            _sessionService.CreateSession(newUser);
-            CreateNewUserBudget();
-            _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
-        }
-
     }
 
     private void CreateNewUserBudget()

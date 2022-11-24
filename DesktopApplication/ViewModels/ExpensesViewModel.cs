@@ -155,16 +155,17 @@ public class ExpensesViewModel : ObservableRecipient
             UpdateAccountBalance(newTransaction);
         }
 
-        int result = await _dataStore.Transaction.AddAsync(newTransaction);
-        
+        int result = 0;
+
         if (validateDate(newTransaction))//Remove this validation once buttons can be enabled and disabled
         {
-            int result = await _dataStore.Transaction.AddAsync(newTransaction);//keep this
+            result = await _dataStore.Transaction.AddAsync(newTransaction);
+        }
 
         if (result > 0)
         {
             Transactions.Add(new ObservableTransaction(newTransaction));
-            Transactions.Add(new ObservableTransaction(newTransaction));//keep this
+            Transactions.Add(new ObservableTransaction(newTransaction));
         }
 
     }
@@ -178,17 +179,6 @@ public class ExpensesViewModel : ObservableRecipient
         ObservableTransaction? listedTransaction = Transactions.FirstOrDefault(
             a => a.Transaction.TransactionId == existingTransaction.TransactionId);
         int index;
-
-        if (listedTransaction is not null)//Remove this validation  once buttons can be enabled and disabled
-        {
-
-            if (validateDate(editedTransaction))//keep this
-            {
-                await _dataStore.Transaction.Update(editedTransaction);//keep this
-
-                index = Transactions.IndexOf(listedTransaction);//keep this 
-                Transactions[index].Transaction = editedTransaction;//keep this
-            }
             
         if (listedTransaction is not null)
         {

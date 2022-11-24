@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using DesktopApplication.Contracts.Services;
+﻿using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Helpers;
 using Microsoft.UI.Xaml;

@@ -92,7 +92,6 @@ public class BankAccountFormViewModel : ObservableRecipient
         }
     }
 
-
     private bool ValidFormCompletion()
     {
         if (!string.IsNullOrEmpty(_bankName)
