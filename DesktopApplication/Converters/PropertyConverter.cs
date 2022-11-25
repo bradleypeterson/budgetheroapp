@@ -12,15 +12,12 @@ public class PropertyConverter
     {
         if (value is string s && value != null)
         {
+            if (string.IsNullOrEmpty(s))
+                return 0;
+
             decimal temp;
             if (decimal.TryParse(s, out temp))
-            {
                 return temp;
-            }
-            else
-            {
-                Debug.WriteLine("Error: You must provide a decimal value.");
-            }
         }
         else if (value is decimal d && value != null) { return d;  }
         return -1;

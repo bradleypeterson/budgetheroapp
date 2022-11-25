@@ -1,9 +1,15 @@
 ﻿using DesktopApplication.Contracts.Views;
+using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.ViewModels.Forms;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
 using ModelsLibrary;
+using System.Diagnostics;
+using Windows.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -17,10 +23,19 @@ public sealed partial class TransactionForm : Page, IDialogForm
 
     public TransactionFormViewModel ViewModel{ get; }
 
+    private bool isValidDate;
+    private bool isValidPayee;
+    private bool isValidExpenseAmount;
+    private bool isValidDepositAmount;
+    private bool isValidAccountSelection;
+    private bool isValidCategorySelection;
+
     public TransactionForm()
     {
         ViewModel = App.GetService<TransactionFormViewModel>();
         InitializeComponent();
+        ExpenseAmount.PlaceholderText = "Enter Amount";
+        DepositAmount.PlaceholderText = "Enter Amount";
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -28,141 +43,145 @@ public sealed partial class TransactionForm : Page, IDialogForm
         await ViewModel.LoadAsync();
     }
 
-    private void addInvalidNumberError()
-    {
-        tbInvalidNumberError.Visibility = Visibility.Visible;
-    }
-    private void removeInvalidNumberError()
-    {
-        tbInvalidNumberError.Visibility = Visibility.Collapsed;
-    }
-
-    private void addInvalidAccountError()
-    {
-        tbInvalidAccountError.Visibility = Visibility.Visible;
-    }
-    private void removeInvalidAccountError()
-    {
-        tbInvalidAccountError.Visibility = Visibility.Collapsed;
-    }
-
-    private void addInvalidCategoryError()
-    {
-        tbInvalidCategoryError.Visibility = Visibility.Visible;
-    }
-    private void removeInvalidCategoryError()
-    {
-        tbInvalidCategoryError.Visibility = Visibility.Collapsed;
-    }
-    private void addInvalidPayeeError()
-    {
-        tbInvalidPayeeError.Visibility = Visibility.Visible;
-    }
-    private void removeInvalidPayeeError()
-    {
-        tbInvalidPayeeError.Visibility = Visibility.Collapsed;
-    }
-
-
-    //Validation
-    private void TransactionPayeeTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        if (TransactionPayeeTextBox.Text.Equals(""))
-        {
-            addInvalidPayeeError();
-        }
-        else
-        {
-            removeInvalidPayeeError();
-            validData();
-        }
-    }
-
-    private void ExpenseAmount_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        
-        try
-        {
-            if (!Double.IsNaN(Decimal.ToDouble(Decimal.Parse(ExpenseAmount.Text))))
-            {
-                if (ExpenseAmount.Text.Split(".")[1].Length > 3)
-                {
-                    addInvalidNumberError();
-                }
-                else
-                {
-                    removeInvalidNumberError();
-                    validData();
-                }
-            }
-        }
-        catch(Exception ex)
-        {
-            addInvalidNumberError();
-        }
-        
-    }
-
-    private void BankAccountComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (BankAccountComboBox.SelectedItem.ToString() == null)
-        {
-            addInvalidAccountError();
-        }
-        else
-        {
-            removeInvalidAccountError();
-            validData();
-        }
-    }
-
-    private void ExpenseCategoryCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ExpenseCategoryCombo.SelectedItem.ToString() == null)
-        {
-            addInvalidCategoryError();
-        }
-        else
-        {
-            removeInvalidCategoryError();
-            validData();
-        }
-    }
-
-    private void validData()
-    {
-       if (TransactionPayeeTextBox.Text.Equals("")) return;
-        try
-        {
-            if (Double.IsNaN(Decimal.ToDouble(Decimal.Parse(ExpenseAmount.Text))))
-            {
-                return;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            return;
-        }
-        if (BankAccountComboBox.SelectedItem == null) return;
-        if (ExpenseCategoryCombo.SelectedItem == null) return;
-
-        //Enable button here
-    }
-
     public void ValidateForm()
     {
-        //
+        ValidateDatePickerValue();
+        ValidatePayeeField();
+        ValidateExpenseAmountField();
+
+        if (!isValidExpenseAmount)
+        {
+            isValidExpenseAmount = true;
+            ValidateDepositAmountField();
+        }
+        else
+            isValidDepositAmount = true;
+            
+        ValidateAccountSelection();
+        ValidateCategorySelection();
     }
 
     public bool IsValidForm()
-    {
-        return true;
-    }
+        => isValidDate && isValidPayee && isValidExpenseAmount && isValidDepositAmount
+        && isValidAccountSelection && isValidCategorySelection;
 
     public void SetModel(object model)
     {
         Transaction _model = (Transaction)model;
         ViewModel.ObservableTransaction = new ObservableTransaction(_model);
+    }
+
+    private void ValidateDatePickerValue()
+    {
+        isValidDate = FormValidator.ValidateDate(TransactionDatePicker.Date);
+        if (isValidDate)
+            HideInvalidDateError();
+        else
+            ShowInvalidDateError();
+    }
+
+    private void ValidatePayeeField()
+    {
+        isValidPayee = FormValidator.ValidateString(TransactionPayeeTextBox.Text);
+        if (isValidPayee)
+            HideInvalidPayeeError();
+        else
+            ShowInvalidPayeeError();
+    }
+
+    private void ValidateExpenseAmountField()
+    {
+        isValidExpenseAmount = FormValidator.ValidateDecimal(ExpenseAmount.Text);
+        if (isValidExpenseAmount)
+            HideInvalidAmountError();
+        else
+            ShowInvalidAmountError();
+    }
+
+    private void ValidateDepositAmountField()
+    {
+        isValidDepositAmount = FormValidator.ValidateDecimal(DepositAmount.Text);
+        if (isValidDepositAmount) 
+            HideInvalidAmountError();
+        else
+            ShowInvalidAmountError();
+    }
+
+    private void ValidateAccountSelection()
+    {
+        isValidAccountSelection = FormValidator.ValidateSelection(BankAccountComboBox.SelectedIndex);
+        if (isValidAccountSelection)
+            HideInvalidAccountError();
+        else
+            ShowInvalidAccountError();
+    }
+
+    private void ValidateCategorySelection()
+    {
+        isValidCategorySelection = FormValidator.ValidateSelection(ExpenseCategoryCombo.SelectedIndex);
+        if (isValidCategorySelection) 
+            HideInvalidCategoryError();
+        else
+            ShowInvalidCategoryError();
+    }
+
+    private void ShowInvalidDateError()
+    {
+        dpInvalidDateError.Visibility = Visibility.Visible;
+    }
+
+    private void HideInvalidDateError()
+    {
+        dpInvalidDateError.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowInvalidAmountError()
+    {
+        tbInvalidNumberError.Visibility = Visibility.Visible;
+    }
+    private void HideInvalidAmountError()
+    {
+        tbInvalidNumberError.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowInvalidAccountError()
+    {
+        tbInvalidAccountError.Visibility = Visibility.Visible;
+    }
+    private void HideInvalidAccountError()
+    {
+        tbInvalidAccountError.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowInvalidCategoryError()
+    {
+        tbInvalidCategoryError.Visibility = Visibility.Visible;
+    }
+    private void HideInvalidCategoryError()
+    {
+        tbInvalidCategoryError.Visibility = Visibility.Collapsed;
+    }
+    private void ShowInvalidPayeeError()
+    {
+        tbInvalidPayeeError.Visibility = Visibility.Visible;
+    }
+    private void HideInvalidPayeeError()
+    {
+        tbInvalidPayeeError.Visibility = Visibility.Collapsed;
+    }
+
+    private void TransactionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        TransactionPayeeTextBox.Focus(FocusState.Programmatic);
+    }
+
+    private void ExpenseRadButton_Checked(object sender, RoutedEventArgs e)
+    {
+        DepositAmount.Text = string.Empty;
+    }
+
+    private void DepositRadButton_Checked(object sender, RoutedEventArgs e)
+    {
+        ExpenseAmount.Text = string.Empty;
     }
 }
