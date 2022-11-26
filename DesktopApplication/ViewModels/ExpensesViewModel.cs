@@ -205,7 +205,7 @@ public class ExpensesViewModel : ObservableRecipient
         {
             foreach (var transaction in transactions)
             {
-                if (transaction is not null)
+                if (transaction is not null && transaction.BankAccount.UserId == userId)
                     if (!filter.Equals(""))
                     {
                         switch (category)
