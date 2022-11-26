@@ -88,6 +88,15 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <NavigationViewItem x:Uid="Shell_Reports" 
+                                    Height="100"
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ReportsViewModel"
+                                    FontSize="23">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\reports.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
                 <NavigationViewItem x:Uid="Shell_Profile" 
                                     Height="100" 
                                     helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ProfileViewModel"
@@ -96,7 +105,6 @@
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\account.png"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
             </NavigationView.MenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
