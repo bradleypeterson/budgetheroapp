@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DesktopApplication.ViewModels.Models;
+namespace DesktopApplication.ViewModels.Forms;
 public class DeleteItemViewModel : ObservableRecipient
 {
     private string? _message;

@@ -6,15 +6,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:DesktopApplication.Controls"
     mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded">
 
     <Grid x:Name="ContentArea">
         <StackPanel Orientation="Vertical" Background="#023e8a" >
             <controls:AppLogoControl/>
-            <ProgressRing IsActive="{x:Bind ViewModel.SignUpCommand.IsRunning}" />
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
-                       Visibility="Collapsed"
-                       Text="All fields cannot be blank."/>
             <TextBox x:Name="txtFirstname" 
                      Width="300" 
                      Header="Firstname" 
@@ -33,9 +30,9 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbUsernameTakenError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
-                       Text="Username is taken."/>
+                       Text="Username is taken"/>
             <TextBox x:Name="txtUsername" 
                      Width="300" 
                      Header="Username" 
@@ -45,9 +42,9 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbEmailInvalidError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
-                       Text="Email is invalid."/>
+                       Text="Not a valid email"/>
             <TextBox x:Name="txtEmail" 
                      Width="300" 
                      Header="Email" 
@@ -57,7 +54,7 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </TextBox.Resources>
             </TextBox>
-            <TextBlock Style="{StaticResource FormErrorTextStyle}" 
+            <TextBlock x:Name="tbPasswordsMismatchedError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
                        Text="Passwords do not match."/>
             <PasswordBox x:Name="pwbPassword" 
@@ -69,7 +66,7 @@
                     <SolidColorBrush x:Key="TextControlHeaderForeground" Color="White"/>
                 </PasswordBox.Resources>
             </PasswordBox>
-            <PasswordBox Width="300" 
+            <PasswordBox x:Name="pwdConfirmPassword" Width="300" 
                          Header="Confirm Password" 
                          PlaceholderText="Confirm Password"
                          Password="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -84,12 +81,14 @@
                     Content="Sign Up" 
                     HorizontalAlignment="Center" 
                     Margin="0 20 0 20" 
+                    IsEnabled="{x:Bind ViewModel.IsFormComplete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Command="{x:Bind ViewModel.SignUpCommand}"/>
                 <Button Content="Cancel"
                         HorizontalAlignment="Center"
                         Margin="0 20 0 20"
                         Command="{x:Bind ViewModel.CancelSignupCommand}"/>
             </StackPanel>
+            <ProgressRing IsActive="{x:Bind ViewModel.SignUpCommand.IsRunning}" />
         </StackPanel>
     </Grid>
 </Page>

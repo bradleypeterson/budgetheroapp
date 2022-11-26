@@ -8,23 +8,31 @@
     mc:Ignorable="d">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-
-        <TextBox Header="Account Name" 
+        <TextBlock x:Name="tbAccountNameEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
+                Enter a account name
+        </TextBlock>
+        <TextBox x:Name="txtAccountName" Header="Account Name" 
                  PlaceholderText="Enter Account Name" 
                  Text="{x:Bind ViewModel.BankName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        
-        <ComboBox x:Name="AccountType" 
+        <TextBlock x:Name="tbAccountTypeEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
+                Select a account type
+        </TextBlock>
+        <ComboBox x:Name="txtAccountType" 
                   PlaceholderText="Choose Account Type" 
                   Margin="0,10,0,10" 
                   SelectedValue="{x:Bind ViewModel.AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <x:String>Checking</x:String>
             <x:String>Savings</x:String>
         </ComboBox>
-        
-        <TextBox Header="Account Balance" 
+        <TextBlock x:Name="tbAccountBalanceInvalidError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
+                Invalid account balance, please enter a number amount like 0.00 
+        </TextBlock>
+        <TextBlock x:Name="tbAccountBalanceEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
+                Enter a account balance
+        </TextBlock>
+        <TextBox x:Name="txtAccountBalance" Header="Account Balance" 
                  PlaceholderText="Enter Account Balance" 
                  Text="{x:Bind ViewModel.BalanceString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        
     </StackPanel>
     
 </Page>

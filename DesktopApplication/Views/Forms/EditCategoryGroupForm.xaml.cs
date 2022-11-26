@@ -1,4 +1,5 @@
-﻿using DesktopApplication.ViewModels.Forms;
+﻿using DesktopApplication.Contracts.Views;
+using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -7,7 +8,7 @@ namespace DesktopApplication.Views.Forms;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class EditCategoryGroupForm : Page
+public sealed partial class EditCategoryGroupForm : Page, IDialogForm
 {
     public EditCategoryGroupFormViewModel ViewModel { get; }
 
@@ -20,9 +21,9 @@ public sealed partial class EditCategoryGroupForm : Page
         EditCatItemAmt.IsReadOnly = true;
     }
 
-    private async void Page_Loaded(object sender, RoutedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        await ViewModel.LoadAsync();
+        ViewModel.LoadAsync();
     }
 
     private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -139,5 +140,23 @@ public sealed partial class EditCategoryGroupForm : Page
                 ViewModel.CategoryItemBudgetAmt = EditCatItemAmt.Text;
             }
         }
+    }
+        ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
+    }
+
+    public void ValidateForm()
+    {
+        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+    }
+
+    public bool IsValidForm()
+    {
+        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        return true;
+    }
+
+    public void SetModel(object model)
+    {
+        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
     }
 }

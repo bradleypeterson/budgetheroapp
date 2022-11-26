@@ -26,6 +26,7 @@ public class DataStore : IDataStore
     public DataStore(BudgetAppContext dbContext)
     {
         this.dbContext = dbContext;
+        dbContext.Database.EnsureCreated();
     }
 
     public IRepository<BankAccount> BankAccount

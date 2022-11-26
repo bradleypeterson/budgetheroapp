@@ -162,4 +162,7 @@
   <data name="SettingsPage_PrivacyTermsLink.NavigateUri" xml:space="preserve">
     <value>https://YourPrivacyUrlGoesHere/</value>
   </data>
+  <data name="Shell_Reports.Content" xml:space="preserve">
+    <value>Reports</value>
+  </data>
 </root>

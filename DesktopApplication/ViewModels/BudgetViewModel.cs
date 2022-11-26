@@ -2,9 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
-using DesktopApplication.Converters;
-using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Models;
+using DesktopApplication.CustomEventArgs;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
@@ -23,6 +22,7 @@ public class BudgetViewModel : ObservableRecipient
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
 
     public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
+    public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
     public ObservableCollection<ObservableCategoryItem>? CategoryItems { get; set; } = new();
     public ObservableCollection<ObservableExpander>? Expanders { get; set; } = new();
 
@@ -52,20 +52,34 @@ public class BudgetViewModel : ObservableRecipient
         int? budgetId = budget!.BudgetId;
         Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
-        if (personalBudget.BudgetCategoryGroups is not null)
+        if (personalBudget is not null)
         {
-            foreach (var categoryGroup in personalBudget.BudgetCategoryGroups)
+            if (personalBudget.BudgetCategoryGroups is not null)
             {
-                BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
-                Expanders.Add(new ObservableExpander(categoryGroup!));
-
-                var groupID = categoryGroup.BudgetCategoryGroupID;
-                var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
-
-                foreach (var item in BudgetItems)
+                foreach (var categoryGroup in personalBudget.BudgetCategoryGroups)
                 {
-                    CategoryItems.Add(new ObservableCategoryItem(item));
+                    BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
+                    Expanders.Add(new ObservableExpander(categoryGroup!));
+
+                    var groupID = categoryGroup.BudgetCategoryGroupID;
+                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
+
+                    foreach (var item in BudgetItems)
+                    {
+                        CategoryItems.Add(new ObservableCategoryItem(item));
+                    }
                 }
+            }
+        }
+
+        if (BankAccounts.Any()) return;
+
+        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
+        if (bankAccounts is not null)
+        {
+            foreach (var bankAccount in bankAccounts)
+            {
+                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
             }
         }
     }
@@ -188,7 +202,7 @@ public class BudgetViewModel : ObservableRecipient
             Expanders.Remove(listedExpander);
         }
     }
-    
+
     private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
         BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, false, true);

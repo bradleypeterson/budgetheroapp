@@ -8,7 +8,6 @@ using DesktopApplication.Models;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
 using DesktopApplication.ViewModels.Forms;
-using DesktopApplication.ViewModels.Models;
 using DesktopApplication.Views;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -76,12 +75,14 @@ public partial class App : Application
             services.AddSingleton<ISessionService, SessionService>();
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IPasswordService, PasswordService>();
-            services.AddScoped<IDataStore, DataStore>();
+            services.AddSingleton<IDataStore, DataStore>();
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddTransient<ReportsViewModel>();
+            services.AddTransient<ReportsPage>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<ProfileViewModel>();

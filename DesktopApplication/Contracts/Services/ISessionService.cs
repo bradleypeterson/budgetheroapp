@@ -8,8 +8,11 @@ using ModelsLibrary;
 namespace DesktopApplication.Contracts.Services;
 public interface ISessionService
 {
+    event EventHandler? OnSessionCreated;
+
+    event EventHandler? OnSessionDestroyed;
     void CreateSession(User user);
     void DestroySession();
-
     int GetSessionUserId();
+    string GetSessionUsername();
 }

@@ -1,9 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.UI.Controls.TextToolbarFormats;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
+using DesktopApplication.Services;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels.Forms;
@@ -11,16 +15,19 @@ public class TransactionFormViewModel : ObservableRecipient
 {
     private readonly IDataStore _dataStore;
     private readonly ISessionService _sessionService;
+    public IDialogService _dialogservice;
 
     public TransactionFormViewModel()
     {
         _dataStore = App.GetService<IDataStore>();
         _sessionService = App.GetService<ISessionService>();
+        _dialogservice= App.GetService<IDialogService>();
     }
 
     public ObservableTransaction? ObservableTransaction { get; set; } = new();
     public ObservableCollection<BankAccount> BankAccounts { get; } = new();
     public ObservableCollection<BudgetCategory> BudgetCategories { get; } = new();
+
 
     private BankAccount? _selectedBankAccount;
     public BankAccount? SelectedBankAccount
@@ -31,6 +38,7 @@ public class TransactionFormViewModel : ObservableRecipient
             SetProperty(ref _selectedBankAccount, value);
             if (value is not null)
                 ObservableTransaction!.Transaction.BankAccountId = value.BankAccountId;
+            //
         }
     }
 
@@ -60,9 +68,10 @@ public class TransactionFormViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _hasExpenseChecked, value);
-            if (ObservableTransaction!.DepositAmount != string.Empty && 
+            if (ObservableTransaction!.DepositAmount != string.Empty &&
                 ObservableTransaction!.ExpenseAmount != string.Empty)
                 ObservableTransaction!.DepositAmount = "0";
+
         }
     }
 
@@ -76,6 +85,7 @@ public class TransactionFormViewModel : ObservableRecipient
             if (ObservableTransaction!.ExpenseAmount != string.Empty &&
                 ObservableTransaction.DepositAmount != string.Empty)
                 ObservableTransaction.ExpenseAmount = "0";
+
         }
     }
 
@@ -136,14 +146,14 @@ public class TransactionFormViewModel : ObservableRecipient
 
     private void SetTransactionType()
     {
-        string expenseAmount = ObservableTransaction.ExpenseAmount;
-        string depositAmount = ObservableTransaction.DepositAmount;
+        string? expenseAmount = ObservableTransaction!.ExpenseAmount;
+        string? depositAmount = ObservableTransaction!.DepositAmount;
 
         if (ObservableTransaction is not null)
             if (string.IsNullOrEmpty(expenseAmount) && !string.IsNullOrEmpty(depositAmount))
             {
                 HasDepositChecked = true;
                 TransactionType = 1;
-            }    
+            }
     }
 }

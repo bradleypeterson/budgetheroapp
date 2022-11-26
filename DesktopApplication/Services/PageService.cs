@@ -21,6 +21,7 @@ public class PageService : IPageService
         Configure<ExpensesViewModel, ExpensesPage>();
         Configure<ProfileViewModel, ProfilePage>();
         Configure<SettingsViewModel, SettingsPage>();
+        Configure<ReportsViewModel, ReportsPage>();
     }
 
     public Type GetPageType(string key)

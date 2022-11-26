@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Windows.System;
 
@@ -15,10 +16,7 @@ namespace DesktopApplication.Views;
 public sealed partial class ShellPage : Page
 {
    
-    public ShellViewModel ViewModel
-    {
-        get;
-    }
+    public ShellViewModel ViewModel { get; }
 
     public ShellPage(ShellViewModel viewModel)
     {
@@ -31,8 +29,6 @@ public sealed partial class ShellPage : Page
         App.MainWindow.ExtendsContentIntoTitleBar = false;
         App.MainWindow.SetTitleBar(AppTitleBar);
         App.MainWindow.Activated += MainWindow_Activated;
-        AppTitleBarText.Text = ViewModel.GetUserName();
-
     }
 
     private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -41,12 +37,14 @@ public sealed partial class ShellPage : Page
 
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu));
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack));
+
+        Debug.WriteLine("Shell Page loaded up.");
     }
 
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
         var resource = args.WindowActivationState == WindowActivationState.Deactivated ? "WindowCaptionForegroundDisabled" : "WindowCaptionForeground";
-        AppTitleBarText.Foreground = (SolidColorBrush)App.Current.Resources[resource];
+        UsernameText.Foreground = (SolidColorBrush)App.Current.Resources[resource];
     }
 
     private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
@@ -58,15 +56,6 @@ public sealed partial class ShellPage : Page
             Right = AppTitleBar.Margin.Right,
             Bottom = AppTitleBar.Margin.Bottom
         };
-    }
-
-    //Not Sure where to call this method as we only need to show the logout bar after we have successfully logged in
-    public void ShowLogoutBar()
-    {
-        AppTitleBarText.Text = ViewModel.GetUserName();
-        AppTitleBarText.Visibility= Visibility.Visible;
-        LogoutButton.Visibility= Visibility.Visible;
-        LogoutIcon.Visibility= Visibility.Visible;
     }
 
     private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)

@@ -20,14 +20,19 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- TODO: These are hidden and need to be shown after a successful login -->
+            <StackPanel x:Name="LogoutBar" 
+                        Orientation="Horizontal"
+                        Visibility="{x:Bind ViewModel.IsActiveSession, Mode=OneWay}">
                 <Image x:Name="LogoutIcon" Grid.Column ="0"  Source="/Assets/WindowIcon.ico"
-                       HorizontalAlignment="Left" Width="16" Height="16" Visibility="Visible" />
-                <TextBlock x:Name="AppTitleBarText" Grid.Column="1" 
+                       HorizontalAlignment="Left" Width="16" Height="16"/>
+                <TextBlock x:Name="UsernameText" Grid.Column="1" 
                            VerticalAlignment="Center" TextWrapping="NoWrap"
                            Style="{StaticResource CaptionTextBlockStyle}"
-                           Margin="28,0,0,0" Visibility="Visible"/>
+                           Margin="28,0,0,0"
+                           Text="{x:Bind ViewModel.ActiveUsername, Mode=OneWay}"/>
                 <Button x:Name="LogoutButton" Grid.Column="2" Content="Log Out" Margin="10,0,0,0"
-                        Visibility="Visible"/>
+                        Command="{x:Bind ViewModel.LogoutCommand}"/>
+            </StackPanel>
             </Grid>
         
         <NavigationView
@@ -88,6 +93,15 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <NavigationViewItem x:Uid="Shell_Reports" 
+                                    Height="100"
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ReportsViewModel"
+                                    FontSize="23">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\reports.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
                 <NavigationViewItem x:Uid="Shell_Profile" 
                                     Height="100" 
                                     helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ProfileViewModel"
@@ -96,7 +110,6 @@
                         <BitmapIcon UriSource="ms-appx:///Assets\Icons\account.png"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
             </NavigationView.MenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate>

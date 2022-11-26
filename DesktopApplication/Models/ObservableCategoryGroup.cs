@@ -33,7 +33,8 @@ namespace DesktopApplication.Models
             set
             {
                 SetProperty(ref _categoryGroupDesc, value);
-                _budgetCategoryGroup.CategoryGroupDesc = _categoryGroupDesc;
+                if (value is not null)
+                    _budgetCategoryGroup.CategoryGroupDesc = value;
             }
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using DesktopApplication.Contracts.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ModelsLibrary;
 
 namespace DesktopApplication.ViewModels.Forms;
@@ -30,7 +28,7 @@ public class BankAccountFormViewModel : ObservableRecipient
             _bankAccount.BankName = _bankName!;
         }
     }
-    
+
     private string? _accountType;
     public string? AccountType
     {
@@ -68,12 +66,6 @@ public class BankAccountFormViewModel : ObservableRecipient
     {
         decimal tempBalance;
         if (decimal.TryParse(value, out tempBalance))
-        {
             Balance = tempBalance;
-        }
-        else
-        {
-            Debug.WriteLine("Error: You must provide a decimal value.");
-        }
     }
 }

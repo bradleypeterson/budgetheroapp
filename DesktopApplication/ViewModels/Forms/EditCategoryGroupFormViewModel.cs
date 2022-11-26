@@ -125,7 +125,7 @@ namespace DesktopApplication.ViewModels.Forms
             }
         }
 
-        public async Task LoadAsync()
+        public void LoadAsync()
         {
             if (BudgetCategoryGroups.Any() || BudgetCategories.Any()) return;
 
