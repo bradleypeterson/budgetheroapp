@@ -20,6 +20,7 @@ public sealed partial class LoginPage : Page
         InitializeComponent();
         ViewModel.OnUserNotFound += showInvalidUsernameOrPassword;
         ViewModel.OnValidLogin += removeLoginError;
+        MainWindowHelper.ResetWindow();
     }
 
     private void removeLoginError(object? sender, EventArgs e)

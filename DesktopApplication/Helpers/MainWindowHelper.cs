@@ -61,6 +61,12 @@ public class MainWindowHelper
         }
     }
 
+    public static void ResetWindow()
+    {
+        App.MainWindow.Restore();
+        isFirstTimeLoad = true;
+    }
+
     private static double GetWindowHeight(double heightPercentage)
     {
         var displayArea = GetDisplayArea();
