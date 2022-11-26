@@ -19,7 +19,6 @@
                                        BorderThickness="2" GridLinesVisibility="Horizontal" 
                                        HeadersVisibility="Column" VerticalAlignment="Bottom"
                                        SelectionMode="Single" AlternatingRowBackground="LightCyan"
-                                       SelectionChanged="DataGrid_SelectionChanged"
                                        ItemsSource="{x:Bind CategoryItems, Mode=OneWay}">
                         <controls:DataGrid.Resources>
                             <Style TargetType="TextBlock">
@@ -29,7 +28,6 @@
                             <Style TargetType="controls:DataGridCell">
                                 <Setter Property="IsHitTestVisible" Value="False"/>
                             </Style>
-                            
                         </controls:DataGrid.Resources>
 
                         <controls:DataGrid.Columns>

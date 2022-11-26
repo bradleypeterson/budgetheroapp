@@ -16,6 +16,8 @@ public sealed partial class EditCategoryGroupForm : Page
         ViewModel = App.GetService<EditCategoryGroupFormViewModel>();
         this.InitializeComponent();        
         GroupNameText.IsReadOnly = true;
+        EditCatItemText.IsReadOnly = true;
+        EditCatItemAmt.IsReadOnly = true;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -33,15 +35,30 @@ public sealed partial class EditCategoryGroupForm : Page
             {
                 AddItemPanel.Visibility = Visibility.Visible;
                 RemoveItemPanel.Visibility = Visibility.Collapsed;
-                //TODO: Clear all fields in remove item panel
-                RemoveItemCombo.SelectedIndex = -1;
+                EditItemPanel.Visibility = Visibility.Collapsed;
+                //Clear all fields in other panels
+                EditCatItemText.Text = string.Empty;
+                EditCatItemAmt.Text = string.Empty;
                 SetCategoryRadStatus(radButton.Content.ToString());
             }
             else if (radButton.Content.ToString() == "Remove Category Item")
             {
                 RemoveItemPanel.Visibility = Visibility.Visible;
                 AddItemPanel.Visibility = Visibility.Collapsed;
-                //TODO: clear all fields in add item panel
+                EditItemPanel.Visibility = Visibility.Collapsed;
+                //clear all fields in other panels
+                EditItemCombo.SelectedItem = null;
+                CatAmountText.Text = string.Empty;
+                CatItemText.Text = string.Empty;
+                EditCatItemText.Text = string.Empty;
+                EditCatItemAmt.Text = string.Empty;
+                SetCategoryRadStatus(radButton.Content.ToString());
+            }
+            else if (radButton.Content.ToString() == "Edit Category Item")
+            {
+                EditItemPanel.Visibility = Visibility.Visible;
+                AddItemPanel.Visibility = Visibility.Collapsed;
+                RemoveItemPanel.Visibility= Visibility.Collapsed;
                 CatAmountText.Text = string.Empty;
                 CatItemText.Text = string.Empty;
                 SetCategoryRadStatus(radButton.Content.ToString());
@@ -60,12 +77,29 @@ public sealed partial class EditCategoryGroupForm : Page
 
         if (combo != null)
         {
-           GroupNameText.IsReadOnly = false;
-           GroupNameText.Text = ViewModel.SelectedCategoryGroup.CategoryGroupDesc.ToString();
+            GroupNameText.IsReadOnly = false;
+
+            if (combo.SelectedItem != null)
+            {
+                GroupNameText.Text = ViewModel.SelectedCategoryGroup.CategoryGroupDesc.ToString();
+            }
         }
 
         //Call viewmodel function to populate the appropriate items
         ViewModel.SetCategoriesToShow();
+    }
+
+    private void EditItemCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var combo = sender as ComboBox;
+
+        if (combo != null)
+        {
+            EditCatItemText.IsReadOnly = false;
+            EditCatItemAmt.IsReadOnly = false;
+            EditCatItemText.Text = ViewModel.SelectedCategoryItem.CategoryName.ToString();
+            EditCatItemAmt.Text = ViewModel.SelectedCategoryItem.CategoryAmount.ToString();
+        }
     }
 
     private void GroupNameText_TextChanged(object sender, TextChangedEventArgs e)
@@ -75,13 +109,35 @@ public sealed partial class EditCategoryGroupForm : Page
 
     private void CatItemText_TextChanged(object sender, TextChangedEventArgs e)
     {
-        ViewModel.CategoryItemName = CatItemText.Text;
+        var textBox = sender as TextBox;
+
+        if (textBox != null)
+        {
+            if (textBox.Name == "CatItemText")
+            {
+                ViewModel.CategoryItemName = CatItemText.Text;
+            }
+            else if (textBox.Name == "EditCatItemText")
+            {
+                ViewModel.CategoryItemName = EditCatItemText.Text;
+            }
+        }
     }
 
     private void CatAmountText_TextChanged(object sender, TextChangedEventArgs e)
     {
-        ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
-    }
+        var textBox = sender as TextBox;
 
-    
+        if (textBox != null)
+        {
+            if (textBox.Name == "CatAmountText")
+            {
+                ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
+            }
+            else if (textBox.Name == "EditCatItemAmt")
+            {
+                ViewModel.CategoryItemBudgetAmt = EditCatItemAmt.Text;
+            }
+        }
+    }
 }
