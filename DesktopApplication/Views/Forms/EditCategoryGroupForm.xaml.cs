@@ -140,7 +140,7 @@ public sealed partial class EditCategoryGroupForm : Page, IDialogForm
                 ViewModel.CategoryItemBudgetAmt = EditCatItemAmt.Text;
             }
         }
-    }
+
         ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
     }
 

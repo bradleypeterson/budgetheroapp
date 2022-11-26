@@ -21,22 +21,4 @@ public sealed partial class BudgetPage : Page
         await ViewModel.LoadAsync();
     }
 
-    private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if(storedSender is null)
-        {
-            storedSender = sender;
-        }
-        else if(sender != storedSender)
-        {
-            DataGrid? grid = storedSender as DataGrid;
-            
-            if (grid != null)
-            {
-                grid.SelectedIndex = -1;
-            }
-
-            storedSender = sender;
-        }
-    }
 }
