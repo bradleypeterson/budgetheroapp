@@ -110,9 +110,28 @@ public class TransactionFormViewModel : ObservableRecipient
     {
         if (BudgetCategories.Any()) return;
 
-        IEnumerable<BudgetCategory> _userCategories = _dataStore.BudgetCategory.List();
+        User? _user = _dataStore.User.Get(u => u.UserId == _sessionService.GetSessionUserId(), false, "Budgets");
 
-        CollectionUtilities.LoadObservableCollection(_userCategories, BudgetCategories);
+        if (_user is not null && _user.Budgets is not null)
+        {
+            foreach (Budget budget in _user.Budgets)
+            {
+                Budget? _userBudget = _dataStore.Budget.Get(b => b.BudgetId == budget.BudgetId, false, "BudgetCategoryGroups");
+
+                if (_userBudget is not null && _userBudget.BudgetCategoryGroups is not null)
+                {
+                    foreach (BudgetCategoryGroup categoryGroup in _userBudget.BudgetCategoryGroups)
+                    {
+                        IEnumerable<BudgetCategory> _userCategories = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == categoryGroup.BudgetCategoryGroupID);
+
+                        if (_userCategories is not null)
+                            _userCategories.ToList().ForEach(c => BudgetCategories.Add(c));
+                    }
+                }
+            }
+        }
+        else
+            throw new Exception("The logged in user could not be found in the database.");
     }
 
     private void OnCollectionsLoaded()
