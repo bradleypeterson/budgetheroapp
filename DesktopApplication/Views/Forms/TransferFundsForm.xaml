@@ -1,0 +1,54 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
+<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
+
+<Page
+    x:Class="DesktopApplication.Views.Forms.TransferFundsForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DesktopApplication.Views.Forms"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
+
+    <StackPanel Orientation="Vertical" Background="White">
+        <TextBlock Text="Transfer From:"
+                   Margin="0, 0, 0, 5"/>
+        <ComboBox x:Name="ComboBoxTransferFrom"
+                  Margin="0, 0, 0, 0"
+                  PlaceholderText="Select Bank Account"
+                  DisplayMemberPath="BankName"
+                  SelectedValue="{x:Bind ViewModel.SelectedTransferFromAccount, Mode=TwoWay}"
+                  ItemsSource="{x:Bind ViewModel.BankAccounts}"/>
+        <TextBlock x:Name="TBInvalidTranferFromSelectionError" 
+                   Style="{StaticResource FormErrorTextStyle}"
+                   Visibility="Collapsed"
+                   Text="You must select an account to transfer from."/>
+        <TextBlock Text="Transfer To:"
+                   Margin="0, 15, 0, 5"/>
+        <ComboBox x:Name="ComboBoxTransferTo"
+                  Margin="0, 0, 0, 0"
+                  PlaceholderText="Select Bank Account"
+                  DisplayMemberPath="BankName"
+                  SelectedValue="{x:Bind ViewModel.SelectedTransferToAccount, Mode=TwoWay}"
+                  ItemsSource="{x:Bind ViewModel.TransferToAccounts}"/>
+        <TextBlock x:Name="TBInvalidTranferToSelectionError" 
+                   Style="{StaticResource FormErrorTextStyle}"
+                   Visibility="Collapsed"
+                   Text="You must select an account to transfer to."/>
+        <TextBox x:Name="TextBoxTransferAmount" 
+                 Header="Transfer Amount:"
+                 Margin="0, 15, 0, 5"
+                 PlaceholderText="Enter Transfer Amount"
+                 Text="{x:Bind ViewModel.TransferAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock x:Name="TBInvalidTranferAmountError" 
+                   Style="{StaticResource FormErrorTextStyle}"
+                   Visibility="Collapsed"
+                   Text="You must enter a dollar amount."/>
+        <TextBlock x:Name="TBInsufficientFundsError" 
+                   Style="{StaticResource FormErrorTextStyle}"
+                   Visibility="Collapsed"
+                   Text="Insufficient funds for transfer."/>
+    </StackPanel>
+</Page>

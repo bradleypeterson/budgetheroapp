@@ -30,6 +30,7 @@
     <None Remove="Views\Forms\EditCategoryGroupForm.xaml" />
     <None Remove="Views\Forms\DeleteAccountForm.xaml" />
     <None Remove="Views\Forms\TransactionForm.xaml" />
+    <None Remove="Views\Forms\TransferFundsForm.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +67,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Forms\TransferFundsForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="ViewModels\Forms\DeleteItemForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

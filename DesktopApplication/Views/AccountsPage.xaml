@@ -37,6 +37,9 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Content="Add Account" Margin="20" 
                             Command="{x:Bind ViewModel.ShowAddDialogCommand}"/>
+                    <Button Content="Transfer Funds" Margin="20"
+                            Command="{x:Bind ViewModel.ShowTransferDialogCommand}"
+                            Visibility="{x:Bind ViewModel.HasMultipleAccounts, Mode=OneWay}"/>
                 </StackPanel>
             </Border>
 
