@@ -14,13 +14,19 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-
-        <ComboBox Grid.Row="0" x:Name="EditGroupCombo" PlaceholderText="Choose Group To Edit"
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <ComboBox x:Name="EditGroupCombo" PlaceholderText="Choose Group To Edit"
                   SelectionChanged="EditCombo_SelectionChanged"
                   SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}" DisplayMemberPath="CategoryGroupDesc"/>
-        <TextBox Grid.Row="1" x:Name="GroupNameText" Width="250" HorizontalAlignment="Left" Header="Group Name:" Margin="0,10,0,10" TextChanged="GroupNameText_TextChanged"/>
-
+            <TextBlock x:Name="EditCatGroupComboError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" Margin="10,5,0,0" FontWeight="Bold" Visibility="Collapsed" Text="Choose Category Group to Edit"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBox x:Name="GroupNameText" Width="250" HorizontalAlignment="Left" Header="Group Name:" Margin="0,10,0,10" TextChanged="GroupNameText_TextChanged"/>
+            <TextBlock x:Name="EditCatGroupNameError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" Margin="10,45,0,0" FontWeight="Bold" Visibility="Collapsed" Text="Name Cannot be Empty"/>
+        </StackPanel>
+        
         <RadioButtons Grid.Row="2" x:Name="CatEditRadButtons" MaxColumns="3" Header="Options:">
             <RadioButton x:Name="AddCatRadio" Content="Add Category Item" Checked="RadioButton_Checked"/>
             <RadioButton x:Name="EditCatItemRadio" Content="Edit Category Item" Checked="RadioButton_Checked" Margin="-5,0,0,0"/>
@@ -28,27 +34,39 @@
         </RadioButtons>
 
         <StackPanel Grid.Row="3" x:Name="AddItemPanel"  Visibility="Collapsed">
-            <TextBox x:Name="CatItemText" Header="Category Item Name:" PlaceholderText="Enter Name of Category Item" Margin="0,10,0,0" TextChanged="CatItemText_TextChanged"/>
-            <TextBox x:Name="CatAmountText" Header="Category Item Budget:" PlaceholderText="Enter Amount to Budget" Margin="0,10,0,0" TextChanged="CatAmountText_TextChanged"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="CatItemText" Width="225" Header="Category Item Name:" PlaceholderText="Enter Name of Category Item" Margin="0,10,0,0" TextChanged="CatItemText_TextChanged"/>
+                <TextBlock x:Name="AddItemNameError" HorizontalAlignment="Center" Margin="10,45,0,0" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Name Cannot be Empty"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="CatAmountText" Width="225" Header="Category Item Budget:" PlaceholderText="Enter Amount to Budget" Margin="0,10,0,0" TextChanged="CatAmountText_TextChanged"/>
+                <TextBlock x:Name="AddItemAmountError" HorizontalAlignment="Center" Margin="10,45,0,0" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Amount Cannot be Empty"/>
+            </StackPanel>
         </StackPanel>
 
-        <StackPanel x:Name="RemoveItemPanel" Grid.Row="3" Visibility="Collapsed">
+        <StackPanel x:Name="RemoveItemPanel" Orientation="Horizontal" Grid.Row="3" Visibility="Collapsed">
             <ComboBox x:Name="RemoveItemCombo" PlaceholderText="Choose Item To Remove" Margin="0,15,0,0"
                       SelectedItem="{x:Bind ViewModel.SelectedCategoryItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{x:Bind ViewModel.CategoriesToShow}" DisplayMemberPath="CategoryName"/>
+            <TextBlock x:Name="RemoveItemError" HorizontalAlignment="Center" Margin="10,20,0,0" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Choose Item to Remove"/>
         </StackPanel>
 
         <StackPanel x:Name="EditItemPanel" Grid.Row="3" Visibility="Collapsed">
-            <ComboBox x:Name="EditItemCombo" PlaceholderText="Choose Item To Edit"
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="EditItemCombo" PlaceholderText="Choose Item To Edit"
                       SelectionChanged="EditItemCombo_SelectionChanged" Margin="0,10,0,0"
                       SelectedItem="{x:Bind ViewModel.SelectedCategoryItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{x:Bind ViewModel.CategoriesToShow}" DisplayMemberPath="CategoryName"/>
-            <TextBox x:Name="EditCatItemText" Header="Item Name:" Margin="0,5,0,0" TextChanged="CatItemText_TextChanged" Width="250" HorizontalAlignment="Left"/>
-            <TextBox x:Name="EditCatItemAmt" Header="Budget Amount:" Margin="0,5,0,0" TextChanged="CatAmountText_TextChanged" Width="250" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="EditItemComboError" HorizontalAlignment="Center" Margin="10,15,0,0" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Choose Item to Edit"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="EditCatItemText" Header="Item Name:" Margin="0,5,0,0" TextChanged="CatItemText_TextChanged" Width="250" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="EditItemNameError" HorizontalAlignment="Center" Margin="10,40,0,0" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Name Cannot be Empty"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="EditCatItemAmt" Header="Budget Amount:" Margin="0,5,0,0" TextChanged="CatAmountText_TextChanged" Width="250" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="EditItemAmountError" HorizontalAlignment="Center" Margin="10,40,0,0" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Amount Cannot be Empty"/>
+            </StackPanel>
         </StackPanel>
-
-
     </Grid>
-
-
 </Page>

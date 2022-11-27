@@ -2,7 +2,7 @@
 using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
+using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms;
 /// <summary>
@@ -11,6 +11,15 @@ namespace DesktopApplication.Views.Forms;
 public sealed partial class EditCategoryGroupForm : Page, IDialogForm
 {
     public EditCategoryGroupFormViewModel ViewModel { get; }
+
+    private bool isValidEditGroup;
+    private bool isValidEditName;
+    private bool isValidAddItemName = true;
+    private bool isValidAddItemAmount = true;
+    private bool isValidRemoveItemCombo = true;
+    private bool isValidEditItemcombo = true;
+    private bool isValidEditItemName = true;
+    private bool isValidEditItemAmount = true;
 
     public EditCategoryGroupForm()
     {
@@ -131,32 +140,183 @@ public sealed partial class EditCategoryGroupForm : Page, IDialogForm
 
         if (textBox != null)
         {
-            if (textBox.Name == "CatAmountText")
+            decimal parsedVal;
+
+            if (Decimal.TryParse(textBox.Text, out parsedVal))
             {
-                ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
+                ViewModel.CategoryItemBudgetAmt = Convert.ToDecimal(textBox.Text);
             }
-            else if (textBox.Name == "EditCatItemAmt")
+            else
             {
-                ViewModel.CategoryItemBudgetAmt = EditCatItemAmt.Text;
+                return;
             }
         }
-
-        ViewModel.CategoryItemBudgetAmt = CatAmountText.Text;
     }
 
     public void ValidateForm()
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        ValidateEditGroupCombo();
+        ValidateCatGroupName();
+        ValidateAddItemName();
+        ValidateAddItemAmount();
+        ValidateRemoveItemCombo();
+        ValidateEditItemCombo();
+        ValidateEditItemName();
+        ValidateEditItemAmount();
     }
 
-    public bool IsValidForm()
+    private void ValidateEditGroupCombo()
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
-        return true;
+        if(EditGroupCombo.SelectedIndex == -1)
+        {
+            EditCatGroupComboError.Visibility = Visibility.Visible;
+            isValidEditGroup = false;
+        }
+        else
+        {
+            EditCatGroupComboError.Visibility= Visibility.Collapsed;
+            isValidEditGroup = true;
+        }
     }
+    private void ValidateCatGroupName()
+    {
+        if(GroupNameText.Text == string.Empty)
+        {
+            EditCatGroupNameError.Visibility = Visibility.Visible;
+            isValidEditName = false;
+        }
+        else
+        {
+            EditCatGroupNameError.Visibility= Visibility.Collapsed;
+            isValidEditName = true;
+        }
+    }
+    private void ValidateAddItemName()
+    {
+        if(AddCatRadio.IsChecked == true)
+        {
+            if(CatItemText.Text == string.Empty)
+            {
+                AddItemNameError.Visibility = Visibility.Visible;
+                isValidAddItemName = false;
+            }
+            else
+            {
+                AddItemNameError.Visibility= Visibility.Collapsed;
+                isValidAddItemName = true;
+            }
+        }
+        else
+        {
+            isValidAddItemName = true;
+        }
+    }
+    private void ValidateAddItemAmount()
+    {
+        if (AddCatRadio.IsChecked == true)
+        {
+            if (CatAmountText.Text == string.Empty)
+            {
+                AddItemAmountError.Visibility = Visibility.Visible;
+                isValidAddItemAmount = false;
+            }
+            else
+            {
+                AddItemAmountError.Visibility = Visibility.Collapsed;
+                isValidAddItemAmount = true;
+            }
+        }
+        else
+        {
+            isValidAddItemAmount = true;
+        }
+    }
+    private void ValidateRemoveItemCombo()
+    {
+        if(RemoveCatRadio.IsChecked == true)
+        {
+            if(RemoveItemCombo.SelectedIndex == -1)
+            {
+                RemoveItemError.Visibility= Visibility.Visible;
+                isValidRemoveItemCombo = false;
+            }
+            else
+            {
+                RemoveItemError.Visibility= Visibility.Collapsed;
+                isValidRemoveItemCombo = true;
+            }
+        }
+        else
+        {
+            isValidRemoveItemCombo = true;
+        }
+    }
+    private void ValidateEditItemCombo()
+    {
+        if(EditCatItemRadio.IsChecked == true)
+        {
+            if (EditItemCombo.SelectedIndex == -1)
+            {
+                EditItemComboError.Visibility= Visibility.Visible;
+                isValidEditItemcombo= false;
+            }
+            else
+            {
+                EditItemComboError.Visibility= Visibility.Collapsed;
+                isValidEditItemcombo = true;
+            }
+        }
+        else
+        {
+            isValidEditItemcombo= true;
+        }
+    }
+    private void ValidateEditItemName()
+    {
+        if (EditCatItemRadio.IsChecked == true)
+        {
+            if (EditCatItemText.Text == string.Empty)
+            {
+                EditItemNameError.Visibility= Visibility.Visible;
+                isValidEditItemName = false;
+            }
+            else
+            {
+                EditItemNameError.Visibility= Visibility.Collapsed;
+                isValidEditItemName = true;
+            }
+        }
+        else
+        {
+            isValidEditItemName= true;
+        }
+    }
+    private void ValidateEditItemAmount()
+    {
+        if (EditCatItemRadio.IsChecked == true)
+        {
+            if (EditCatItemAmt.Text == string.Empty)
+            {
+                EditItemAmountError.Visibility = Visibility.Visible;
+                isValidEditItemAmount = false;
+            }
+            else
+            {
+                EditItemAmountError.Visibility = Visibility.Collapsed;
+                isValidEditItemAmount = true;
+            }
+        }
+        else
+        {
+            isValidEditItemAmount = true;
+        }
+    }
+
+    public bool IsValidForm() => isValidEditGroup && isValidEditName && isValidAddItemName && isValidAddItemAmount && 
+        isValidRemoveItemCombo && isValidEditItemcombo && isValidEditItemName && isValidEditItemAmount;
 
     public void SetModel(object model)
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        ViewModel.SelectedCategoryGroup = (BudgetCategoryGroup)model;
     }
 }

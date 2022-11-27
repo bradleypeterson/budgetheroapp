@@ -1,17 +1,18 @@
 ﻿<Page
     x:Class="DesktopApplication.Views.Forms.AddCategoryGroupForm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DesktopApplication.Views.Forms"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Content body -->
-        <TextBox Header="Category Group Name" 
+        <TextBlock x:Name="GroupNameError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" 
+                   FontWeight="Bold" Visibility="Collapsed" Text="Enter Category Name"/>
+        <TextBox x:Name="CategoryGroupText" Header="Category Group Name" 
                  Margin="0,10,0,10" 
-                 PlaceholderText="Group Name"
+                 PlaceholderText="Enter Group Name"
                  Text="{x:Bind ViewModel.CategoryGroupDesc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </StackPanel>
 </Page>
