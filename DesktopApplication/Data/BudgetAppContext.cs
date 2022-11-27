@@ -30,6 +30,12 @@ public class BudgetAppContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //modelBuilder
+        //    .Entity<Budget>()
+        //    .HasMany(b => b.BudgetCategoryGroups)
+        //    .WithMany(b => b.Budgets)
+        //    .UsingEntity(j => j.ToTable("BudgetBudgetCategoryGroups"));
+
         #region Defaults
         modelBuilder.Entity<BudgetCategory>()
             .Property(t => t.CategoryAmount)
@@ -44,15 +50,15 @@ public class BudgetAppContext : DbContext
             .HasDefaultValue(false);
         #endregion
 
-        //#region BudgetCategoryGroupSeed
+        #region BudgetCategoryGroupSeed
         //modelBuilder.Entity<BudgetCategoryGroup>().HasData(
         //    new BudgetCategoryGroup { BudgetCategoryGroupID = 1, CategoryGroupDesc = "Housing" },
         //    new BudgetCategoryGroup { BudgetCategoryGroupID = 2, CategoryGroupDesc = "Living Expenses" },
         //    new BudgetCategoryGroup { BudgetCategoryGroupID = 3, CategoryGroupDesc = "Entertainment" },
         //    new BudgetCategoryGroup { BudgetCategoryGroupID = 4, CategoryGroupDesc = "Savings Goals" });
-        //#endregion
+        #endregion
 
-        //#region BudgetCategorySeed
+        #region BudgetCategorySeed
         //modelBuilder.Entity<BudgetCategory>().HasData(
         //    new BudgetCategory { BudgetCategoryID = 1, CategoryName = "Mortgage", BudgetCategoryGroupID = 1 },
         //    new BudgetCategory { BudgetCategoryID = 2, CategoryName = "HOA Dues", BudgetCategoryGroupID = 1 },
@@ -70,6 +76,6 @@ public class BudgetAppContext : DbContext
         //    new BudgetCategory { BudgetCategoryID = 14, CategoryName = "Vacation", BudgetCategoryGroupID = 4 },
         //    new BudgetCategory { BudgetCategoryID = 15, CategoryName = "Retirement", BudgetCategoryGroupID = 4 },
         //    new BudgetCategory { BudgetCategoryID = 16, CategoryName = "Wedding", BudgetCategoryGroupID = 4 });
-        //#endregion
+        #endregion
     }
 }

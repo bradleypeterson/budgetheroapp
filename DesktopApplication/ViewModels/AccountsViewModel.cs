@@ -27,11 +27,13 @@ public class AccountsViewModel : ObservableRecipient
         ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
         ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
         ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
+        ShowTransferDialogCommand = new AsyncRelayCommand(ShowTransferDialog);
     }
 
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
+    public IAsyncRelayCommand ShowTransferDialogCommand { get; }
 
     private IEnumerable<Transaction>? allTransactions;
     public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
@@ -57,6 +59,13 @@ public class AccountsViewModel : ObservableRecipient
         set => SetProperty(ref _hasItemSelected, value);
     }
 
+    private bool _hasMultipleAccounts;
+    public bool HasMultipleAccounts
+    {
+        get => _hasMultipleAccounts;
+        set => SetProperty(ref _hasMultipleAccounts, value);
+    }
+
     public async Task LoadAsync()
     {
         if (BankAccounts.Any()) return;
@@ -69,6 +78,8 @@ public class AccountsViewModel : ObservableRecipient
                 BankAccounts.Add(new ObservableBankAccount(bankAccount!));
             }
         }
+
+        VerifyUserAccountCount();
 
         allTransactions = _dataStore.Transaction.GetAll(t => t.BankAccount.UserId == _sessionService.GetSessionUserId());
     }
@@ -105,6 +116,16 @@ public class AccountsViewModel : ObservableRecipient
         _dialogService.OnSaved -= DeleteBankAccountAsync;
     }
 
+    private async Task ShowTransferDialog()
+    {
+        _dialogService.OnSaved += TransferFundsAsync;
+
+        string dialogTitle = "Transfer Funds";
+        await _dialogService.ShowDialogAsync<TransferFundsForm>(dialogTitle);
+
+        _dialogService.OnSaved -= TransferFundsAsync;
+    }
+
     private async void AddBankAccountAsync(object? sender, DialogServiceEventArgs e)
     {
         BankAccount newBankAccount = GetBankAccount(e);
@@ -116,6 +137,8 @@ public class AccountsViewModel : ObservableRecipient
         {
             BankAccounts.Add(new ObservableBankAccount(newBankAccount));
         }
+
+        VerifyUserAccountCount();
     }
 
     private async void EditBankAccountAsync(object? sender, DialogServiceEventArgs e)
@@ -142,12 +165,66 @@ public class AccountsViewModel : ObservableRecipient
         await _dataStore.BankAccount.DeleteAsync(selectedBankAccount);
 
         BankAccounts.Remove(_selectedBankAccount);
+
+        VerifyUserAccountCount();
+    }
+
+    private async void TransferFundsAsync(object? sender, DialogServiceEventArgs e)
+    {
+        BankAccount[] accounts = GetBankAccounts(e);
+        ObservableBankAccount transferFromAccount = GetBankAccount(accounts[0].BankAccountId);
+        ObservableBankAccount transferToAccount = GetBankAccount(accounts[1].BankAccountId);
+        decimal transferAmount = GetTransferAmount(e);
+
+        await UpdateAccountBalance(transferFromAccount, -transferAmount);
+        await UpdateAccountBalance(transferToAccount, transferAmount);
+    }
+
+    private async Task UpdateAccountBalance(ObservableBankAccount observableBankAccount, decimal transferAmount)
+    {
+        BankAccount bankAccount = observableBankAccount.BankAccount;
+
+        bankAccount.Balance += transferAmount;
+        await _dataStore.BankAccount.Update(bankAccount);
+
+        observableBankAccount.BankAccount = bankAccount;
     }
 
     private static BankAccount GetBankAccount(DialogServiceEventArgs e)
     {
         BankAccountForm accountForm = (BankAccountForm)e.Content;
         return accountForm.ViewModel.BankAccount;
+    }
+
+    private ObservableBankAccount GetBankAccount(int bankAccountId)
+    {
+        ObservableBankAccount? observableAccount = BankAccounts.FirstOrDefault(a => a?.BankAccount.BankAccountId == bankAccountId, null);
+
+        if (observableAccount is not null)
+            return observableAccount;
+        else
+            throw new NullReferenceException();
+    }
+
+    private static BankAccount[] GetBankAccounts(DialogServiceEventArgs e)
+    {
+        TransferFundsForm transferForm = (TransferFundsForm)e.Content;
+        BankAccount[] accounts = new BankAccount[2];
+
+        accounts[0] = transferForm.ViewModel.SelectedTransferFromAccount!;
+        accounts[1] = transferForm.ViewModel.SelectedTransferToAccount!;
+
+        return accounts;
+    }
+
+    private static decimal GetTransferAmount(DialogServiceEventArgs e)
+    {
+        TransferFundsForm transferForm = (TransferFundsForm)e.Content;
+
+        if (decimal.TryParse(transferForm.ViewModel.TransferAmount, out decimal transferAmount))
+            return transferAmount;
+        else
+            throw new Exception("Somehow a non-decimal value made it this far...");
     }
 
     private void FilterAccountTransactions(int accountId)
@@ -159,5 +236,13 @@ public class AccountsViewModel : ObservableRecipient
                                                                    .OrderByDescending(t => t.TransactionDate).ToList();
             accountTransactions.ForEach(AccountTransactions.Add);
         }
+    }
+
+    private void VerifyUserAccountCount()
+    {
+        if (BankAccounts.Count() > 1)
+            HasMultipleAccounts = true;
+        else
+            HasMultipleAccounts = false;
     }
 }

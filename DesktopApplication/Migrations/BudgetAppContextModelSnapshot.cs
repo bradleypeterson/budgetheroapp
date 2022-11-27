@@ -29,7 +29,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasIndex("BudgetsBudgetId");
 
-                    b.ToTable("BudgetBudgetCategoryGroup");
+                    b.ToTable("BudgetBudgetCategoryGroup", (string)null);
                 });
 
             modelBuilder.Entity("BudgetUser", b =>
@@ -44,7 +44,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasIndex("UsersUserId");
 
-                    b.ToTable("BudgetUser");
+                    b.ToTable("BudgetUser", (string)null);
                 });
 
             modelBuilder.Entity("ModelsLibrary.BankAccount", b =>
@@ -72,7 +72,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BankAccounts");
+                    b.ToTable("BankAccounts", (string)null);
                 });
 
             modelBuilder.Entity("ModelsLibrary.Budget", b =>
@@ -91,7 +91,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasKey("BudgetId");
 
-                    b.ToTable("Budgets");
+                    b.ToTable("Budgets", (string)null);
                 });
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategory", b =>
@@ -117,7 +117,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasIndex("BudgetCategoryGroupID");
 
-                    b.ToTable("BudgetCategories");
+                    b.ToTable("BudgetCategories", (string)null);
                 });
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategoryGroup", b =>
@@ -132,7 +132,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasKey("BudgetCategoryGroupID");
 
-                    b.ToTable("BudgetCategoryGroups");
+                    b.ToTable("BudgetCategoryGroups", (string)null);
                 });
 
             modelBuilder.Entity("ModelsLibrary.Transaction", b =>
@@ -182,7 +182,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasIndex("BudgetCategoryId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("ModelsLibrary.User", b =>
@@ -219,7 +219,7 @@ namespace DesktopApplication.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BudgetBudgetCategoryGroup", b =>
