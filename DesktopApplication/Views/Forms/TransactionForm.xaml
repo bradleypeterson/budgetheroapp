@@ -73,8 +73,7 @@
 
             <ComboBox x:Name="BankAccountComboBox" PlaceholderText="Select Bank Account"
                       SelectedValue="{x:Bind ViewModel.SelectedBankAccount, Mode=TwoWay}"
-                      ItemsSource="{x:Bind ViewModel.BankAccounts}"
-                      DisplayMemberPath="BankName" />
+                      ItemsSource="{x:Bind ViewModel.BankAccounts}" />
             <TextBlock x:Name="tbInvalidAccountError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
                        Text="Please select an account."/>

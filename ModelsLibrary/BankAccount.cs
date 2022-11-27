@@ -26,5 +26,10 @@ namespace ModelsLibrary
 
         [Required]
         public User User { get; set; } = null!;
+
+        public override string ToString()
+        {
+            return $"{BankName} | {Balance:C2}";
+        }
     }
 }
