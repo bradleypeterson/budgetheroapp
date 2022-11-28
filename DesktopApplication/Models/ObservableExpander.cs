@@ -56,7 +56,8 @@ namespace DesktopApplication.Models
         {
             if (CategoryItems.Any())
             {
-                return;
+                CategoryItems.Clear();
+                //return;
             }
             
             var groupID = _budgetCategoryGroup.BudgetCategoryGroupID;
@@ -67,6 +68,5 @@ namespace DesktopApplication.Models
                 CategoryItems.Add(new ObservableCategoryItem(item));
             }
         }
-
     }
 }

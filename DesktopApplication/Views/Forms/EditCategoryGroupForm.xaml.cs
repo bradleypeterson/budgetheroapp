@@ -1,4 +1,5 @@
-﻿using DesktopApplication.Contracts.Views;
+﻿using CommunityToolkit.Common;
+using DesktopApplication.Contracts.Views;
 using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -215,15 +216,24 @@ public sealed partial class EditCategoryGroupForm : Page, IDialogForm
     {
         if (AddCatRadio.IsChecked == true)
         {
+            decimal parsedVal;
+
             if (CatAmountText.Text == string.Empty)
             {
                 AddItemAmountError.Visibility = Visibility.Visible;
+                AddItemAmountError.Text = "Amount Cannot be Empty";
                 isValidAddItemAmount = false;
             }
-            else
+            else if(Decimal.TryParse(CatAmountText.Text, out parsedVal))
             {
                 AddItemAmountError.Visibility = Visibility.Collapsed;
                 isValidAddItemAmount = true;
+            }
+            else
+            {
+                AddItemAmountError.Visibility = Visibility.Visible;
+                AddItemAmountError.Text = "Must be a Number";
+                isValidAddItemAmount = false;
             }
         }
         else
@@ -295,15 +305,24 @@ public sealed partial class EditCategoryGroupForm : Page, IDialogForm
     {
         if (EditCatItemRadio.IsChecked == true)
         {
+            decimal parsedVal;
+
             if (EditCatItemAmt.Text == string.Empty)
             {
                 EditItemAmountError.Visibility = Visibility.Visible;
+                EditItemAmountError.Text = "Amount Cannot be Empty";
                 isValidEditItemAmount = false;
             }
-            else
+            else if (Decimal.TryParse(EditCatItemAmt.Text, out parsedVal))
             {
                 EditItemAmountError.Visibility = Visibility.Collapsed;
                 isValidEditItemAmount = true;
+            }
+            else
+            {
+                EditItemAmountError.Visibility = Visibility.Visible;
+                EditItemAmountError.Text = "Must be a Number";
+                isValidEditItemAmount = false;
             }
         }
         else

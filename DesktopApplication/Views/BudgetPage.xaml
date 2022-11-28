@@ -46,8 +46,8 @@
                         <controls:DataGrid.Columns>
                             <controls:DataGridTextColumn Header="ItemName" FontSize="15" Width="1*" Binding="{Binding CategoryName}"/>
                             <controls:DataGridTextColumn Header="Budgeted" FontSize="15" Width="1*" Binding="{Binding CategoryAmount, Converter={StaticResource DecimalToStringConverter}}"/>
-                            <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated}"/>
-                            <controls:DataGridTextColumn Header="Remaining" FontSize="15" Width="1*" Binding="{Binding Remaining}"/>
+                            <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated, Converter={StaticResource DecimalToStringConverter}}"/>
+                            <controls:DataGridTextColumn Header="Remaining" FontSize="15" Width="1*" Binding="{Binding Remaining, Converter={StaticResource DecimalToStringConverter}}"/>
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
                 </Expander>
