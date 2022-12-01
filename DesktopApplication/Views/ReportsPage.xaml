@@ -21,13 +21,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-        <!-- Pie charts: One Month's Expense with a breakdown per category - Landon -->
-            <!-- Make Month selectable-->
+        <!-- Pie charts: One Month's Expense with a breakdown per category (only one month, current month only) - Landon -->
         
         <!-- Double Line Graph: Expense vs Income for the year -Landon -->
         
-        <!-- Line Graph: Spending per month per category -Tevin -->
-            <!-- Make Category Selectable-->
+        <!--Multi Line Graph: Spending per month per category (List all catergories) -Tevin -->
         
         <!-- Bar Graph: Monthly breakdown for a year of expenses -Tevin -->
             
