@@ -1,6 +1,7 @@
 ﻿using DesktopApplication.ViewModels;
 
 using Microsoft.UI.Xaml.Controls;
+using Syncfusion.UI.Xaml.Charts;
 
 namespace DesktopApplication.Views;
 
