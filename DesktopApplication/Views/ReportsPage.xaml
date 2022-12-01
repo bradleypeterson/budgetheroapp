@@ -5,39 +5,32 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:chart="using:Syncfusion.UI.Xaml.Charts"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        <Grid x:Name="CardArea" Padding="15" ColumnSpacing="20" RowSpacing="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
 
-            </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="325" />
-                <RowDefinition Height="325" />
-                <RowDefinition Height="325" />
-                <RowDefinition Height="325" />
-                <RowDefinition Height="325" />
-                <RowDefinition Height="325" />
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Pie charts: One Month's Expense with a breakdown per category - Landon -->
+            <!-- Make Month selectable-->
+        
+        <!-- Double Line Graph: Expense vs Income for the year -Landon -->
+        
+        <!-- Line Graph: Spending per month per category -Tevin -->
+            <!-- Make Category Selectable-->
+        
+        <!-- Bar Graph: Monthly breakdown for a year of expenses -Tevin -->
             
-
-            <Rectangle Fill="CadetBlue" Grid.Column="0" Grid.Row="0" />
-            <Rectangle Fill="CadetBlue" Grid.Column="1" Grid.Row="0" />
-            <Rectangle Fill="CadetBlue" Grid.Column="2" Grid.Row="0" />
-            <Rectangle Fill="CadetBlue" Grid.Column="0" Grid.Row="1" />
-            <Rectangle Fill="CadetBlue" Grid.Column="1" Grid.Row="1" />
-            <Rectangle Fill="CadetBlue" Grid.Column="2" Grid.Row="1" />
-            
-
-
-
-
-        </Grid>
 
     </Grid>
 </Page>
