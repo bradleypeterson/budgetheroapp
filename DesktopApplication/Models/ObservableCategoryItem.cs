@@ -58,13 +58,7 @@ namespace DesktopApplication.Models
             get => _allocated;
             set
             {
-                decimal totalAllocated = 0;                
-                transactions = _dataStore.Transaction!.GetAll(t => t.BudgetCategoryId == BudgetCategory.BudgetCategoryID);
-                foreach (Transaction? transaction in transactions)
-                {
-                    totalAllocated += transaction.ExpenseAmount;
-                }
-                SetProperty(ref _allocated, totalAllocated);
+                SetProperty(ref _allocated, value);
             }
         }
 
@@ -74,16 +68,29 @@ namespace DesktopApplication.Models
             get => _remaining;
             set
             {
-
-                decimal totalRemaining = _categoryAmount - _allocated;
-                
-                if(totalRemaining < 0)
-                {
-                    totalRemaining = 0.00m;
-                }
- 
-                SetProperty(ref _remaining, totalRemaining);
+                SetProperty(ref _remaining, value);
             }
+        }
+
+
+        public void SetAllocatedAndRemaining()
+        {
+            /* First set Allocated */
+            decimal totalAllocated = 0;
+            transactions = _dataStore.Transaction!.GetAll(t => t.BudgetCategoryId == BudgetCategory.BudgetCategoryID);
+            foreach (Transaction? transaction in transactions)
+            {
+                totalAllocated += transaction.ExpenseAmount;
+            }
+            Allocated = totalAllocated;
+
+            /* Next set Remaining */
+            decimal totalRemaining = _categoryAmount - _allocated;
+            if (totalRemaining <= 0)
+            {
+                totalRemaining = 0.00m;
+            }
+            Remaining = totalRemaining;
         }
 
         private void ConvertToDecimal(string value)
