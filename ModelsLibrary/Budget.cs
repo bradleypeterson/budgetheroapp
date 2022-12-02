@@ -9,7 +9,7 @@ namespace ModelsLibrary
 {
     public class Budget
     {
-        public int BudgetId { get; set; }
+        public int BudgetId { get; set; } 
 
         [Required]
         public string BudgetName { get; set; } = null!;
