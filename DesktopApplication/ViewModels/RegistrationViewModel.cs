@@ -19,6 +19,10 @@ public class RegistrationViewModel : ObservableRecipient
     private readonly IPasswordService _passwordService;
     private readonly ISessionService _sessionService;
 
+    private bool isAvailableUsername;
+    private bool isValidEmail;
+    private bool hasMatchingPasswords;
+
     public RegistrationViewModel()
     {
         _navigationService = App.GetService<INavigationService>();
@@ -108,7 +112,7 @@ public class RegistrationViewModel : ObservableRecipient
         }
     }
     public bool IsFormComplete { get; set; }
-    private bool dataValid = false;
+
     public async Task AddUser()
     {
         if (IsFormComplete)
@@ -116,37 +120,37 @@ public class RegistrationViewModel : ObservableRecipient
             var existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
             if (existingUser is null) {
                 OnUsernameNotTaken?.Invoke(this, EventArgs.Empty);
-                dataValid = true;
+                isAvailableUsername = true;
             } else {
                 OnUsernameTaken?.Invoke(this, EventArgs.Empty);
-                dataValid = false;
+                isAvailableUsername = false;
             }
 
             if (IsValidEmail(_email))
             {
                 OnValidEmail?.Invoke(this, EventArgs.Empty);
-                dataValid = true;
+                isValidEmail = true;
             }
             else
             {
                 OnInvalidEmail?.Invoke(existingUser, EventArgs.Empty);
-                dataValid = false;
+                isValidEmail = false;
             }
 
 
             if(_password == _confirmPassword)
             {
                 OnMatchingPasswords?.Invoke(this, EventArgs.Empty);
-                dataValid = true;
+                hasMatchingPasswords = true;
             }
             else
             {
                 OnMismatchingPasswords?.Invoke(this, EventArgs.Empty);
-                dataValid = false;
+                hasMatchingPasswords = false;
             }
 
 
-            if (dataValid)
+            if (IsValidRegistration())
             {
                 await Task.Delay(1500);
                 string hashedPassword = _passwordService.HashPassword(_password!);
@@ -263,4 +267,7 @@ public class RegistrationViewModel : ObservableRecipient
     }
 
     private void NavigateBack() => _navigationService.GoBack();
+
+    private bool IsValidRegistration()
+        => isAvailableUsername && isValidEmail && hasMatchingPasswords;
 }
