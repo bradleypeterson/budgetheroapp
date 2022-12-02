@@ -1,7 +1,8 @@
-﻿
+﻿using Microsoft.UI.Xaml;
 using DesktopApplication.Contracts.Views;
 using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml.Controls;
+using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms;
 /// <summary>
@@ -10,6 +11,9 @@ namespace DesktopApplication.Views.Forms;
 public sealed partial class AddCategoryGroupForm : Page, IDialogForm
 {
     public CategoryGroupFormViewModel ViewModel { get; }
+
+    private bool isValidCategoryName;
+
     public AddCategoryGroupForm()
     {
         ViewModel = App.GetService<CategoryGroupFormViewModel>();
@@ -18,17 +22,27 @@ public sealed partial class AddCategoryGroupForm : Page, IDialogForm
 
     public void ValidateForm()
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        ValidateGroupNameField();
     }
 
-    public bool IsValidForm()
+    private void ValidateGroupNameField()
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
-        return true;
+        if(CategoryGroupText.Text == string.Empty)
+        {
+            GroupNameError.Visibility = Visibility.Visible;
+            isValidCategoryName = false;
+        }
+        else
+        {
+            GroupNameError.Visibility = Visibility.Collapsed;
+            isValidCategoryName = true;
+        }
     }
+
+    public bool IsValidForm() => isValidCategoryName;
 
     public void SetModel(object model)
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        ViewModel.BudgetCategoryGroup = (BudgetCategoryGroup)model;
     }
 }

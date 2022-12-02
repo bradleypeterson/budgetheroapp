@@ -73,8 +73,8 @@ namespace DesktopApplication.ViewModels.Forms
             }
         }
 
-        private string? _categoryItemBudgetAmt;
-        public string? CategoryItemBudgetAmt
+        private decimal? _categoryItemBudgetAmt;
+        public decimal? CategoryItemBudgetAmt
         {
             get => _categoryItemBudgetAmt;
             set

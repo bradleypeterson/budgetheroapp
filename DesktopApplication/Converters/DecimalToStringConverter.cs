@@ -13,7 +13,7 @@ public sealed class DecimalToStringConverter : IValueConverter
     {
         if (value is decimal d && value != null)
         {
-            if (d == 0) { return string.Empty; }
+            if (d == 0) { return "$0.00"; }
             return d.ToString(Format);
         }
         else if (value is string s && value != null)

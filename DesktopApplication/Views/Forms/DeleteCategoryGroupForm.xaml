@@ -9,6 +9,7 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Content body -->
+        <TextBlock x:Name="DeleteCategoryGroupError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed" Text="Choose a Group to Delete"/>
         <ComboBox Grid.Row="0" x:Name="DeleteCategoryGroupCombo" PlaceholderText="Choose Group To Delete"
                    SelectedItem="{x:Bind ViewModel.SelectedCategoryGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    ItemsSource="{x:Bind ViewModel.BudgetCategoryGroups}"

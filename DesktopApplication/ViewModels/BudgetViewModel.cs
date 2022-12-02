@@ -182,6 +182,7 @@ public class BudgetViewModel : ObservableRecipient
         if (result == 2)
         {
             BudgetCategoryGroups?.Add(new ObservableCategoryGroup(newCategoryGroup));
+            Expanders.Add(new ObservableExpander(newCategoryGroup!));
         }
     }
     
@@ -189,6 +190,7 @@ public class BudgetViewModel : ObservableRecipient
     {
         BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, true, false);
         ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        ObservableExpander? listedExpander = Expanders.FirstOrDefault(e => e.CategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
         int index;
 
         if(listedCategoryGroup != null)
@@ -197,14 +199,16 @@ public class BudgetViewModel : ObservableRecipient
 
             index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
             BudgetCategoryGroups.RemoveAt(index);
+            Expanders.Remove(listedExpander);
         }
     }
 
     private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
         BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, false, true);
-
         ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        ObservableExpander? listedExpander = Expanders.FirstOrDefault(e => e.CategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+
         int index;
 
         if (listedCategoryGroup != null)
@@ -212,16 +216,8 @@ public class BudgetViewModel : ObservableRecipient
             index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
 
             BudgetCategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
-            
             selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e);
-
             await _dataStore.BudgetCategoryGroup.Update(selectedCategoryGroup); /* updates the database value */
-
-            
-            //TODO: Get the expander for later data manipulation
-            //var expander = Expanders.FirstOrDefault(e => e.CategoryGroupID == newCategoryItem.BudgetCategoryGroupID);
-
-
 
             /* Get status of radio button for Category Item Editing */
             var radStatus = GetRadioButtonStatus(e);
@@ -232,17 +228,15 @@ public class BudgetViewModel : ObservableRecipient
                 {
                     BudgetCategory newCategoryItem = new BudgetCategory();
 
-                    //Set the data members
+                    //Set the data members and update database
                     newCategoryItem.CategoryName = GetCategoryItemNameTxt(e);
                     newCategoryItem.BudgetCategoryGroupID = selectedCategoryGroup.BudgetCategoryGroupID;
                     newCategoryItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
-
-                    //update list and database
-                    CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
                     var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
-
-                    //TODO: uncomment after getting the expander tied to the specific category group
-                    //expander.AddToExpanderList(newCategoryItem);
+                    
+                    //update list 
+                    CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
+                    listedExpander.AddItemToExpanderList(newCategoryItem);
                 }
                 else if (radStatus == "Remove Category Item")
                 {
@@ -253,9 +247,36 @@ public class BudgetViewModel : ObservableRecipient
                     if (listedCatItem != null)
                     {
                         await _dataStore.BudgetCategory.DeleteAsync(selectedCatItem);
-
+                        
                         index = CategoryItems.IndexOf(listedCatItem);
                         CategoryItems.RemoveAt(index);
+                        listedExpander.DeleteItemFromExpanderList(selectedCatItem);
+                    }
+                }
+                else if (radStatus == "Edit Category Item")
+                {
+                    //update database
+                    BudgetCategory selectedCatItem = GetCategoryItem(e);
+                    if (selectedCatItem != null)
+                    {
+                        selectedCatItem.CategoryName = GetCategoryItemNameTxt(e);
+                        selectedCatItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
+                        await _dataStore.BudgetCategory.Update(selectedCatItem);
+                    }
+
+                    //update list
+                    ObservableCategoryItem? listedCatItem = CategoryItems?.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == selectedCatItem.BudgetCategoryID);
+                    if (listedCatItem != null)
+                    {
+                        selectedCatItem.CategoryName = GetCategoryItemNameTxt(e);
+                        selectedCatItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
+                        await _dataStore.BudgetCategory.Update(selectedCatItem);
+
+                        index = CategoryItems.IndexOf(listedCatItem);
+                        CategoryItems[index].CategoryName = GetCategoryItemNameTxt(e);
+                        CategoryItems[index].CategoryAmount = GetCategoryItemBudgetAmt(e);
+
+                        listedExpander.EditItemInExpanderList(selectedCatItem);
                     }
                 }
             }

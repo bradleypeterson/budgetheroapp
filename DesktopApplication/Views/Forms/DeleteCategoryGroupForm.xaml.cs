@@ -2,7 +2,7 @@
 using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
+using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms;
 /// <summary>
@@ -11,6 +11,8 @@ namespace DesktopApplication.Views.Forms;
 public sealed partial class DeleteCategoryGroupForm : Page, IDialogForm
 {
     public DeleteCategoryGroupFormViewModel ViewModel { get; }
+
+    private bool isValidSelectedGroup;
 
     public DeleteCategoryGroupForm()
     {
@@ -25,17 +27,30 @@ public sealed partial class DeleteCategoryGroupForm : Page, IDialogForm
 
     public void ValidateForm()
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        ValidateGroupToDelete();
     }
 
-    public bool IsValidForm()
+    private void ValidateGroupToDelete()
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
-        return true;
+        int sel = DeleteCategoryGroupCombo.SelectedIndex;
+
+        if(sel == -1)
+        {
+            DeleteCategoryGroupError.Visibility = Visibility.Visible;
+            isValidSelectedGroup = false;
+        }
+        else
+        {
+            DeleteCategoryGroupError.Visibility = Visibility.Collapsed;
+            isValidSelectedGroup= true;
+        }
     }
+
+    public bool IsValidForm() => isValidSelectedGroup;
+
 
     public void SetModel(object model)
     {
-        // Refer to BankAccountForm.xaml.cs on how to implement this. - RO
+        ViewModel.SelectedCategoryGroup = (BudgetCategoryGroup)model;
     }
 }

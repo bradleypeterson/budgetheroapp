@@ -4,7 +4,6 @@ using DesktopApplication.Contracts.Services;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
 
-
 namespace DesktopApplication.ViewModels.Forms
 {
     public class DeleteCategoryGroupFormViewModel : ObservableRecipient

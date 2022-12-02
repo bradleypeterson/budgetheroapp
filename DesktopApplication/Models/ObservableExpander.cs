@@ -15,8 +15,10 @@ namespace DesktopApplication.Models
     public class ObservableExpander : ObservableObject
     {
         private readonly BudgetCategoryGroup _budgetCategoryGroup;
+        
         private readonly IDataStore _dataStore;
-        public ObservableCollection<BudgetCategory> CategoryItems { get; set; } = new();
+        
+        public ObservableCollection<ObservableCategoryItem>? CategoryItems { get; set; } = new();
 
         public ObservableExpander(BudgetCategoryGroup budgetCategoryGroup)
         {
@@ -28,14 +30,26 @@ namespace DesktopApplication.Models
         public string? CategoryGroupDesc => _budgetCategoryGroup.CategoryGroupDesc;
         public int? CategoryGroupID => _budgetCategoryGroup.BudgetCategoryGroupID;
 
-        public void AddToExpanderList(BudgetCategory catItem)
+        public void AddItemToExpanderList(BudgetCategory catItem)
         {
-            CategoryItems.Add(catItem);
+            CategoryItems.Add(new ObservableCategoryItem(catItem));
         }
 
-        public void DeleteFromExpanderList(BudgetCategory catItem)
+        public void DeleteItemFromExpanderList(BudgetCategory catItem)
         {
-            CategoryItems.Remove(catItem);
+            ObservableCategoryItem item = CategoryItems.FirstOrDefault(x => x.BudgetCategory.BudgetCategoryID == catItem.BudgetCategoryID);
+
+            if (item != null)
+            {
+                CategoryItems.Remove(item);
+            }
+        }
+
+        public void EditItemInExpanderList(BudgetCategory catItem)
+        {
+            var itemToEdit = CategoryItems.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == catItem.BudgetCategoryID);
+            itemToEdit.CategoryName = catItem.CategoryName;
+            itemToEdit.CategoryAmount = catItem.CategoryAmount;
         }
 
         private void LoadAsync()
@@ -50,9 +64,13 @@ namespace DesktopApplication.Models
 
             foreach (var item in BudgetItems)
             {
-                CategoryItems.Add(item);
+                CategoryItems.Add(new ObservableCategoryItem(item));
+            }
+
+            foreach (ObservableCategoryItem item in CategoryItems)
+            {
+                item.SetAllocatedAndRemaining();
             }
         }
-
     }
 }
