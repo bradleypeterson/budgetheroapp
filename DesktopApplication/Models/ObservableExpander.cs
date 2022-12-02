@@ -28,7 +28,7 @@ namespace DesktopApplication.Models
         }
 
         public string? CategoryGroupDesc => _budgetCategoryGroup.CategoryGroupDesc;
-        public int? CategoryGroupID => _budgetCategoryGroup.BudgetCategoryGroupID;
+        public Guid CategoryGroupID => _budgetCategoryGroup.BudgetCategoryGroupID;
 
         public void AddItemToExpanderList(BudgetCategory catItem)
         {

@@ -30,7 +30,7 @@ namespace Web_API.Controllers
 
         // GET: api/BudgetCategories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BudgetCategory>> GetBudgetCategory(int id)
+        public async Task<ActionResult<BudgetCategory>> GetBudgetCategory(Guid id)
         {
             var budgetCategory = await _context.BudgetCategories.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Web_API.Controllers
         // PUT: api/BudgetCategories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBudgetCategory(int id, BudgetCategory budgetCategory)
+        public async Task<IActionResult> PutBudgetCategory(Guid id, BudgetCategory budgetCategory)
         {
             if (id != budgetCategory.BudgetCategoryID)
             {
@@ -86,7 +86,7 @@ namespace Web_API.Controllers
 
         // DELETE: api/BudgetCategories/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBudgetCategory(int id)
+        public async Task<IActionResult> DeleteBudgetCategory(Guid id)
         {
             var budgetCategory = await _context.BudgetCategories.FindAsync(id);
             if (budgetCategory == null)
@@ -100,7 +100,7 @@ namespace Web_API.Controllers
             return NoContent();
         }
 
-        private bool BudgetCategoryExists(int id)
+        private bool BudgetCategoryExists(Guid id)
         {
             return _context.BudgetCategories.Any(e => e.BudgetCategoryID == id);
         }

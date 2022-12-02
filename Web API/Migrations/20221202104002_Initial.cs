@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Web_API.Migrations
 {
-    public partial class APIMigration_Initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,7 @@ namespace Web_API.Migrations
                 name: "BudgetCategoryGroups",
                 columns: table => new
                 {
-                    BudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BudgetCategoryGroupID = table.Column<Guid>(type: "TEXT", nullable: false),
                     CategoryGroupDesc = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -26,8 +25,7 @@ namespace Web_API.Migrations
                 name: "Budgets",
                 columns: table => new
                 {
-                    BudgetId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BudgetId = table.Column<Guid>(type: "TEXT", nullable: false),
                     BudgetName = table.Column<string>(type: "TEXT", nullable: false),
                     BudgetType = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -37,14 +35,31 @@ namespace Web_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
+                    PercentageMod = table.Column<double>(type: "REAL", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    UserImageLink = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BudgetCategories",
                 columns: table => new
                 {
-                    BudgetCategoryID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BudgetCategoryID = table.Column<Guid>(type: "TEXT", nullable: false),
                     CategoryName = table.Column<string>(type: "TEXT", nullable: false),
                     CategoryAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
-                    BudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false)
+                    BudgetCategoryGroupID = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,40 +73,38 @@ namespace Web_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "BudgetBudgetCategoryGroup",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    PercentageMod = table.Column<double>(type: "REAL", nullable: true),
-                    Username = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    UserImageLink = table.Column<string>(type: "TEXT", nullable: true),
-                    BudgetId = table.Column<int>(type: "INTEGER", nullable: true)
+                    BudgetCategoryGroupsBudgetCategoryGroupID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BudgetsBudgetId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_BudgetBudgetCategoryGroup", x => new { x.BudgetCategoryGroupsBudgetCategoryGroupID, x.BudgetsBudgetId });
                     table.ForeignKey(
-                        name: "FK_Users_Budgets_BudgetId",
-                        column: x => x.BudgetId,
+                        name: "FK_BudgetBudgetCategoryGroup_BudgetCategoryGroups_BudgetCategoryGroupsBudgetCategoryGroupID",
+                        column: x => x.BudgetCategoryGroupsBudgetCategoryGroupID,
+                        principalTable: "BudgetCategoryGroups",
+                        principalColumn: "BudgetCategoryGroupID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BudgetBudgetCategoryGroup_Budgets_BudgetsBudgetId",
+                        column: x => x.BudgetsBudgetId,
                         principalTable: "Budgets",
-                        principalColumn: "BudgetId");
+                        principalColumn: "BudgetId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BankAccounts",
                 columns: table => new
                 {
-                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BankAccountId = table.Column<Guid>(type: "TEXT", nullable: false),
                     BankName = table.Column<string>(type: "TEXT", nullable: false),
                     AccountType = table.Column<string>(type: "TEXT", nullable: false),
                     Balance = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,11 +118,34 @@ namespace Web_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BudgetUser",
+                columns: table => new
+                {
+                    BudgetsBudgetId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UsersUserId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BudgetUser", x => new { x.BudgetsBudgetId, x.UsersUserId });
+                    table.ForeignKey(
+                        name: "FK_BudgetUser_Budgets_BudgetsBudgetId",
+                        column: x => x.BudgetsBudgetId,
+                        principalTable: "Budgets",
+                        principalColumn: "BudgetId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BudgetUser_Users_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
-                    TransactionId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    TransactionId = table.Column<Guid>(type: "TEXT", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TransactionPayee = table.Column<string>(type: "TEXT", nullable: false),
                     TransactionMemo = table.Column<string>(type: "TEXT", nullable: true),
@@ -117,8 +153,8 @@ namespace Web_API.Migrations
                     DepositAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
                     IsTransactionPaid = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
                     IsHousehold = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
-                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BudgetCategoryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BankAccountId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BudgetCategoryId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,9 +179,19 @@ namespace Web_API.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BudgetBudgetCategoryGroup_BudgetsBudgetId",
+                table: "BudgetBudgetCategoryGroup",
+                column: "BudgetsBudgetId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BudgetCategories_BudgetCategoryGroupID",
                 table: "BudgetCategories",
                 column: "BudgetCategoryGroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BudgetUser_UsersUserId",
+                table: "BudgetUser",
+                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_BankAccountId",
@@ -156,17 +202,21 @@ namespace Web_API.Migrations
                 name: "IX_Transactions_BudgetCategoryId",
                 table: "Transactions",
                 column: "BudgetCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_BudgetId",
-                table: "Users",
-                column: "BudgetId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BudgetBudgetCategoryGroup");
+
+            migrationBuilder.DropTable(
+                name: "BudgetUser");
+
+            migrationBuilder.DropTable(
                 name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
 
             migrationBuilder.DropTable(
                 name: "BankAccounts");
@@ -179,9 +229,6 @@ namespace Web_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "BudgetCategoryGroups");
-
-            migrationBuilder.DropTable(
-                name: "Budgets");
         }
     }
 }

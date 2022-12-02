@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ModelsLibrary
 {
     public class User
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
         public string? FirstName { get; set; }

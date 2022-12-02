@@ -13,6 +13,6 @@ public interface ISessionService
     event EventHandler? OnSessionDestroyed;
     void CreateSession(User user);
     void DestroySession();
-    int GetSessionUserId();
+    Guid GetSessionUserId();
     string GetSessionUsername();
 }

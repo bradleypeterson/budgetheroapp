@@ -30,7 +30,7 @@ namespace Web_API.Controllers
 
         // GET: api/BankAccounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BankAccount>> GetBankAccount(int id)
+        public async Task<ActionResult<BankAccount>> GetBankAccount(Guid id)
         {
             var bankAccount = await _context.BankAccounts.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Web_API.Controllers
         // PUT: api/BankAccounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBankAccount(int id, BankAccount bankAccount)
+        public async Task<IActionResult> PutBankAccount(Guid id, BankAccount bankAccount)
         {
             if (id != bankAccount.BankAccountId)
             {
@@ -86,7 +86,7 @@ namespace Web_API.Controllers
 
         // DELETE: api/BankAccounts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBankAccount(int id)
+        public async Task<IActionResult> DeleteBankAccount(Guid id)
         {
             var bankAccount = await _context.BankAccounts.FindAsync(id);
             if (bankAccount == null)
@@ -100,7 +100,7 @@ namespace Web_API.Controllers
             return NoContent();
         }
 
-        private bool BankAccountExists(int id)
+        private bool BankAccountExists(Guid id)
         {
             return _context.BankAccounts.Any(e => e.BankAccountId == id);
         }

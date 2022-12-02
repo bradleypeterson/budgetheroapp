@@ -196,9 +196,9 @@ public class AccountsViewModel : ObservableRecipient
         return accountForm.ViewModel.BankAccount;
     }
 
-    private ObservableBankAccount GetBankAccount(int bankAccountId)
+    private ObservableBankAccount GetBankAccount(Guid bankAccountId)
     {
-        ObservableBankAccount? observableAccount = BankAccounts.FirstOrDefault(a => a?.BankAccount.BankAccountId == bankAccountId, null);
+        ObservableBankAccount? observableAccount = BankAccounts.FirstOrDefault(a => a.BankAccount.BankAccountId == bankAccountId, null);
 
         if (observableAccount is not null)
             return observableAccount;
@@ -227,7 +227,7 @@ public class AccountsViewModel : ObservableRecipient
             throw new Exception("Somehow a non-decimal value made it this far...");
     }
 
-    private void FilterAccountTransactions(int accountId)
+    private void FilterAccountTransactions(Guid accountId)
     {
         if (allTransactions is not null)
         {

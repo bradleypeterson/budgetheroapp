@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesktopApplication.Migrations
 {
     [DbContext(typeof(BudgetAppContext))]
-    [Migration("20221124043200_Initial")]
+    [Migration("20221202104307_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,11 +21,11 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("BudgetBudgetCategoryGroup", b =>
                 {
-                    b.Property<int>("BudgetCategoryGroupsBudgetCategoryGroupID")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetCategoryGroupsBudgetCategoryGroupID")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BudgetsBudgetId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetsBudgetId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("BudgetCategoryGroupsBudgetCategoryGroupID", "BudgetsBudgetId");
 
@@ -36,11 +36,11 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("BudgetUser", b =>
                 {
-                    b.Property<int>("BudgetsBudgetId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetsBudgetId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("UsersUserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("UsersUserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("BudgetsBudgetId", "UsersUserId");
 
@@ -51,9 +51,9 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("ModelsLibrary.BankAccount", b =>
                 {
-                    b.Property<int>("BankAccountId")
+                    b.Property<Guid>("BankAccountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AccountType")
                         .IsRequired()
@@ -67,8 +67,8 @@ namespace DesktopApplication.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("BankAccountId");
 
@@ -79,9 +79,9 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("ModelsLibrary.Budget", b =>
                 {
-                    b.Property<int>("BudgetId")
+                    b.Property<Guid>("BudgetId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("BudgetName")
                         .IsRequired()
@@ -98,12 +98,12 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategory", b =>
                 {
-                    b.Property<int>("BudgetCategoryID")
+                    b.Property<Guid>("BudgetCategoryID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BudgetCategoryGroupID")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetCategoryGroupID")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("CategoryAmount")
                         .ValueGeneratedOnAdd()
@@ -124,9 +124,9 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategoryGroup", b =>
                 {
-                    b.Property<int>("BudgetCategoryGroupID")
+                    b.Property<Guid>("BudgetCategoryGroupID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CategoryGroupDesc")
                         .IsRequired()
@@ -139,15 +139,15 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("ModelsLibrary.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<Guid>("TransactionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BankAccountId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BankAccountId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BudgetCategoryId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetCategoryId")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("DepositAmount")
                         .HasPrecision(18, 2)
@@ -162,8 +162,7 @@ namespace DesktopApplication.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
-                    b.Property<bool?>("IsTransactionPaid")
-                        .IsRequired()
+                    b.Property<bool>("IsTransactionPaid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
@@ -189,9 +188,9 @@ namespace DesktopApplication.Migrations
 
             modelBuilder.Entity("ModelsLibrary.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()

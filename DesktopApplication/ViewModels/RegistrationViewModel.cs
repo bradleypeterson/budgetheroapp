@@ -241,7 +241,7 @@ public class RegistrationViewModel : ObservableRecipient
 
     private void CreateNewUserBudget()
     {
-        int userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User.Get(u => u.UserId == userId, false, "Budgets");
         
         if (user is not null)

@@ -143,24 +143,22 @@ public class TransactionFormViewModel : ObservableRecipient
 
     private void SetSelectedBankAccount()
     {
-        int bankAccountId = 0;
-
         if (ObservableTransaction is not null)
             if (ObservableTransaction.Transaction is not null)
-                bankAccountId = ObservableTransaction.Transaction.BankAccountId;
-
-        SelectedBankAccount = BankAccounts.FirstOrDefault(b => b.BankAccountId == bankAccountId);
+            {
+                Guid bankAccountId = ObservableTransaction.Transaction.BankAccountId;
+                SelectedBankAccount = BankAccounts.FirstOrDefault(b => b.BankAccountId == bankAccountId);
+            }
     }
 
     private void SetSelectedCategory()
     {
-        int categoryId = 0;
-
         if (ObservableTransaction is not null)
             if (ObservableTransaction.Transaction is not null)
-                categoryId = ObservableTransaction.Transaction.BudgetCategoryId;
-
-        SelectedCategory = BudgetCategories.FirstOrDefault(c => c.BudgetCategoryID == categoryId);
+            {
+                Guid categoryId = ObservableTransaction.Transaction.BudgetCategoryId;
+                SelectedCategory = BudgetCategories.FirstOrDefault(c => c.BudgetCategoryID == categoryId);
+            }
     }
 
     private void SetTransactionType()

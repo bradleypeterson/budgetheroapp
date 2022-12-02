@@ -30,7 +30,7 @@ namespace Web_API.Controllers
 
         // GET: api/Budgets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Budget>> GetBudget(int id)
+        public async Task<ActionResult<Budget>> GetBudget(Guid id)
         {
             var budget = await _context.Budgets.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Web_API.Controllers
         // PUT: api/Budgets/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBudget(int id, Budget budget)
+        public async Task<IActionResult> PutBudget(Guid id, Budget budget)
         {
             if (id != budget.BudgetId)
             {
@@ -86,7 +86,7 @@ namespace Web_API.Controllers
 
         // DELETE: api/Budgets/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBudget(int id)
+        public async Task<IActionResult> DeleteBudget(Guid id)
         {
             var budget = await _context.Budgets.FindAsync(id);
             if (budget == null)
@@ -100,7 +100,7 @@ namespace Web_API.Controllers
             return NoContent();
         }
 
-        private bool BudgetExists(int id)
+        private bool BudgetExists(Guid id)
         {
             return _context.Budgets.Any(e => e.BudgetId == id);
         }
