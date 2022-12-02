@@ -13,10 +13,10 @@ namespace ModelsLibrary
         public int BankAccountId { get; set; }
 
         [Required]
-        public string BankName { get; set; } = null!;
+        public string? BankName { get; set; }
 
         [Required]
-        public string AccountType { get; set; } = null!;
+        public string? AccountType { get; set; }
 
         [Precision(18,2)]
         public decimal Balance { get; set; }
@@ -25,7 +25,7 @@ namespace ModelsLibrary
         public int UserId { get; set; }
 
         [Required]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
 
         public override string ToString()
         {
