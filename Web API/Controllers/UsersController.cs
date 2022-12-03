@@ -50,20 +50,6 @@ namespace Web_API.Controllers
             return AutoMapper.Map(user, true);
         }
 
-        // GET: api/Users/doeman
-        [HttpGet("{username:string}")]
-        public async Task<ActionResult<UserDTO>> GetUser(string username)
-        {
-            User? user = await _dataStore.User.GetAsync(u => u.Username == username, false, "Budgets");
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return AutoMapper.Map(user, true);
-        }
-
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id:guid}")]
