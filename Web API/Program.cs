@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using Web_API.Models;
+using Web_API.Contracts.Data;
+using Web_API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options
 );
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<BudgetHeroAPIDbContext>();
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IDataStore, DataStore>();
 
 var app = builder.Build();
 

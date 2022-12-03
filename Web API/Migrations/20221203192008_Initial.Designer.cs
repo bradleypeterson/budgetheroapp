@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Web_API.Models;
+using Web_API.Data;
 
 #nullable disable
 
 namespace Web_API.Migrations
 {
-    [DbContext(typeof(BudgetHeroAPIDbContext))]
-    [Migration("20221203095738_Initial")]
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20221203192008_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

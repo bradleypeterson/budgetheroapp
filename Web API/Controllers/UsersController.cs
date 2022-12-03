@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
 using ModelsLibrary.DTO;
 using ModelsLibrary.Utilities;
-using Web_API.Models;
+using Web_API.Contracts.Data;
+using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -16,27 +17,30 @@ namespace Web_API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly BudgetHeroAPIDbContext _context;
+        private readonly IDataStore _dataStore;
 
-        public UsersController(BudgetHeroAPIDbContext context)
+        public UsersController(IDataStore dataStore)
         {
-            _context = context;
+            _dataStore = dataStore;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            List<User>? users = await _context.Users.Include(u => u.Budgets).ToListAsync();
-            return AutoMapper.Map(users, true).ToList();
+            IEnumerable<User>? users = await _dataStore.User.GetAllAsync(null, "Budgets");
+
+            if (users is not null)
+                return AutoMapper.Map(users, true).ToList();
+            else
+                return new List<UserDTO>();    
         }
 
         // GET: api/Users/5
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<UserDTO>> GetUser(Guid id)
         {
-            IEnumerable<User> users = await _context.Users.Include(u => u.Budgets).ToListAsync();
-            User? user = users.FirstOrDefault(u => u.UserId == id);
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
 
             if (user == null)
             {
@@ -58,8 +62,7 @@ namespace Web_API.Controllers
                 return BadRequest();
             }
 
-            IEnumerable<User> users = await _context.Users.Include(u => u.Budgets).ToListAsync();
-            User? user = users.FirstOrDefault(u => u.UserId == id);
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
 
             if (user is not null)
             {
@@ -96,22 +99,21 @@ namespace Web_API.Controllers
                             };
 
                             budget.Users = new List<User>() { user };
-                            _context.Budgets.Add(budget);
-                            await _context.SaveChangesAsync();
+                            await _dataStore.Budget.AddAsync(budget);
                             user.Budgets.Add(budget);
                         }
                     }
                 }
 
-                _context.Entry(user).State = EntityState.Modified;
-
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await _dataStore.User.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(id))
+                    bool userExists = await UserExists(id);
+
+                    if (userExists)
                         return NotFound();
                     else
                         throw;
@@ -128,8 +130,7 @@ namespace Web_API.Controllers
         {
             User user = AutoMapper.ReverseMap(userDTO, true);
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _dataStore.User.AddAsync(user);
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
@@ -138,32 +139,23 @@ namespace Web_API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
+
+            if (user is null)
                 return NotFound();
-            }
-
-            IEnumerable<Budget> budgets = await _context.Budgets.Include(b => b.Users).ToListAsync();
-            List<Budget> ghostBudgets = budgets.Where(b => b.Users.Count() == 0).ToList();
-
-            foreach (Budget budget in ghostBudgets)
-                _context.Budgets.Remove(budget);
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            else 
+                await _dataStore.User.DeleteAsync(user);
 
             return NoContent();
         }
 
-        private bool UserExists(Guid id)
+        private async Task<bool> UserExists(Guid id)
         {
-            return _context.Users.Any(e => e.UserId == id);
-        }
-
-        private bool BudgetExists(Guid id)
-        {
-            return _context.Budgets.Any(b => b.BudgetId == id);
+            User? user = await _dataStore.User.GetByIdAsync(id);
+            if (user is null)
+                return false;
+            else
+                return true;
         }
     }
 }

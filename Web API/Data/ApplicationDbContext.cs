@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Options;
 using ModelsLibrary;
 
-namespace Web_API.Models
+namespace Web_API.Data
 {
-    public class BudgetHeroAPIDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users => Set<User>();
         public DbSet<BankAccount> BankAccounts => Set<BankAccount>();

@@ -3,14 +3,14 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Web_API.Models;
+using Web_API.Data;
 
 #nullable disable
 
 namespace Web_API.Migrations
 {
-    [DbContext(typeof(BudgetHeroAPIDbContext))]
-    partial class BudgetHeroAPIDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ApplicationDbContext))]
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using Web_API.Models;
+using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -14,9 +9,9 @@ namespace Web_API.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly BudgetHeroAPIDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public TransactionsController(BudgetHeroAPIDbContext context)
+        public TransactionsController(ApplicationDbContext context)
         {
             _context = context;
         }

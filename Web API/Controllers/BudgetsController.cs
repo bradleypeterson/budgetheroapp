@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
 using ModelsLibrary.DTO;
 using ModelsLibrary.Utilities;
-using Web_API.Models;
+using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -16,9 +11,9 @@ namespace Web_API.Controllers
     [ApiController]
     public class BudgetsController : ControllerBase
     {
-        private readonly BudgetHeroAPIDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public BudgetsController(BudgetHeroAPIDbContext context)
+        public BudgetsController(ApplicationDbContext context)
         {
             _context = context;
         }
