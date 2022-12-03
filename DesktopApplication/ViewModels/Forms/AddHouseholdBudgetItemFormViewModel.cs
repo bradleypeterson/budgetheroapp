@@ -46,7 +46,7 @@ namespace DesktopApplication.ViewModels.Forms
         {
             if (UsersToShow.Any()) { UsersToShow.Clear(); }
 
-            int? userId = _sessionService.GetSessionUserId();
+            Guid? userId = _sessionService.GetSessionUserId();
             User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
             var userBudgets = user?.Budgets;
             Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");

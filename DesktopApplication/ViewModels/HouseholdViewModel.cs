@@ -65,13 +65,13 @@ public class HouseholdViewModel : ObservableRecipient
         if(CategoryItems.Any()) { return; }
 
         //Load category items into collection
-        int? userId = _sessionService.GetSessionUserId();
+        Guid? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
         var userBudgets = user?.Budgets;
         Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");
         if(budget is not null)
         {
-            int? budgetId = budget!.BudgetId;
+            Guid? budgetId = budget!.BudgetId;
             Budget? householdBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
             if (householdBudget is not null)
@@ -100,7 +100,7 @@ public class HouseholdViewModel : ObservableRecipient
         CreatingHH = true; 
         await Task.Delay(2000);
 
-        int userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User.Get(u => u.UserId == userId, false, "Budgets");
 
         if (user is not null)
@@ -117,20 +117,14 @@ public class HouseholdViewModel : ObservableRecipient
             user.Budgets = userBudgets;
             _dataStore.User.Update(user);
 
-            // create a Household category Group linked to the Household budget.
-            BudgetCategoryGroup newHHCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
-            newBudget.BudgetCategoryGroups = new List<BudgetCategoryGroup>();
-            newBudget.BudgetCategoryGroups!.Add(newHHCategoryGroup);
-            await _dataStore.Budget.Update(newBudget);
+            //Add Household category group to both budgets
+            foreach(Budget b in userBudgets)
+            {
+                BudgetCategoryGroup newHHCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
+                b.BudgetCategoryGroups = new List<BudgetCategoryGroup>() { newHHCategoryGroup };
+            }
+            await _dataStore.User.Update(user);
 
-            //Create a household category group in the users personal budget, this will hold their amount of a split bill.
-            //NOTE: Transactions posted toward this category group should also be reflected in the household budget page.
-            BudgetCategoryGroup newPersonalHHCatGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
-            Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
-            int? budgetId = budget!.BudgetId;
-            Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
-            personalBudget!.BudgetCategoryGroups!.Add(newPersonalHHCatGroup);
-            var result = await _dataStore.BudgetCategoryGroup.AddAsync(newPersonalHHCatGroup);
         }
         CreatingHH = false;
     }
@@ -209,11 +203,11 @@ public class HouseholdViewModel : ObservableRecipient
 
     private async void AddHouseholdBudgetItem(object? sender, DialogServiceEventArgs e)
     {
-        int? userId = _sessionService.GetSessionUserId();
+        Guid? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
         ICollection<Budget>? userBudgets = user?.Budgets;
         Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");
-        int? budgetId = budget!.BudgetId;
+        Guid? budgetId = budget!.BudgetId;
         Budget? householdBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
         ICollection<BudgetCategoryGroup>? groups = householdBudget?.BudgetCategoryGroups;
         BudgetCategoryGroup? householdGroup = groups?.FirstOrDefault(g => g.CategoryGroupDesc == "Household");
@@ -237,9 +231,15 @@ public class HouseholdViewModel : ObservableRecipient
         foreach (User u in usersToSplit)
         {
             //TODO: Create a new Household budget item in their personal budget with the split amount
+            ICollection<Budget>? uBudgets = u?.Budgets;
+            Budget? bud = uBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
+            Guid? bId = bud!.BudgetId;
+            Budget? houseBudget = _dataStore.Budget!.Get(b => b.BudgetId == bId, false, "BudgetCategoryGroups");
+            ICollection<BudgetCategoryGroup>? catGroups = houseBudget?.BudgetCategoryGroups;
+            BudgetCategoryGroup? houseGroup = catGroups?.FirstOrDefault(g => g.CategoryGroupDesc == "Household");
 
-
-
+            BudgetCategory newItem = new BudgetCategory( );
+            newItem = GetCategoryItemNameTxt(e);
 
 
 
@@ -256,7 +256,7 @@ public class HouseholdViewModel : ObservableRecipient
 
     private void VerifyUserBudgetCount()
     {
-        int? userId = _sessionService.GetSessionUserId();
+        Guid? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
         ICollection<Budget>? usersBudgets = user?.Budgets;
 
