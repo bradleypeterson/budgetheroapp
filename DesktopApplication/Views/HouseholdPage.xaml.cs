@@ -18,5 +18,4 @@ public sealed partial class HouseholdPage : Page
     {
         await ViewModel.LoadAsync();
     }
-
 }

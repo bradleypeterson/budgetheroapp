@@ -56,13 +56,14 @@ namespace DesktopApplication.ViewModels.Forms
 
             if (_usersCategoryGroups is not null)
             {
-                foreach (BudgetCategoryGroup? categoryGroup in _usersCategoryGroups
-)
+                foreach (BudgetCategoryGroup? categoryGroup in _usersCategoryGroups)
                 {
-                    BudgetCategoryGroups.Add(categoryGroup!);
+                    if (categoryGroup.CategoryGroupDesc != "Household")
+                    { 
+                        BudgetCategoryGroups.Add(categoryGroup!);
+                    } 
                 }
             }
-
             SetSelectedGroup();
         }
     }

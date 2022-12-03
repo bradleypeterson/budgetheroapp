@@ -11,6 +11,7 @@ namespace DesktopApplication.Models
         private readonly IDataStore _dataStore;
         IEnumerable<Transaction?> transactions;
 
+        public ObservableCategoryItem() { }
 
         public ObservableCategoryItem(BudgetCategory budgetCategory) 
         {

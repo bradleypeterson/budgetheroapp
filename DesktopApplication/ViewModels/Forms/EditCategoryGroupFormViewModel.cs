@@ -114,7 +114,7 @@ namespace DesktopApplication.ViewModels.Forms
                 CategoriesToShow.Clear();
             }
             //Grab ID of selected Group
-            var catGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
+            int catGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
 
             foreach (BudgetCategory? item in BudgetCategories)
             {
@@ -127,29 +127,31 @@ namespace DesktopApplication.ViewModels.Forms
 
         public void LoadAsync()
         {
-            if (BudgetCategoryGroups.Any() || BudgetCategories.Any()) return;
+            if (BudgetCategoryGroups.Any() || BudgetCategories.Any()) { return; }
 
             int? userId = _sessionService.GetSessionUserId();
             User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
             var userBudgets = user?.Budgets;
-            Budget? budget = userBudgets?.ToList()[0];
+            Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
             int? budgetId = budget!.BudgetId;
             Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
-
             var _usersCategoryGroups = personalBudget.BudgetCategoryGroups;
 
             if (_usersCategoryGroups is not null)
             {
                 foreach (BudgetCategoryGroup? categoryGroup in _usersCategoryGroups)
                 {
-                    BudgetCategoryGroups.Add(categoryGroup!);
-
-                    var groupID = categoryGroup.BudgetCategoryGroupID;
-                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
-
-                    foreach (var item in BudgetItems)
+                    if(categoryGroup.CategoryGroupDesc != "Household")
                     {
-                        BudgetCategories.Add(item);
+                        BudgetCategoryGroups.Add(categoryGroup!);
+
+                        var groupID = categoryGroup.BudgetCategoryGroupID;
+                        var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
+
+                        foreach (var item in BudgetItems)
+                        {
+                            BudgetCategories.Add(item);
+                        }
                     }
                 }
             }

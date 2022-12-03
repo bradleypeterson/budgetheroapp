@@ -169,7 +169,8 @@ public class BudgetViewModel : ObservableRecipient
 
         int? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
-        var userBudgets = user?.Budgets;
+
+        ICollection<Budget> userBudgets = user?.Budgets;
         Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
         int? budgetId = budget!.BudgetId;
         Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");

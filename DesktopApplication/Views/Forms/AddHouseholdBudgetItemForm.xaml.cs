@@ -2,6 +2,7 @@ using DesktopApplication.Contracts.Views;
 using DesktopApplication.ViewModels.Forms;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms
 {
@@ -22,6 +23,48 @@ namespace DesktopApplication.Views.Forms
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.LoadAsync();
+        }
+
+        private void CatItemText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            if (textBox != null)
+            {
+                    ViewModel.CatItemName = CatItemText.Text;
+            }
+        }
+
+        private void CatAmountText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            if (textBox != null)
+            {
+                decimal parsedVal;
+
+                if (Decimal.TryParse(textBox.Text, out parsedVal))
+                {
+                    ViewModel.CatItemAmount = Convert.ToDecimal(textBox.Text);
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+        
+        private void UserSelectList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listView = sender as ListView;
+
+            if (listView != null && listView.SelectedItems.Count > 0)
+            {
+                foreach ( var user in listView.SelectedItems )
+                {
+                    ViewModel.SelectedUsers.Add((User)user);
+                }
+            }
         }
         
         public void ValidateForm()

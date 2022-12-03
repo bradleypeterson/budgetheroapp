@@ -64,30 +64,33 @@ public class HouseholdViewModel : ObservableRecipient
 
         if(CategoryItems.Any()) { return; }
 
-        //TODO: load category items into collection
+        //Load category items into collection
         int? userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
         var userBudgets = user?.Budgets;
         Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");
-        int? budgetId = budget!.BudgetId;
-        Budget? householdBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
-
-        if (householdBudget is not null)
+        if(budget is not null)
         {
-            if (householdBudget.BudgetCategoryGroups is not null)
+            int? budgetId = budget!.BudgetId;
+            Budget? householdBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
+
+            if (householdBudget is not null)
             {
-                foreach (var categoryGroup in householdBudget.BudgetCategoryGroups)
+                if (householdBudget.BudgetCategoryGroups is not null)
                 {
-                    var groupID = categoryGroup.BudgetCategoryGroupID;
-                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
-
-                    foreach (var item in BudgetItems)
+                    foreach (var categoryGroup in householdBudget.BudgetCategoryGroups)
                     {
-                        CategoryItems.Add(new ObservableCategoryItem(item));
-                    }
-                }
+                        var groupID = categoryGroup.BudgetCategoryGroupID;
+                        var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
 
-                foreach (var item in CategoryItems) { item.SetAllocatedAndRemaining(); }
+                        foreach (var item in BudgetItems)
+                        {
+                            CategoryItems.Add(new ObservableCategoryItem(item));
+                        }
+                    }
+
+                    foreach (var item in CategoryItems) { item.SetAllocatedAndRemaining(); }
+                }
             }
         }
     }
@@ -102,35 +105,32 @@ public class HouseholdViewModel : ObservableRecipient
 
         if (user is not null)
         {
-            List<Budget> userBudgets;
+            ICollection<Budget> userBudgets = user.Budgets;
 
-            if (user.Budgets is not null)
-            {
-                userBudgets = user.Budgets.ToList();
-            }
-            else
-            {
-                userBudgets = new List<Budget>();
-            }
-
-            Budget budget = new()
+            Budget newBudget = new()
             {
                 BudgetName = "Household Budget",
                 BudgetType = "household",
             };
 
-            userBudgets.Add(budget);
-
+            userBudgets.Add(newBudget);
             user.Budgets = userBudgets;
-
             _dataStore.User.Update(user);
 
             // create a Household category Group linked to the Household budget.
-            BudgetCategoryGroup newCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
-            budget.BudgetCategoryGroups = new List<BudgetCategoryGroup>();
-            budget.BudgetCategoryGroups!.Add(newCategoryGroup);
+            BudgetCategoryGroup newHHCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
+            newBudget.BudgetCategoryGroups = new List<BudgetCategoryGroup>();
+            newBudget.BudgetCategoryGroups!.Add(newHHCategoryGroup);
+            await _dataStore.Budget.Update(newBudget);
 
-            await _dataStore.Budget.Update(budget);
+            //Create a household category group in the users personal budget, this will hold their amount of a split bill.
+            //NOTE: Transactions posted toward this category group should also be reflected in the household budget page.
+            BudgetCategoryGroup newPersonalHHCatGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
+            Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
+            int? budgetId = budget!.BudgetId;
+            Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
+            personalBudget!.BudgetCategoryGroups!.Add(newPersonalHHCatGroup);
+            var result = await _dataStore.BudgetCategoryGroup.AddAsync(newPersonalHHCatGroup);
         }
         CreatingHH = false;
     }
@@ -184,16 +184,60 @@ public class HouseholdViewModel : ObservableRecipient
     private async void JoinHouseholdAsync(object? sender, DialogServiceEventArgs e)
     {
         //TODO: Implement logic for joining a household based on decrypting the invite code recieved from email.
-        //      Decrypting the invite code should result in a BudgetID to add to the users Budgets
+        //      Decrypting the invite code should result in a BudgetID to add to the users Budget
+        //      When they join a household we need to create a household budget expander in the user's personal budget
+    }
+
+    private static string GetCategoryItemNameTxt(DialogServiceEventArgs e)
+    {
+        var householdBudgetItemForm = (AddHouseholdBudgetItemForm)e.Content;
+        return householdBudgetItemForm.ViewModel.CatItemName;
+    }
+
+    private static decimal GetCategoryItemBudgetAmt(DialogServiceEventArgs e)
+    {
+        var householdBudgetItemForm = (AddHouseholdBudgetItemForm)e.Content;
+        decimal convertedCategoryAmount = Convert.ToDecimal(householdBudgetItemForm.ViewModel.CatItemAmount);
+        return convertedCategoryAmount;
+    }
+
+    private static ICollection<User> GetUsersToSplit(DialogServiceEventArgs e)
+    {
+        var householdBudgetItemForm = (AddHouseholdBudgetItemForm)e.Content;
+        return householdBudgetItemForm.ViewModel.SelectedUsers;
     }
 
     private async void AddHouseholdBudgetItem(object? sender, DialogServiceEventArgs e)
     {
-        //TODO: Implement logic for adding a budget item to a household.
-        //      Should be able to add name of the item and a total amount.
-        //      User will be able to select any number of household members to split the items amount.
-        //      Total amount will be split evenly among all selected members of the household.
-        //      (Still need to figure out how we are going to handle the users paying towards it)
+        int? userId = _sessionService.GetSessionUserId();
+        User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
+        ICollection<Budget>? userBudgets = user?.Budgets;
+        Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");
+        int? budgetId = budget!.BudgetId;
+        Budget? householdBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
+        ICollection<BudgetCategoryGroup>? groups = householdBudget?.BudgetCategoryGroups;
+        BudgetCategoryGroup? householdGroup = groups?.FirstOrDefault(g => g.CategoryGroupDesc == "Household");
+
+        BudgetCategory newCategoryItem = new BudgetCategory();
+
+        newCategoryItem.CategoryName = GetCategoryItemNameTxt(e);
+        newCategoryItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
+        newCategoryItem.BudgetCategoryGroupID = householdGroup.BudgetCategoryGroupID;
+        var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
+        CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
+                
+        // User will be able to select any number of household members to split the items amount.
+        // Total amount will be split evenly among all selected members of the household.
+
+        //TODO: On submit we will find the split value and go through the list of selected users and
+        //      add the newly created category to their personal budget with the split amount.
+        ICollection<User> usersToSplit = GetUsersToSplit(e);
+        Decimal splitAmt = GetCategoryItemBudgetAmt(e) / usersToSplit.Count();
+
+        foreach (User u in usersToSplit)
+        {
+            //TODO: Create a new Household budget item in their personal budget with the split amount
+        }
     }
 
     private async void EditHouseholdBudgetItem(object? sender, DialogServiceEventArgs e)
