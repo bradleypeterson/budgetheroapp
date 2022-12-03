@@ -1,11 +1,10 @@
 ﻿<Page
     x:Class="DesktopApplication.Views.HouseholdPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d" Loaded="Page_Loaded">
 
     <Grid x:Name="ContentArea">
         <Grid.ColumnDefinitions>
@@ -22,28 +21,34 @@
 
             <!-- This Border will contain any buttons that are used for interacting with the work area such as adding new items-->
             <Border Grid.Row="0" x:Name="InitialButtons" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" 
-                    BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" Visibility="Visible" >
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="CreateHouseholdButton" Margin="20" Content="Create Household"/>
-                    <Button x:Name="JoinHouseholdButton" Margin="20" Content="Join Household"/>
+                    BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" Visibility="{x:Bind ViewModel.HasNoHousehold, Mode=OneWay}">
+                <StackPanel x:Name="NoHouseholdPanel" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="CreateHouseholdButton" Margin="20" Content="Create Household" Command="{x:Bind ViewModel.CreateHouseholdCommand}"/>
+                    <Button x:Name="JoinHouseholdButton" Margin="20" Content="Join Household" Command="{x:Bind ViewModel.ShowJoinHouseholdCommand}"/>
                 </StackPanel>
             </Border>
+            
             <Border Grid.Row="0" x:Name="ActivatedButtons" Grid.Column="0" Background="#023e8a" Width="auto" Height="75" CornerRadius="10,10,0,0" 
-                    BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" Visibility="Collapsed" >
+                    BorderBrush="Black" BorderThickness="2,2,2,0" VerticalAlignment="Top" Visibility="{x:Bind ViewModel.HasHousehold, Mode=OneWay}" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="CreateHHBudgetItem" Margin="20" Content="Add Budget Item"/>
-                    <Button x:Name="EditHHBudgetItem" Margin="20" Content="Edit Budget Item"/>
+                    <Button x:Name="CreateHHBudgetItem" Margin="20" Content="Add Budget Item" Command="{x:Bind ViewModel.ShowAddBudgetItemCommand}"/>
+                    <Button x:Name="EditHHBudgetItem" Margin="20" Content="Edit Budget Item" Command="{x:Bind ViewModel.ShowEditBudgetItemCommand}"/>
                 </StackPanel>
             </Border>
 
             <!-- This panel is for whatever control is needed for the work area-->
             <RelativePanel x:Name="Work_Area" Background="White" Grid.Row="1" CornerRadius="0,0,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                            BorderBrush="Black" BorderThickness="2">
-                <!--<controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True"
-                                       CanUserReorderColumns="False" BorderBrush="Black" 
-                                       BorderThickness="2" GridLinesVisibility="Horizontal" 
-                                       HeadersVisibility="Column" VerticalAlignment="Bottom"
-                                       SelectionMode="Single" AlternatingRowBackground="LightCyan">
+                
+                <StackPanel x:Name="CreateHHPanel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="410,300,0,0" Visibility="{x:Bind ViewModel.CreatingHH, Mode=OneWay}">
+                    <ProgressRing Height="50" Width="50"/>
+                    <TextBlock Text="Creating Household, Please Wait..." Margin="0,10,0,0" FontSize="30"/>
+                </StackPanel>
+                
+                <controls:DataGrid AutoGenerateColumns="False" IsReadOnly="True"
+                                       CanUserReorderColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="Horizontal" 
+                                       HeadersVisibility="Column" VerticalAlignment="Bottom" SelectionMode="Single" AlternatingRowBackground="LightCyan" 
+                                       Visibility="{x:Bind ViewModel.HasHousehold, Mode=OneWay}" ItemsSource="{x:Bind ViewModel.CategoryItems, Mode=OneWay}">
                     <controls:DataGrid.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -56,15 +61,15 @@
 
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="ItemName" FontSize="15" Width="1*" Binding="{Binding CategoryName}"/>
-                        <controls:DataGridTextColumn Header="Budgeted" FontSize="15" Width="1*" Binding="{Binding CategoryAmount, Converter={StaticResource DecimalToStringConverter}}"/>
-                        <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated, Converter={StaticResource DecimalToStringConverter}}"/>
-                        <controls:DataGridTextColumn Header="Remaining" FontSize="15" Width="1*" Binding="{Binding Remaining, Converter={StaticResource DecimalToStringConverter}}"/>
+                        <controls:DataGridTextColumn Header="Budgeted" FontSize="15" Width="1*" Binding="{Binding CategoryAmount}"/>
+                        <controls:DataGridTextColumn Header="Allocated" FontSize="15" Width="1*" Binding="{Binding Allocated}"/>
+                        <controls:DataGridTextColumn Header="Remaining" FontSize="15" Width="1*" Binding="{Binding Remaining}"/>
                     </controls:DataGrid.Columns>
-                </controls:DataGrid>-->
+                </controls:DataGrid>
             </RelativePanel>
         </Grid>
 
-        <!-- This Grid will show the details of any selected item from the work area -->
+        <!-- This Grid will show the details of whatever -->
         <Grid x:Name="Details_Pane" Background="LightGray" Grid.Column="1" HorizontalAlignment="Right" Width="300" Margin="10 0 10 0" CornerRadius="10" BorderBrush="Black" BorderThickness="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="55"/>
@@ -83,36 +88,8 @@
 
             <!-- This is the stack panel for any buttons needed to manipulate the selected item in the work area if needed-->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
-                <Button x:Name="InviteUserToHHButton" Margin="20" Content="Invite User"/>
+                <Button x:Name="InviteUserToHHButton" Margin="20" Content="Invite User" Command="{x:Bind ViewModel.ShowInviteUserCommand}" Visibility="{x:Bind ViewModel.HasHousehold, Mode=OneWay}"/>
             </StackPanel>
-
-            <!-- this is the data grid for the bank account items-->
-            <!--<controls:DataGrid x:Name="Account_Grid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" 
-                                CanUserResizeColumns="False" CanUserSortColumns="False" BorderBrush="Black" BorderThickness="2" GridLinesVisibility="All"
-                                HeadersVisibility="Column" VerticalAlignment="Center" Width="275" Height="150">
-
-                <controls:DataGrid.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="TextWrapping" Value="Wrap"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                    </Style>
-                    <Style TargetType="controls:DataGridCell">
-                        <Setter Property="Background" Value="GhostWhite"/>
-                    </Style>
-                </controls:DataGrid.Resources>
-
-                <controls:DataGrid.RowStyle>
-                    <Style TargetType="controls:DataGridRow">
-                        <Setter Property="IsHitTestVisible" Value="False"/>
-                    </Style>
-                </controls:DataGrid.RowStyle>
-
-                <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Account" FontSize="15" Width="1*" Binding="{Binding BankName}"/>
-                    <controls:DataGridTextColumn Header="Balance" FontSize="15" Width="1*" Binding="{Binding Balance, Converter={StaticResource DecimalToStringConverter}}"/>
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>-->
         </Grid>
     </Grid>
 </Page>

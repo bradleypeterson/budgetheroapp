@@ -8,13 +8,13 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <TextBlock x:Name="tbAccountNameEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed">
-                Enter a account name
+                Enter an account name
         </TextBlock>
         <TextBox x:Name="txtAccountName" Header="Account Name" 
                  PlaceholderText="Enter Account Name" 
                  Text="{x:Bind ViewModel.BankName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock x:Name="tbAccountTypeEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
-                Select a account type
+                Select an account type
         </TextBlock>
         <ComboBox x:Name="txtAccountType" 
                   PlaceholderText="Choose Account Type" 
@@ -27,7 +27,7 @@
                 Invalid account balance, please enter a number amount like 0.00 
         </TextBlock>
         <TextBlock x:Name="tbAccountBalanceEmptyError" HorizontalAlignment="Center" Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="bold" Visibility="Collapsed">
-                Enter a account balance
+                Enter an account balance
         </TextBlock>
         <TextBox x:Name="txtAccountBalance" Header="Account Balance" 
                  PlaceholderText="Enter Account Balance" 

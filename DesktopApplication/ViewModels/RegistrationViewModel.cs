@@ -109,6 +109,7 @@ public class RegistrationViewModel : ObservableRecipient
     }
     public bool IsFormComplete { get; set; }
     private bool dataValid = false;
+    
     public async Task AddUser()
     {
         if (IsFormComplete)
@@ -117,7 +118,8 @@ public class RegistrationViewModel : ObservableRecipient
             if (existingUser is null) {
                 OnUsernameNotTaken?.Invoke(this, EventArgs.Empty);
                 dataValid = true;
-            } else {
+            } 
+            else {
                 OnUsernameTaken?.Invoke(this, EventArgs.Empty);
                 dataValid = false;
             }

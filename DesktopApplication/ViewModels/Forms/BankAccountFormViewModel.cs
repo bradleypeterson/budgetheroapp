@@ -68,4 +68,4 @@ public class BankAccountFormViewModel : ObservableRecipient
         if (decimal.TryParse(value, out tempBalance))
             Balance = tempBalance;
     }
-}
+}       

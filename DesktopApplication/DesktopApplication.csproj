@@ -24,11 +24,15 @@
     <None Remove="Styles\Styles.xaml" />
     <None Remove="ViewModels\Forms\DeleteItemForm.xaml" />
     <None Remove="Views\Forms\AddCategoryGroupForm.xaml" />
+    <None Remove="Views\Forms\AddHouseholdBudgetItemForm.xaml" />
     <None Remove="Views\Forms\BankAccountForm.xaml" />
     <None Remove="Views\Forms\DeleteCategoryGroupForm.xaml" />
     <None Remove="Views\Forms\DeleteTransactionForm.xaml" />
     <None Remove="Views\Forms\EditCategoryGroupForm.xaml" />
     <None Remove="Views\Forms\DeleteAccountForm.xaml" />
+    <None Remove="Views\Forms\EditHouseholdBudgetItemForm.xaml" />
+    <None Remove="Views\Forms\InviteUserForm.xaml" />
+    <None Remove="Views\Forms\JoinHouseholdForm.xaml" />
     <None Remove="Views\Forms\TransactionForm.xaml" />
     <None Remove="Views\Forms\TransferFundsForm.xaml" />
   </ItemGroup>
@@ -57,6 +61,9 @@
     <Content Update="Assets\budgetherologo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="Assets\Icons\House.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\WindowIcon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -68,6 +75,18 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Forms\EditHouseholdBudgetItemForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Forms\AddHouseholdBudgetItemForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Forms\InviteUserForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Forms\JoinHouseholdForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Forms\TransferFundsForm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

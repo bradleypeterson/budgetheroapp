@@ -38,7 +38,6 @@ public class TransactionFormViewModel : ObservableRecipient
             SetProperty(ref _selectedBankAccount, value);
             if (value is not null)
                 ObservableTransaction!.Transaction.BankAccountId = value.BankAccountId;
-            //
         }
     }
 

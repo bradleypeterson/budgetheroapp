@@ -110,6 +110,10 @@ public partial class App : Application
             services.AddTransient<DeleteCategoryGroupFormViewModel>();
             services.AddTransient<EditCategoryGroupFormViewModel>();
             services.AddTransient<TransferFundsFormViewModel>();
+            services.AddTransient<JoinHouseholdFormViewmodel>();
+            services.AddTransient<InviteUserFormViewModel>();
+            services.AddTransient<AddHouseholdBudgetItemFormViewModel>();
+            services.AddTransient<EditHouseholdBudgetItemFormViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
