@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ModelsLibrary
 {
     public class User
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
         public string? FirstName { get; set; }

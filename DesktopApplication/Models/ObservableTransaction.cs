@@ -92,8 +92,8 @@ public class ObservableTransaction : ObservableObject
         }
     }
 
-    private bool? _isTransactionPaid;
-    public bool? IsTransactionPaid
+    private bool _isTransactionPaid;
+    public bool IsTransactionPaid
     {
         get => _isTransactionPaid;
         set

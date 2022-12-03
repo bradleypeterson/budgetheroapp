@@ -2,26 +2,58 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Web_API.Models;
+using Web_API.Data;
 
 #nullable disable
 
 namespace Web_API.Migrations
 {
-    [DbContext(typeof(BudgetHeroAPIDbContext))]
-    partial class BudgetHeroAPIDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20221203192008_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
+            modelBuilder.Entity("BudgetBudgetCategoryGroup", b =>
+                {
+                    b.Property<Guid>("BudgetCategoryGroupsBudgetCategoryGroupID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("BudgetsBudgetId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BudgetCategoryGroupsBudgetCategoryGroupID", "BudgetsBudgetId");
+
+                    b.HasIndex("BudgetsBudgetId");
+
+                    b.ToTable("BudgetBudgetCategoryGroup");
+                });
+
+            modelBuilder.Entity("BudgetUser", b =>
+                {
+                    b.Property<Guid>("BudgetsBudgetId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UsersUserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BudgetsBudgetId", "UsersUserId");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("BudgetUser");
+                });
+
             modelBuilder.Entity("ModelsLibrary.BankAccount", b =>
                 {
-                    b.Property<int>("BankAccountId")
+                    b.Property<Guid>("BankAccountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AccountType")
                         .IsRequired()
@@ -35,8 +67,8 @@ namespace Web_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("BankAccountId");
 
@@ -47,9 +79,9 @@ namespace Web_API.Migrations
 
             modelBuilder.Entity("ModelsLibrary.Budget", b =>
                 {
-                    b.Property<int>("BudgetId")
+                    b.Property<Guid>("BudgetId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("BudgetName")
                         .IsRequired()
@@ -66,12 +98,12 @@ namespace Web_API.Migrations
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategory", b =>
                 {
-                    b.Property<int>("BudgetCategoryID")
+                    b.Property<Guid>("BudgetCategoryID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BudgetCategoryGroupID")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetCategoryGroupID")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("CategoryAmount")
                         .HasPrecision(18, 2)
@@ -90,9 +122,9 @@ namespace Web_API.Migrations
 
             modelBuilder.Entity("ModelsLibrary.BudgetCategoryGroup", b =>
                 {
-                    b.Property<int>("BudgetCategoryGroupID")
+                    b.Property<Guid>("BudgetCategoryGroupID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CategoryGroupDesc")
                         .IsRequired()
@@ -105,15 +137,15 @@ namespace Web_API.Migrations
 
             modelBuilder.Entity("ModelsLibrary.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<Guid>("TransactionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BankAccountId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BankAccountId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BudgetCategoryId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("BudgetCategoryId")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("DepositAmount")
                         .HasPrecision(18, 2)
@@ -128,8 +160,7 @@ namespace Web_API.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
-                    b.Property<bool?>("IsTransactionPaid")
-                        .IsRequired()
+                    b.Property<bool>("IsTransactionPaid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
@@ -155,12 +186,9 @@ namespace Web_API.Migrations
 
             modelBuilder.Entity("ModelsLibrary.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BudgetId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -178,7 +206,7 @@ namespace Web_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("PercentageMod")
+                    b.Property<double>("PercentageMod")
                         .HasColumnType("REAL");
 
                     b.Property<string>("UserImageLink")
@@ -190,9 +218,37 @@ namespace Web_API.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("BudgetId");
-
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BudgetBudgetCategoryGroup", b =>
+                {
+                    b.HasOne("ModelsLibrary.BudgetCategoryGroup", null)
+                        .WithMany()
+                        .HasForeignKey("BudgetCategoryGroupsBudgetCategoryGroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelsLibrary.Budget", null)
+                        .WithMany()
+                        .HasForeignKey("BudgetsBudgetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BudgetUser", b =>
+                {
+                    b.HasOne("ModelsLibrary.Budget", null)
+                        .WithMany()
+                        .HasForeignKey("BudgetsBudgetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelsLibrary.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ModelsLibrary.BankAccount", b =>
@@ -234,18 +290,6 @@ namespace Web_API.Migrations
                     b.Navigation("BankAccount");
 
                     b.Navigation("BudgetCategory");
-                });
-
-            modelBuilder.Entity("ModelsLibrary.User", b =>
-                {
-                    b.HasOne("ModelsLibrary.Budget", null)
-                        .WithMany("Users")
-                        .HasForeignKey("BudgetId");
-                });
-
-            modelBuilder.Entity("ModelsLibrary.Budget", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

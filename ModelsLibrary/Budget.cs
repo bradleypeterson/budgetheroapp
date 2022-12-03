@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace ModelsLibrary
 {
     public class Budget
     {
-        public int BudgetId { get; set; } 
+        public Guid BudgetId { get; set; }
 
         [Required]
-        public string BudgetName { get; set; } = null!;
+        public string? BudgetName { get; set; }
         
         [Required]
-        public string BudgetType { get; set; } = null!;
+        public string? BudgetType { get; set; }
 
         public ICollection<User>? Users { get; set; }
 

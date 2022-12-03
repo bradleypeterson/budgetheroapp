@@ -13,8 +13,7 @@ namespace DesktopApplication.Migrations
                 name: "BudgetCategoryGroups",
                 columns: table => new
                 {
-                    BudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BudgetCategoryGroupID = table.Column<Guid>(type: "TEXT", nullable: false),
                     CategoryGroupDesc = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -26,8 +25,7 @@ namespace DesktopApplication.Migrations
                 name: "Budgets",
                 columns: table => new
                 {
-                    BudgetId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BudgetId = table.Column<Guid>(type: "TEXT", nullable: false),
                     BudgetName = table.Column<string>(type: "TEXT", nullable: false),
                     BudgetType = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -40,8 +38,7 @@ namespace DesktopApplication.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
@@ -59,11 +56,10 @@ namespace DesktopApplication.Migrations
                 name: "BudgetCategories",
                 columns: table => new
                 {
-                    BudgetCategoryID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BudgetCategoryID = table.Column<Guid>(type: "TEXT", nullable: false),
                     CategoryName = table.Column<string>(type: "TEXT", nullable: false),
                     CategoryAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false, defaultValue: 0m),
-                    BudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false)
+                    BudgetCategoryGroupID = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,8 +76,8 @@ namespace DesktopApplication.Migrations
                 name: "BudgetBudgetCategoryGroup",
                 columns: table => new
                 {
-                    BudgetCategoryGroupsBudgetCategoryGroupID = table.Column<int>(type: "INTEGER", nullable: false),
-                    BudgetsBudgetId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BudgetCategoryGroupsBudgetCategoryGroupID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BudgetsBudgetId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,12 +100,11 @@ namespace DesktopApplication.Migrations
                 name: "BankAccounts",
                 columns: table => new
                 {
-                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    BankAccountId = table.Column<Guid>(type: "TEXT", nullable: false),
                     BankName = table.Column<string>(type: "TEXT", nullable: false),
                     AccountType = table.Column<string>(type: "TEXT", nullable: false),
                     Balance = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,8 +121,8 @@ namespace DesktopApplication.Migrations
                 name: "BudgetUser",
                 columns: table => new
                 {
-                    BudgetsBudgetId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UsersUserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BudgetsBudgetId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UsersUserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,8 +145,7 @@ namespace DesktopApplication.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    TransactionId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    TransactionId = table.Column<Guid>(type: "TEXT", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TransactionPayee = table.Column<string>(type: "TEXT", nullable: false),
                     TransactionMemo = table.Column<string>(type: "TEXT", nullable: true),
@@ -159,8 +153,8 @@ namespace DesktopApplication.Migrations
                     DepositAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
                     IsTransactionPaid = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
                     IsHousehold = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
-                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BudgetCategoryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BankAccountId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BudgetCategoryId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

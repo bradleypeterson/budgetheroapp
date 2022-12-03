@@ -30,12 +30,12 @@ public class SessionService : ISessionService
         sessionUser = null;
         OnSessionDestroyed?.Invoke(this, EventArgs.Empty);
     }
-    public int GetSessionUserId()
+    public Guid GetSessionUserId()
     {
         if (sessionUser is not null)
             return sessionUser.UserId;
-        else
-            return -1;
+
+        throw new Exception("A session must be created before calling this method.");
     }
 
     public string GetSessionUsername()

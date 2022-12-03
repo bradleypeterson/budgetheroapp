@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using Web_API.Models;
+using ModelsLibrary.DTO;
+using ModelsLibrary.Utilities;
+using Web_API.Contracts.Data;
+using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -14,59 +17,120 @@ namespace Web_API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly BudgetHeroAPIDbContext _context;
+        private readonly IDataStore _dataStore;
 
-        public UsersController(BudgetHeroAPIDbContext context)
+        public UsersController(IDataStore dataStore)
         {
-            _context = context;
+            _dataStore = dataStore;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            IEnumerable<User>? users = await _dataStore.User.GetAllAsync(null, "Budgets");
+
+            if (users is not null)
+                return AutoMapper.Map(users, true).ToList();
+            else
+                return new List<UserDTO>();    
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<UserDTO>> GetUser(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return AutoMapper.Map(user, true);
+        }
+
+        // GET: api/Users/doeman
+        [HttpGet("{username:string}")]
+        public async Task<ActionResult<UserDTO>> GetUser(string username)
+        {
+            User? user = await _dataStore.User.GetAsync(u => u.Username == username, false, "Budgets");
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return AutoMapper.Map(user, true);
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> PutUser(Guid id, UserDTO userDTO)
         {
-            if (id != user.UserId)
+            User _user = AutoMapper.ReverseMap(userDTO, true);
+
+            if (id != _user.UserId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
 
-            try
+            if (user is not null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
+                user.FirstName = _user.FirstName;
+                user.LastName = _user.LastName;
+                user.EmailAddress = _user.EmailAddress;
+                user.PercentageMod = _user.PercentageMod;
+                user.Username = _user.Username;
+                user.Password = _user.Password;
+                user.UserImageLink = _user.UserImageLink;
+
+
+                if (_user.Budgets is not null)
                 {
-                    return NotFound();
+                    if (user.Budgets is null)
+                        user.Budgets = new List<Budget>();
+
+                    foreach (Budget _budget in _user.Budgets)
+                    {
+                        Budget? budget = user.Budgets.FirstOrDefault(b => b.BudgetId == _budget.BudgetId);
+
+                        if (budget is not null)
+                        {
+                            budget.BudgetName = _budget.BudgetName;
+                            budget.BudgetType = _budget.BudgetType;
+                        }
+                        else
+                        {
+                            budget = new()
+                            {
+                                BudgetId = _budget.BudgetId,
+                                BudgetName = _budget.BudgetName,
+                                BudgetType = _budget.BudgetType,
+                            };
+
+                            budget.Users = new List<User>() { user };
+                            await _dataStore.Budget.AddAsync(budget);
+                            user.Budgets.Add(budget);
+                        }
+                    }
                 }
-                else
+
+                try
                 {
-                    throw;
+                    await _dataStore.User.Update(user);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    bool userExists = await UserExists(id);
+
+                    if (userExists)
+                        return NotFound();
+                    else
+                        throw;
                 }
             }
 
@@ -76,33 +140,36 @@ namespace Web_API.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserDTO>> PostUser(UserDTO userDTO)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            User user = AutoMapper.ReverseMap(userDTO, true);
+
+            await _dataStore.User.AddAsync(user);
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
 
         // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            if (user is null)
+                return NotFound();
+            else 
+                await _dataStore.User.DeleteAsync(user);
 
             return NoContent();
         }
 
-        private bool UserExists(int id)
+        private async Task<bool> UserExists(Guid id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            User? user = await _dataStore.User.GetByIdAsync(id);
+            if (user is null)
+                return false;
+            else
+                return true;
         }
     }
 }

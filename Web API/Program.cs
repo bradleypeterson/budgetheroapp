@@ -1,13 +1,19 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using Web_API.Models;
+using Web_API.Contracts.Data;
+using Web_API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<BudgetHeroAPIDbContext>();
+builder.Services.AddControllers().AddNewtonsoftJson(options 
+    => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IDataStore, DataStore>();
 
 var app = builder.Build();
 
@@ -22,6 +28,8 @@ app.UseAuthentication();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 //app.UseHttpsRedirection();

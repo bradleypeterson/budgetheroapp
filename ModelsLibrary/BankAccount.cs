@@ -1,31 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelsLibrary
 {
     public class BankAccount
     {
-        public int BankAccountId { get; set; }
+        public Guid BankAccountId { get; set; }
 
         [Required]
-        public string BankName { get; set; } = null!;
+        public string? BankName { get; set; }
 
         [Required]
-        public string AccountType { get; set; } = null!;
+        public string? AccountType { get; set; }
 
         [Precision(18,2)]
         public decimal Balance { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
 
         public override string ToString()
         {

@@ -44,11 +44,11 @@ public class BudgetViewModel : ObservableRecipient
             return;
         }
 
-        int? userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
         var userBudgets = user?.Budgets;
-        Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
-        int? budgetId = budget!.BudgetId;
+        Budget? budget = userBudgets?.ToList()[0];
+        Guid budgetId = budget!.BudgetId;
         Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
         if (personalBudget is not null)
@@ -167,12 +167,11 @@ public class BudgetViewModel : ObservableRecipient
     {
         BudgetCategoryGroup newCategoryGroup = GetCategoryGroup(e);
 
-        int? userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
-
-        ICollection<Budget> userBudgets = user?.Budgets;
-        Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
-        int? budgetId = budget!.BudgetId;
+        var userBudgets = user?.Budgets;
+        Budget? budget = userBudgets?.ToList()[0];
+        Guid budgetId = budget!.BudgetId;
         Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
         personalBudget!.BudgetCategoryGroups!.Add(newCategoryGroup);

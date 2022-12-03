@@ -77,7 +77,7 @@ public class ExpensesViewModel : ObservableRecipient
     {
         if (BankAccounts.Any()) return;
         
-        int userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
 
         IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
         if (bankAccounts is not null)
@@ -194,7 +194,7 @@ public class ExpensesViewModel : ObservableRecipient
     //Used to filter the transaction list
     public void FilterList(string filter, string category)
     {
-        int userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
 
         ObservableCollection<ObservableTransaction> filteredList = new ObservableCollection<ObservableTransaction>();
 

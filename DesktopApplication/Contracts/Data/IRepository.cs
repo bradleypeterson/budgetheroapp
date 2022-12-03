@@ -3,7 +3,7 @@
 namespace DesktopApplication.Contracts.Data;
 public interface IRepository<T> where T : class
 {
-    T? GetById(int id);
+    T? GetById(Guid id);
 
     T? Get(Expression<Func<T, bool>> predicate, bool asNotTracking = false, string? includes = null);
 

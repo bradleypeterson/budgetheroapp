@@ -84,26 +84,24 @@ namespace DesktopApplication.ViewModels.Forms
 
         private void SetSelectedGroup()
         {
-            int categoryGroupId = 0;
+            Guid categoryGroupId;
 
             if (SelectedCategoryGroup is not null)
             {
                 categoryGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
+                SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
             }
-
-            SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
         }
 
         private void SetSelectedItem() 
         {
-            int categoryItemId = 0;
+            Guid categoryItemId;
             
             if (SelectedCategoryItem is not null)
             {
                 categoryItemId = SelectedCategoryItem.BudgetCategoryID;
+                SelectedCategoryItem = BudgetCategories.FirstOrDefault(i => i.BudgetCategoryID == categoryItemId);
             }
-            
-            SelectedCategoryItem = BudgetCategories.FirstOrDefault(i => i.BudgetCategoryID == categoryItemId);
         }
 
         public void SetCategoriesToShow()
@@ -113,7 +111,7 @@ namespace DesktopApplication.ViewModels.Forms
                 CategoriesToShow.Clear();
             }
             //Grab ID of selected Group
-            int catGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
+            var catGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
 
             foreach (BudgetCategory? item in BudgetCategories)
             {
@@ -128,11 +126,11 @@ namespace DesktopApplication.ViewModels.Forms
         {
             if (BudgetCategoryGroups.Any() || BudgetCategories.Any()) { return; }
 
-            int? userId = _sessionService.GetSessionUserId();
+            Guid userId = _sessionService.GetSessionUserId();
             User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
             var userBudgets = user?.Budgets;
-            Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
-            int? budgetId = budget!.BudgetId;
+            Budget? budget = userBudgets?.ToList()[0];
+            Guid budgetId = budget!.BudgetId;
             Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
             var _usersCategoryGroups = personalBudget.BudgetCategoryGroups;
 

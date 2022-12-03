@@ -53,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DebugTools\DebugTools.csproj" />
     <ProjectReference Include="..\DesktopApplication.Core\DesktopApplication.Core.csproj" />
     <ProjectReference Include="..\ModelsLibrary\ModelsLibrary.csproj" />
   </ItemGroup>

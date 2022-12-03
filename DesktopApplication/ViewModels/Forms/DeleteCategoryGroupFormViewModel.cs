@@ -31,25 +31,24 @@ namespace DesktopApplication.ViewModels.Forms
 
         private void SetSelectedGroup()
         {
-            int categoryGroupId = 0;
+            Guid categoryGroupId;
 
             if (SelectedCategoryGroup is not null)
             {
                 categoryGroupId = SelectedCategoryGroup.BudgetCategoryGroupID;
+                SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
             }
-            
-            SelectedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(g => g.BudgetCategoryGroupID == categoryGroupId);
         }
 
         public void LoadAsync()
         {
             if (BudgetCategoryGroups.Any()) return;
 
-            int? userId = _sessionService.GetSessionUserId();
+            Guid userId = _sessionService.GetSessionUserId();
             User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
             var userBudgets = user?.Budgets;
             Budget? budget = userBudgets?.ToList()[0];
-            int? budgetId = budget!.BudgetId;
+            Guid budgetId = budget!.BudgetId;
             Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
 
             var _usersCategoryGroups = personalBudget.BudgetCategoryGroups;

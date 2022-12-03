@@ -135,7 +135,7 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public virtual T? GetById(int id)
+    public virtual T? GetById(Guid id)
     {
         return dbContext.Set<T>().Find(id);
     }
