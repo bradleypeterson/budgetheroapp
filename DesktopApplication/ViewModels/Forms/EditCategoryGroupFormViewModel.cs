@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
-using DesktopApplication.Models;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
 

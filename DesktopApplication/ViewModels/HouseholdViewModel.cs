@@ -226,17 +226,24 @@ public class HouseholdViewModel : ObservableRecipient
         var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
         CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
                 
-        // User will be able to select any number of household members to split the items amount.
-        // Total amount will be split evenly among all selected members of the household.
+        /* User will be able to select any number of household members to split the items amount.
+           Total amount will be split evenly among all selected members of the household. */
 
-        //TODO: On submit we will find the split value and go through the list of selected users and
-        //      add the newly created category to their personal budget with the split amount.
+        /* On submit we will find the split value and go through the list of selected users and
+           add the newly created category to their personal budget with the split amount.*/
         ICollection<User> usersToSplit = GetUsersToSplit(e);
         Decimal splitAmt = GetCategoryItemBudgetAmt(e) / usersToSplit.Count();
 
         foreach (User u in usersToSplit)
         {
             //TODO: Create a new Household budget item in their personal budget with the split amount
+
+
+
+
+
+
+
         }
     }
 
