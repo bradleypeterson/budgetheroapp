@@ -11,7 +11,7 @@ using Web_API.Models;
 namespace Web_API.Migrations
 {
     [DbContext(typeof(BudgetHeroAPIDbContext))]
-    [Migration("20221202104002_Initial")]
+    [Migration("20221203095738_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

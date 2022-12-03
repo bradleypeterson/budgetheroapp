@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
+using ModelsLibrary.DTO;
+using ModelsLibrary.Utilities;
 using Web_API.Models;
 
 namespace Web_API.Controllers
@@ -23,30 +25,34 @@ namespace Web_API.Controllers
 
         // GET: api/BankAccounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
+        public async Task<ActionResult<IEnumerable<BankAccountDTO>>> GetBankAccounts()
         {
-            return await _context.BankAccounts.ToListAsync();
+            List<BankAccount>? bankAccounts = await _context.BankAccounts.ToListAsync();
+
+            return AutoMapper.Map(bankAccounts).ToList();
         }
 
         // GET: api/BankAccounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BankAccount>> GetBankAccount(Guid id)
+        public async Task<ActionResult<BankAccountDTO>> GetBankAccount(Guid id)
         {
-            var bankAccount = await _context.BankAccounts.FindAsync(id);
+            BankAccount? bankAccount = await _context.BankAccounts.FindAsync(id);
 
             if (bankAccount == null)
             {
                 return NotFound();
             }
 
-            return bankAccount;
+            return AutoMapper.Map(bankAccount);
         }
 
         // PUT: api/BankAccounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBankAccount(Guid id, BankAccount bankAccount)
+        public async Task<IActionResult> PutBankAccount(Guid id, BankAccountDTO bankAccountDTO)
         {
+            BankAccount bankAccount = AutoMapper.ReverseMap(bankAccountDTO);
+
             if (id != bankAccount.BankAccountId)
             {
                 return BadRequest();
@@ -76,8 +82,10 @@ namespace Web_API.Controllers
         // POST: api/BankAccounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccount bankAccount)
+        public async Task<ActionResult<BankAccountDTO>> PostBankAccount(BankAccountDTO bankAccountDTO)
         {
+            BankAccount bankAccount = AutoMapper.ReverseMap(bankAccountDTO);
+
             _context.BankAccounts.Add(bankAccount);
             await _context.SaveChangesAsync();
 

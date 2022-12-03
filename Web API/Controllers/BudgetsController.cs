@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
+using ModelsLibrary.DTO;
+using ModelsLibrary.Utilities;
 using Web_API.Models;
 
 namespace Web_API.Controllers
@@ -23,30 +25,35 @@ namespace Web_API.Controllers
 
         // GET: api/Budgets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Budget>>> GetBudgets()
+        public async Task<ActionResult<IEnumerable<BudgetDTO>>> GetBudgets()
         {
-            return await _context.Budgets.ToListAsync();
+            List<Budget> budgets = await _context.Budgets.Include(b => b.Users).ToListAsync();
+
+            return AutoMapper.Map(budgets, true).ToList();
         }
 
         // GET: api/Budgets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Budget>> GetBudget(Guid id)
+        public async Task<ActionResult<BudgetDTO>> GetBudget(Guid id)
         {
-            var budget = await _context.Budgets.FindAsync(id);
+            IEnumerable<Budget>? budgets = await _context.Budgets.Include(b => b.Users).ToListAsync();
+            Budget? budget = budgets.FirstOrDefault(b => b.BudgetId == id);
 
             if (budget == null)
             {
                 return NotFound();
             }
 
-            return budget;
+            return AutoMapper.Map(budget, true);
         }
 
         // PUT: api/Budgets/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBudget(Guid id, Budget budget)
+        public async Task<IActionResult> PutBudget(Guid id, BudgetDTO budgetDTO)
         {
+            Budget budget = AutoMapper.ReverseMap(budgetDTO, true);
+
             if (id != budget.BudgetId)
             {
                 return BadRequest();
@@ -76,8 +83,10 @@ namespace Web_API.Controllers
         // POST: api/Budgets
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Budget>> PostBudget(Budget budget)
+        public async Task<ActionResult<BudgetDTO>> PostBudget(BudgetDTO budgetDTO)
         {
+            Budget budget = AutoMapper.ReverseMap(budgetDTO, true);
+
             _context.Budgets.Add(budget);
             await _context.SaveChangesAsync();
 

@@ -1,14 +1,12 @@
 ﻿using System.Globalization;
-using System.Net.Mail;
 using System.Text.RegularExpressions;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
-using DesktopApplication.Data;
 using ModelsLibrary;
+using ModelsLibrary.Utilities;
 
 namespace DesktopApplication.ViewModels;
 
@@ -18,6 +16,7 @@ public class RegistrationViewModel : ObservableRecipient
     private readonly IDataStore _dataStore;
     private readonly IPasswordService _passwordService;
     private readonly ISessionService _sessionService;
+    private readonly IAPIService _apiService;
 
     private bool isAvailableUsername;
     private bool isValidEmail;
@@ -29,6 +28,7 @@ public class RegistrationViewModel : ObservableRecipient
         _dataStore = App.GetService<IDataStore>();
         _passwordService = App.GetService<IPasswordService>();
         _sessionService = App.GetService<ISessionService>();
+        _apiService = App.GetService<IAPIService>();
         SignUpCommand = new AsyncRelayCommand(AddUser);
         CancelSignupCommand = new RelayCommand(NavigateBack);
         IsFormComplete = false;
@@ -117,7 +117,17 @@ public class RegistrationViewModel : ObservableRecipient
     {
         if (IsFormComplete)
         {
-            var existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
+            User? existingUser = null;
+            IEnumerable<User>? _usersFromApi = await _apiService.GetAsync<IEnumerable<User>>("users");
+
+            if (_usersFromApi is not null && _usersFromApi.Any())
+            {
+                existingUser = _usersFromApi.FirstOrDefault(u => u.Username == _username);
+
+                if (existingUser is null)
+                    existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
+            }       
+
             if (existingUser is null) {
                 OnUsernameNotTaken?.Invoke(this, EventArgs.Empty);
                 isAvailableUsername = true;
@@ -164,12 +174,13 @@ public class RegistrationViewModel : ObservableRecipient
                     Password = hashedPassword
                 };
 
-                var result = await _dataStore.User.AddAsync(newUser);
+                int result = await _dataStore.User.AddAsync(newUser);
 
                 if (result == 1)
                 {
+                    await _apiService.PostAsync("users", AutoMapper.Map(newUser, false));
                     _sessionService.CreateSession(newUser);
-                    CreateNewUserBudget();
+                    await CreateNewUserBudget();
                     _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
                 }
             }
@@ -239,7 +250,7 @@ public class RegistrationViewModel : ObservableRecipient
         }
     }
 
-    private void CreateNewUserBudget()
+    private async Task CreateNewUserBudget()
     {
         Guid userId = _sessionService.GetSessionUserId();
         User? user = _dataStore.User.Get(u => u.UserId == userId, false, "Budgets");
@@ -262,7 +273,8 @@ public class RegistrationViewModel : ObservableRecipient
 
             user.Budgets = userBudgets;
 
-            _dataStore.User.Update(user);
+            await _dataStore.User.Update(user);
+            await _apiService.PutAsync($"users/{user.UserId}", AutoMapper.Map(user, true));
         }
     }
 

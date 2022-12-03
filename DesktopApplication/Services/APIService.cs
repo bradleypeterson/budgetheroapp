@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DesktopApplication.Contracts.Services;
+using Microsoft.Extensions.Configuration;
 using ModelsLibrary;
 using Newtonsoft.Json;
 using System;
@@ -11,13 +12,18 @@ using Windows.Media.Protection.PlayReady;
 
 namespace DesktopApplication.Services
 {
-    public class APIService
+    public class APIService : IAPIService
     {
-        private static readonly HttpClient _client = new();
+        private readonly HttpClient _client = new();
 
-        public static async Task<T?> GetAsync<T>(string url)
+        public APIService()
         {
             ConfigureClient();
+            ConfigureJsonSettings();
+        }
+
+        public async Task<T?> GetAsync<T>(string url)
+        {
             var result = await _client.GetAsync(url);
 
             result.EnsureSuccessStatusCode();
@@ -28,39 +34,61 @@ namespace DesktopApplication.Services
             return resultModel;
         }
 
-        public static async Task PostAsync<T>(string url, T contentValue)
+        public async Task<int> PostAsync<T>(string url, T contentValue)
         {
-            ConfigureClient();
+            //JsonSerializerSettings settings = new JsonSerializerSettings
+            //{
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            //};
             var content = new StringContent(JsonConvert.SerializeObject(contentValue), Encoding.UTF8, "application/json");
             var result = await _client.PostAsync(url, content);
 
-            result.EnsureSuccessStatusCode();
+            if (result.IsSuccessStatusCode)
+                return 1;
+            else
+                return 0;
         }
 
-        public static async Task PutAsync<T>(string url, T stringValue)
+        public async Task<int> PutAsync<T>(string url, T stringValue)
         {
-            ConfigureClient();
+            //JsonSerializerSettings settings = new JsonSerializerSettings
+            //{
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            //};
             var content = new StringContent(JsonConvert.SerializeObject(stringValue), Encoding.UTF8, "application/json");
             var result = await _client.PutAsync(url, content);
 
-            result.EnsureSuccessStatusCode();
+            if (result.IsSuccessStatusCode)
+                return 1;
+            else
+                return 0;
         }
 
-        public static async Task DeleteAsync(string url)
+        public async Task DeleteAsync(string url)
         {
-            ConfigureClient();
             var result = await _client.DeleteAsync(url);
 
             result.EnsureSuccessStatusCode();
         }
 
-        private static void ConfigureClient()
+        private void ConfigureClient()
         {
             _client.BaseAddress = new Uri("https://www.budgethero.app/api/");
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json")
             );
+        }
+
+        private void ConfigureJsonSettings()
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
         }
     }
 }
