@@ -217,7 +217,7 @@ public class HouseholdViewModel : ObservableRecipient
         newCategoryItem.CategoryName = GetCategoryItemNameTxt(e);
         newCategoryItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
         newCategoryItem.BudgetCategoryGroupID = householdGroup.BudgetCategoryGroupID;
-        var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
+        await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
         CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
                 
         /* User will be able to select any number of household members to split the items amount.
@@ -230,20 +230,18 @@ public class HouseholdViewModel : ObservableRecipient
 
         foreach (User u in usersToSplit)
         {
-            //TODO: Create a new Household budget item in their personal budget with the split amount
-            ICollection<Budget>? uBudgets = u?.Budgets;
-            Budget? bud = uBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
+            //Create a new Household budget item in the users personal budget with the split amount
+            Budget? bud = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
             Guid? bId = bud!.BudgetId;
             Budget? houseBudget = _dataStore.Budget!.Get(b => b.BudgetId == bId, false, "BudgetCategoryGroups");
             ICollection<BudgetCategoryGroup>? catGroups = houseBudget?.BudgetCategoryGroups;
             BudgetCategoryGroup? houseGroup = catGroups?.FirstOrDefault(g => g.CategoryGroupDesc == "Household");
 
             BudgetCategory newItem = new BudgetCategory( );
-            newItem = GetCategoryItemNameTxt(e);
-
-
-
-
+            newItem.CategoryName = GetCategoryItemNameTxt(e);
+            newItem.CategoryAmount = splitAmt;
+            newItem.BudgetCategoryGroupID = houseGroup.BudgetCategoryGroupID;
+            await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
         }
     }
 
