@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DebugTools;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
+using Web_API.Contracts.Data;
 using Web_API.Data;
 
 namespace Web_API.Controllers
@@ -9,60 +11,55 @@ namespace Web_API.Controllers
     [ApiController]
     public class BudgetCategoryGroupsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDataStore _dataStore;
 
-        public BudgetCategoryGroupsController(ApplicationDbContext context)
+        public BudgetCategoryGroupsController(IDataStore dataStore)
         {
-            _context = context;
+            _dataStore = dataStore;
         }
 
         // GET: api/BudgetCategoryGroups
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BudgetCategoryGroup>>> GetBudgetCategoryGroups()
         {
-            return await _context.BudgetCategoryGroups.ToListAsync();
+            IEnumerable<BudgetCategoryGroup>? _categoryGroups = await _dataStore.BudgetCategoryGroup.GetAllAsync(null, "Budgets");
+            
+            return _categoryGroups.ToList();
         }
 
         // GET: api/BudgetCategoryGroups/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<BudgetCategoryGroup>> GetBudgetCategoryGroup(Guid id)
         {
-            var budgetCategoryGroup = await _context.BudgetCategoryGroups.FindAsync(id);
-
-            if (budgetCategoryGroup == null)
-            {
+            BudgetCategoryGroup? _categoryGroup = await _dataStore.BudgetCategoryGroup
+                .GetAsync(b => b.BudgetCategoryGroupID == id, false, "Budgets");
+            Jsonizer.GimmeDatJson(_categoryGroup);
+            if (_categoryGroup == null)
                 return NotFound();
-            }
 
-            return budgetCategoryGroup;
+            return _categoryGroup;
         }
 
         // PUT: api/BudgetCategoryGroups/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBudgetCategoryGroup(Guid id, BudgetCategoryGroup budgetCategoryGroup)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> PutBudgetCategoryGroup(Guid id, BudgetCategoryGroup _categoryGroup)
         {
-            if (id != budgetCategoryGroup.BudgetCategoryGroupID)
-            {
+            if (id != _categoryGroup.BudgetCategoryGroupID)
                 return BadRequest();
-            }
-
-            _context.Entry(budgetCategoryGroup).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _dataStore.BudgetCategoryGroup.Update(_categoryGroup);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BudgetCategoryGroupExists(id))
-                {
+                bool categoryGroupExists = await BudgetCategoryGroupExists(id);
+
+                if (!categoryGroupExists)
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -71,33 +68,53 @@ namespace Web_API.Controllers
         // POST: api/BudgetCategoryGroups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BudgetCategoryGroup>> PostBudgetCategoryGroup(BudgetCategoryGroup budgetCategoryGroup)
+        public async Task<ActionResult<BudgetCategoryGroup>> PostBudgetCategoryGroup(BudgetCategoryGroup categoryGroup)
         {
-            _context.BudgetCategoryGroups.Add(budgetCategoryGroup);
-            await _context.SaveChangesAsync();
+            bool categoryGroupExists = await BudgetCategoryGroupExists(categoryGroup.BudgetCategoryGroupID);
 
-            return CreatedAtAction("GetBudgetCategoryGroup", new { id = budgetCategoryGroup.BudgetCategoryGroupID }, budgetCategoryGroup);
+            if (!categoryGroupExists)
+            {
+                if (categoryGroup.Budgets is not null)
+                {
+                    List<Budget> budgets = categoryGroup.Budgets.ToList();
+                    categoryGroup.Budgets = null;
+                    await _dataStore.BudgetCategoryGroup.AddAsync(categoryGroup);
+                    categoryGroup.Budgets = budgets;
+                    await _dataStore.BudgetCategoryGroup.Update(categoryGroup);
+                }
+                else
+                    await _dataStore.BudgetCategoryGroup.AddAsync(categoryGroup);
+
+                return CreatedAtAction("GetBudgetCategoryGroup", new { id = categoryGroup.BudgetCategoryGroupID }, categoryGroup);
+            }
+            else
+                return StatusCode(422);
         }
 
         // DELETE: api/BudgetCategoryGroups/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteBudgetCategoryGroup(Guid id)
         {
-            var budgetCategoryGroup = await _context.BudgetCategoryGroups.FindAsync(id);
-            if (budgetCategoryGroup == null)
+            BudgetCategoryGroup? _categoryGroup = await _dataStore.BudgetCategoryGroup.GetAsync(b => b.BudgetCategoryGroupID == id);
+
+            if (_categoryGroup == null)
             {
                 return NotFound();
             }
 
-            _context.BudgetCategoryGroups.Remove(budgetCategoryGroup);
-            await _context.SaveChangesAsync();
+            await _dataStore.BudgetCategoryGroup.DeleteAsync(_categoryGroup);
 
             return NoContent();
         }
 
-        private bool BudgetCategoryGroupExists(Guid id)
+        private async Task<bool> BudgetCategoryGroupExists(Guid id)
         {
-            return _context.BudgetCategoryGroups.Any(e => e.BudgetCategoryGroupID == id);
+            BudgetCategoryGroup? _categoryGroup = await _dataStore.BudgetCategoryGroup.GetByIdAsync(id);
+
+            if (_categoryGroup is null)
+                return false;
+            else
+                return true;
         }
     }
 }

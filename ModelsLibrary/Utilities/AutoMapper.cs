@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using ModelsLibrary;
 using ModelsLibrary.DTO;
+using System.Collections.ObjectModel;
 
 namespace ModelsLibrary.Utilities
 {
@@ -184,7 +185,7 @@ namespace ModelsLibrary.Utilities
             };
         }
 
-        public static ICollection<UserDTO>? Map(IEnumerable<User>? _users, bool includeBudgets)
+        public static ICollection<UserDTO> Map(IEnumerable<User>? _users, bool includeBudgets)
         {
             if (_users is not null)
             {
@@ -201,10 +202,10 @@ namespace ModelsLibrary.Utilities
                 return users;
             }
             else
-                return null;
+                return new List<UserDTO>();
         }
 
-        public static ICollection<User>? ReverseMap(IEnumerable<UserDTO>? _users, bool includeBudgets)
+        public static ICollection<User> ReverseMap(IEnumerable<UserDTO>? _users, bool includeBudgets)
         {
             if (_users is not null)
             {
@@ -221,10 +222,10 @@ namespace ModelsLibrary.Utilities
                 return users;
             }
             else
-                return null;
+                return new List<User>();
         }
 
-        public static ICollection<BudgetDTO>? Map(IEnumerable<Budget>? _budgets, bool includeUsers)
+        public static ICollection<BudgetDTO> Map(IEnumerable<Budget>? _budgets, bool includeUsers)
         {
             if (_budgets is not null)
             {
@@ -241,10 +242,10 @@ namespace ModelsLibrary.Utilities
                 return budgets;
             }
             else
-                return null;
+                return new List<BudgetDTO>();
         }
 
-        private static ICollection<Budget>? ReverseMap(IEnumerable<BudgetDTO>? _budgets, bool includeUsers)
+        private static ICollection<Budget> ReverseMap(IEnumerable<BudgetDTO>? _budgets, bool includeUsers)
         {
             if (_budgets is not null)
             {
@@ -261,10 +262,10 @@ namespace ModelsLibrary.Utilities
                 return budgets;
             }
             else
-                return null;
+                return new List<Budget>();
         }
 
-        public static IEnumerable<BankAccountDTO>? Map(IEnumerable<BankAccount>? _bankAccounts)
+        public static IEnumerable<BankAccountDTO> Map(IEnumerable<BankAccount>? _bankAccounts)
         {
             if (_bankAccounts is not null)
             {
@@ -276,7 +277,22 @@ namespace ModelsLibrary.Utilities
                 return bankAccounts;
             }
             else
-                return null;
+                return new List<BankAccountDTO>();
+        }
+
+        public static IEnumerable<TransactionDTO> Map(IEnumerable<Transaction>? _transactions)
+        {
+            if (_transactions is not null)
+            {
+                List<TransactionDTO> transactionDTOs = new();
+
+                foreach (Transaction? transaction in _transactions)
+                    transactionDTOs.Add(Map(transaction));
+
+                return transactionDTOs;
+            }
+            else
+                return new List<TransactionDTO>();
         }
     }
 }

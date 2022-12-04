@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using ModelsLibrary.DTO;
 using ModelsLibrary.Utilities;
 using Web_API.Contracts.Data;
-using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -26,99 +19,46 @@ namespace Web_API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            IEnumerable<User>? users = await _dataStore.User.GetAllAsync(null, "Budgets");
+            IEnumerable<User> users = await _dataStore.User.GetAllAsync(null, "Budgets");
+            await LoadBudgetCategoryGroups(users);
 
-            if (users is not null)
-                return AutoMapper.Map(users, true).ToList();
-            else
-                return new List<UserDTO>();    
+            return users.ToList();
         }
 
         // GET: api/Users/5
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<UserDTO>> GetUser(Guid id)
+        public async Task<ActionResult<User>> GetUser(Guid id)
         {
             User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            return AutoMapper.Map(user, true);
+            await LoadBudgetCategoryGroups(user);
+
+            return user;
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> PutUser(Guid id, UserDTO userDTO)
+        public async Task<IActionResult> PutUser(Guid id, User _user)
         {
-            User _user = AutoMapper.ReverseMap(userDTO, true);
-
             if (id != _user.UserId)
-            {
                 return BadRequest();
-            }
 
-            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
+            User? user = await _dataStore.User.GetAsync(u => u.UserId == _user.UserId, false, "Budgets");
 
-            if (user is not null)
-            {
-                user.FirstName = _user.FirstName;
-                user.LastName = _user.LastName;
-                user.EmailAddress = _user.EmailAddress;
-                user.PercentageMod = _user.PercentageMod;
-                user.Username = _user.Username;
-                user.Password = _user.Password;
-                user.UserImageLink = _user.UserImageLink;
+            if (user == null)
+                return NotFound();
 
+            user = EntityUtilities.Update(user, _user);
 
-                if (_user.Budgets is not null)
-                {
-                    if (user.Budgets is null)
-                        user.Budgets = new List<Budget>();
+            await UpdateBudgets(user, _user);
 
-                    foreach (Budget _budget in _user.Budgets)
-                    {
-                        Budget? budget = user.Budgets.FirstOrDefault(b => b.BudgetId == _budget.BudgetId);
-
-                        if (budget is not null)
-                        {
-                            budget.BudgetName = _budget.BudgetName;
-                            budget.BudgetType = _budget.BudgetType;
-                        }
-                        else
-                        {
-                            budget = new()
-                            {
-                                BudgetId = _budget.BudgetId,
-                                BudgetName = _budget.BudgetName,
-                                BudgetType = _budget.BudgetType,
-                            };
-
-                            budget.Users = new List<User>() { user };
-                            await _dataStore.Budget.AddAsync(budget);
-                            user.Budgets.Add(budget);
-                        }
-                    }
-                }
-
-                try
-                {
-                    await _dataStore.User.Update(user);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    bool userExists = await UserExists(id);
-
-                    if (!userExists)
-                        return NotFound();
-                    else
-                        throw;
-                }
-            }
+            await _dataStore.User.Update(user);
 
             return NoContent();
         }
@@ -126,13 +66,18 @@ namespace Web_API.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserDTO>> PostUser(UserDTO userDTO)
+        public async Task<ActionResult<User>> PostUser(User user)
         {
-            User user = AutoMapper.ReverseMap(userDTO, true);
+            bool userExists = await UserExists(user.UserId);
 
-            await _dataStore.User.AddAsync(user);
+            if (!userExists)
+            {
+                await _dataStore.User.AddAsync(user);
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+                return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            }
+            else
+                return StatusCode(422);
         }
 
         // DELETE: api/Users/5
@@ -156,6 +101,66 @@ namespace Web_API.Controllers
                 return false;
             else
                 return true;
+        }
+
+        private async Task LoadBudgetCategoryGroups(User user)
+        {
+            if (user.Budgets is not null)
+            {
+                List<Budget> budgets = new List<Budget>();
+
+                foreach (Budget budget in user.Budgets)
+                {
+                    Budget? _budget = await _dataStore.Budget.GetAsync(c => c.BudgetId == budget.BudgetId, false, "BudgetCategoryGroups");
+
+                    if (_budget is not null)
+                        budgets.Add(_budget);
+                }
+
+                user.Budgets = budgets;
+            }
+        }
+
+        private async Task LoadBudgetCategoryGroups(IEnumerable<User> users)
+        {
+            foreach (User user in users)
+            {
+                await LoadBudgetCategoryGroups(user);
+            }
+        }
+
+        private async Task UpdateBudgets(User existingUser, User incomingUser)
+        {
+            List<Budget> incomingBudgets = (incomingUser.Budgets is null) ? new List<Budget>() : incomingUser.Budgets.ToList();
+
+            if (incomingBudgets.Any())
+            {
+                IEnumerable<Budget> existingBudgets = await _dataStore.Budget.GetAllAsync(null, "Users");
+
+                if (incomingBudgets.Any())
+                {
+                    foreach (Budget incomingBudget in incomingBudgets)
+                    {
+                        Budget? existingBudget = existingBudgets.FirstOrDefault(b => b.BudgetId == incomingBudget.BudgetId);
+
+                        if (existingBudget is not null)
+                        {
+                            existingBudget = EntityUtilities.Update(existingBudget, incomingBudget);
+
+                            if (incomingBudget.Users is not null && incomingBudget.Users.Any())
+                            {
+                                existingBudget.Users = (existingBudget.Users is null) ? new List<User>() : existingBudget.Users.ToList();
+                                incomingBudget.Users.ToList().ForEach(u => existingBudget.Users.Add(u));
+                            }
+
+                            await _dataStore.Budget.Update(existingBudget);
+                        }
+                        else
+                            await _dataStore.Budget.AddAsync(incomingBudget);
+                    }
+                    existingUser.Budgets = incomingBudgets;
+                }
+            }
         }
     }
 }

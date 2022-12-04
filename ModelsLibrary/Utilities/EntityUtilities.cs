@@ -1,4 +1,5 @@
-﻿using ModelsLibrary;
+﻿using Microsoft.EntityFrameworkCore.Update.Internal;
+using ModelsLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,8 +49,7 @@ namespace ModelsLibrary.Utilities
             existing.Username = modified.Username;
             existing.Password = modified.Password;
             existing.UserImageLink = modified.UserImageLink;
-            existing.Budgets = modified.Budgets;
-
+            
             return existing;
         }
 
@@ -58,8 +58,6 @@ namespace ModelsLibrary.Utilities
             existing.BudgetId = modified.BudgetId;
             existing.BudgetName = modified.BudgetName;
             existing.BudgetType = modified.BudgetType;
-            existing.Users = modified.Users;
-            existing.BudgetCategoryGroups = modified.BudgetCategoryGroups;
 
             return existing;
         }

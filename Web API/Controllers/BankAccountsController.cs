@@ -4,7 +4,6 @@ using ModelsLibrary;
 using ModelsLibrary.DTO;
 using ModelsLibrary.Utilities;
 using Web_API.Contracts.Data;
-using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -24,12 +23,8 @@ namespace Web_API.Controllers
         public async Task<ActionResult<IEnumerable<BankAccountDTO>>> GetBankAccounts()
         {
             IEnumerable<BankAccount>? bankAccounts = await _dataStore.BankAccount.GetAllAsync();
-            IEnumerable<BankAccountDTO>? bankAccountsDTO = AutoMapper.Map(bankAccounts);
-
-            if (bankAccountsDTO != null)
-                return bankAccountsDTO.ToList();
-            else
-                return new List<BankAccountDTO>();
+            
+            return AutoMapper.Map(bankAccounts).ToList();
         }
 
         // GET: api/BankAccounts/5
