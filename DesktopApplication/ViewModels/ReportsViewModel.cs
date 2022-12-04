@@ -203,25 +203,4 @@ public class ReportsViewModel : ObservableRecipient
         }
         return list;
     }
-
-    public List<lineGraphData> gatherData()
-    {
-        var transactionList = Transactions.Where(x => (x.DepositAmount.Equals(""))).ToList();
-
-        List<lineGraphData> list = new List<lineGraphData>();
-
-        for (int i = 0; i < 12; i++)
-        {
-            lineGraphData data = new lineGraphData();
-            data.TotalCost = 0.0;
-            data.Month = monthCase(i + 1);
-            list.Add(data);
-        }
-
-        foreach (var transaction in transactionList)
-        {
-            list[transaction.TransactionDate.Month - 1].TotalCost += Double.Parse(transaction.ExpenseAmount);
-        }
-        return list;
-    }
 }
