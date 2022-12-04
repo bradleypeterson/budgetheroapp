@@ -3,7 +3,11 @@ using DesktopApplication.Contracts.Services;
 using DesktopApplication.Models;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using ModelsLibrary;
 using Syncfusion.UI.Xaml.Charts;
 using System.Collections.ObjectModel;
@@ -25,6 +29,16 @@ public sealed partial class ReportsPage : Page
         Header = "Breakdown of the Past Month"
     };
 
+    private SfCircularChart categoryPieChart = new SfCircularChart()
+    {
+        Header = "Expense Percentage per Category Past Month"
+    };
+
+    private SfCartesianChart expenseVsIncomeLineChart = new SfCartesianChart()
+    {
+        Header = "Expenses vs Income Past Year"
+    };
+
     public ReportsPage()
     {
         ViewModel = App.GetService<ReportsViewModel>();
@@ -39,6 +53,8 @@ public sealed partial class ReportsPage : Page
         await ViewModel.LoadAsync();
         createCategoryLineGraph();
         createCategoryBarGraph();
+        createCategoryPieChart();
+        createExpenseVsIncomeLineGraph();
     }
 
     private void createCategoryLineGraph()
@@ -142,5 +158,84 @@ public sealed partial class ReportsPage : Page
         //Add graph to the xaml
         catBarGraphArea.Children.Add(categoryBarGraph);
     }
-    
+
+    private void createCategoryPieChart()
+    {
+        ChartLegend legend = new ChartLegend();
+
+        
+        categoryPieChart.Legend = legend;
+
+
+        PieSeries temp = new PieSeries()
+        {
+            ItemsSource = ViewModel.gatherPieChartData(DateTime.Now.Month),
+            //category name is given to the series from the data binding from gatherPieChartData
+            XBindingPath = "Category",
+            YBindingPath = "TotalCost",
+            ShowDataLabels = true,
+            DataLabelSettings = new CircularDataLabelSettings() { Context = LabelContext.Percentage },
+            Radius = 0.9,
+        };
+
+        categoryPieChart.Series.Add(temp);
+                
+           
+
+
+        
+
+        //Add graph to the xaml
+        catPieChartArea.Children.Add(categoryPieChart);
+    }
+
+    private void createExpenseVsIncomeLineGraph()
+    {
+        //Create the x-axis
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.Header = "Month";
+        expenseVsIncomeLineChart.XAxes.Add(xAxis);
+
+        //create the y-axis
+        NumericalAxis yAxis = new NumericalAxis();
+        yAxis.Header = "Amount";
+        expenseVsIncomeLineChart.YAxes.Add(yAxis);
+
+        //Legend
+        ChartLegend legend = new ChartLegend()
+        {
+            Placement = LegendPlacement.Right,
+            CheckBoxVisibility = Visibility
+        };
+        expenseVsIncomeLineChart.Legend = legend;
+
+        
+        LineSeries temp1 = new LineSeries()
+        {
+            //gather data for expense
+            ItemsSource = ViewModel.gatherData(),
+            XBindingPath = "Month",
+            YBindingPath = "TotalCost",
+            Label = "Expenses",
+            EnableTooltip = true,
+        };
+
+        LineSeries temp2 = new LineSeries()
+        {
+            //gather data for income
+            ItemsSource = ViewModel.gatherDepositData(),
+            XBindingPath = "Month",
+            YBindingPath = "TotalCost",
+            Label = "Income",
+            EnableTooltip = true,
+        };
+
+        expenseVsIncomeLineChart.Series.Add(temp1);
+        expenseVsIncomeLineChart.Series.Add(temp2);
+
+
+        //Add graph to the xaml
+        expenseVsIncomeChartArea.Children.Add(expenseVsIncomeLineChart);
+    }
+
 }

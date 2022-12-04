@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using ModelsLibrary;
 using Windows.System;
 using System.Collections.Generic;
+using static DesktopApplication.ViewModels.ReportsViewModel;
 
 namespace DesktopApplication.ViewModels;
 
@@ -154,4 +155,84 @@ public class ReportsViewModel : ObservableRecipient
         }
     }
 
+    public class pieChartData
+    {
+        public string? Category { get; set; }
+        public double TotalCost { get; set; }
+    }
+
+
+    public List<pieChartData> gatherPieChartData(int month)
+    {
+        var transactionList = Transactions.Where(x => (x.TransactionDate.Month == month && x.DepositAmount.Equals(""))).ToList();
+
+        List<pieChartData> list = new List<pieChartData>();
+        List<string> categories = new List<string>();
+
+        foreach (var transaction in transactionList)
+        {
+            if (!categories.Contains(transaction.CategoryName))
+            {
+                pieChartData temp = new pieChartData();
+                temp.TotalCost = Double.Parse(transaction.ExpenseAmount);
+                temp.Category = transaction.CategoryName;
+                categories.Add(transaction.CategoryName);
+
+                list.Add(temp);
+            }
+            else
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].Category.Equals(transaction.CategoryName))
+                    {
+                        list[i].TotalCost += Double.Parse(transaction.ExpenseAmount);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    public List<lineGraphData> gatherDepositData()
+    {
+        var transactionList = Transactions.Where(x => (x.ExpenseAmount.Equals(""))).ToList();
+
+        List<lineGraphData> list = new List<lineGraphData>();
+
+        for (int i = 0; i < 12; i++)
+        {
+            lineGraphData data = new lineGraphData();
+            data.TotalCost = 0.0;
+            data.Month = monthCase(i + 1);
+            list.Add(data);
+        }
+
+        foreach (var transaction in transactionList)
+        {
+            list[transaction.TransactionDate.Month - 1].TotalCost += Double.Parse(transaction.DepositAmount);
+        }
+        return list;
+    }
+
+    public List<lineGraphData> gatherData()
+    {
+        var transactionList = Transactions.Where(x => (x.DepositAmount.Equals(""))).ToList();
+
+        List<lineGraphData> list = new List<lineGraphData>();
+
+        for (int i = 0; i < 12; i++)
+        {
+            lineGraphData data = new lineGraphData();
+            data.TotalCost = 0.0;
+            data.Month = monthCase(i + 1);
+            list.Add(data);
+        }
+
+        foreach (var transaction in transactionList)
+        {
+            list[transaction.TransactionDate.Month - 1].TotalCost += Double.Parse(transaction.ExpenseAmount);
+        }
+        return list;
+    }
 }
