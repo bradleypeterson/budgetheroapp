@@ -178,7 +178,17 @@ public class HouseholdViewModel : ObservableRecipient
     private async void InviteToHouseholdAsync(object? sender, DialogServiceEventArgs e)
     {
         //TODO: Implement logic for inviting another user to a household by creating an invite code and sending it via email.
-        //      Invite code should be created by using the Household Budget ID and Encrypting/Hashing it.
+        //      Invite code should be created by using the Household Budget ID.
+        Guid userId = _sessionService.GetSessionUserId();
+        User? user = _dataStore.User.Get(u => u.UserId == userId, false, "Budgets");
+        ICollection<Budget> userBudgets = user.Budgets;
+        Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");
+        Guid? budgetId = budget!.BudgetId;
+
+        string email = GetInviteEmail(e);
+
+
+
     }
 
     private async void JoinHouseholdAsync(object? sender, DialogServiceEventArgs e)
@@ -199,6 +209,12 @@ public class HouseholdViewModel : ObservableRecipient
         var householdBudgetItemForm = (AddHouseholdBudgetItemForm)e.Content;
         decimal convertedCategoryAmount = Convert.ToDecimal(householdBudgetItemForm.ViewModel.CatItemAmount);
         return convertedCategoryAmount;
+    }
+
+    private static string GetInviteEmail(DialogServiceEventArgs e)
+    {
+        var inviteUserForm = (InviteUserForm)e.Content;
+        return inviteUserForm.ViewModel.EmailAddress;
     }
 
     private static ICollection<User> GetUsersToSplit(DialogServiceEventArgs e)
