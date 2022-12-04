@@ -15,7 +15,7 @@ public interface IRepository<T> where T : class
 
     IEnumerable<T> List(Expression<Func<T, bool>> predicate, Expression<Func<T, int>> orderBy = null!, string? includes = null);
 
-    Task<IEnumerable<T?>> ListAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, int>> orderBy = null!, string? includes = null);
+    Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, int>> orderBy = null!, string? includes = null);
 
     Task<int> AddAsync(T entity);
 

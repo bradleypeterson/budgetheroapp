@@ -189,7 +189,7 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async virtual Task<IEnumerable<T?>> ListAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, int>>? orderBy = null, string? includes = null)
+    public async virtual Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, int>>? orderBy = null, string? includes = null)
     {
         IQueryable<T> queryable = dbContext.Set<T>();
         if (predicate != null && includes == null)

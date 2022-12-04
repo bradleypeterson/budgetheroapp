@@ -10,6 +10,7 @@ using DesktopApplication.Models;
 using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
+using ModelsLibrary.Utilities;
 
 namespace DesktopApplication.ViewModels;
 
