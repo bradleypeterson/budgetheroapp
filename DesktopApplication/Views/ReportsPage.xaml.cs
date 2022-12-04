@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
 using Syncfusion.UI.Xaml.Charts;
 using System.Collections.ObjectModel;
+using static DesktopApplication.ViewModels.ReportsViewModel;
 
 namespace DesktopApplication.Views;
 
@@ -17,12 +18,12 @@ public sealed partial class ReportsPage : Page
 
     private SfCartesianChart categoryLineChart = new SfCartesianChart()
     {
-        Header = "Cost over Past the Year"
+        Header = "Category Breakown Over the Past Year"
     };
 
     private SfCartesianChart categoryBarGraph = new SfCartesianChart()
     {
-        Header = "Breakdown of the Past Month"
+        Header = "Total Expenses Over the Past Year"
     };
 
     public ReportsPage()
@@ -94,7 +95,7 @@ public sealed partial class ReportsPage : Page
     {
         //Create the x-axis
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.Header = "Category";
+        xAxis.Header = "Month";
         categoryBarGraph.XAxes.Add(xAxis);
 
         //create the y-axis
@@ -102,40 +103,18 @@ public sealed partial class ReportsPage : Page
         yAxis.Header = "Cost";
         categoryBarGraph.YAxes.Add(yAxis);
 
-        //Legend
-        ChartLegend legend = new ChartLegend()
-        {
-            Placement = LegendPlacement.Right,
-            CheckBoxVisibility = Visibility
-        };
-        categoryBarGraph.Legend = legend;
-
         //gather data by category
-        List<string> categories = new List<string>();
-
-        for (int i = 0; i < ViewModel.Transactions.Count; i++)
+        ColumnSeries temp = new ColumnSeries()
         {
-
-            string name = ViewModel.Transactions.ElementAt(i).CategoryName;
-            if (!categories.Contains(name) && ViewModel.Transactions.ElementAt(i).DepositAmount.Equals("") 
-                && ViewModel.Transactions.ElementAt(i).TransactionDate.Month == DateTime.Now.Month)
-            {
-                ColumnSeries temp = new ColumnSeries()
-                {
-                    ItemsSource = ViewModel.gatherData(DateTime.Now.Month, name),
-                    XBindingPath = "Category",
-                    YBindingPath = "TotalCost",
-                    Label = name,
-                    EnableTooltip = true,
-                    SegmentSpacing = 0.5,
-                };
+            ItemsSource = ViewModel.gatherData(),
+            XBindingPath = "Month",
+            YBindingPath = "TotalCost",
+            EnableTooltip = true,
+            SegmentSpacing = 0.5,
+        };
                 
-                categoryBarGraph.Series.Add(temp);
-                categories.Add(name);
-            }
-
-
-        }
+        categoryBarGraph.Series.Add(temp);
+        
 
 
 
