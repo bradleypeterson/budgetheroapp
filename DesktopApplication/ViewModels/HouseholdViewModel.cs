@@ -7,6 +7,8 @@ using DesktopApplication.Models;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
+using System.Net.Mail;
+using System.Net;
 
 namespace DesktopApplication.ViewModels;
 
@@ -187,7 +189,16 @@ public class HouseholdViewModel : ObservableRecipient
 
         string email = GetInviteEmail(e);
 
+        string userFullname = user.FirstName + " " + user.LastName;
 
+        var smtpClient = new SmtpClient("smtp-relay.sendinblue.com")
+        {
+            Port = 587,
+            Credentials = new NetworkCredential("landon.george16@gmail.com", "cdPvWa7NT2Fwt6yg")
+        };
+
+        string body = "<p>Your code to join " + userFullname + "'s household budget is: <h2>" + budgetId +"</h2></p>";
+        smtpClient.Send("budgetheroinfo@gmail.com", email, "You've Been Invited!", body);
 
     }
 
