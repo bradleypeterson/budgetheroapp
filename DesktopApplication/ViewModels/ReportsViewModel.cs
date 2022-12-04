@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using ModelsLibrary;
 using Windows.System;
 using System.Collections.Generic;
+using System.Linq;
 using static DesktopApplication.ViewModels.ReportsViewModel;
 
 namespace DesktopApplication.ViewModels;
@@ -81,35 +82,23 @@ public class ReportsViewModel : ObservableRecipient
         return list;
     }
 
-    public List<lineGraphData> gatherData(int month, string category)
+    public List<lineGraphData> gatherData()
     {
-        var transactionList = Transactions.Where(x => (x.TransactionDate.Month == month && x.CategoryName.Equals(category))).ToList();
+        var transactionList = Transactions.Where(x => (x.DepositAmount.Equals(""))).ToList();
 
         List<lineGraphData> list = new List<lineGraphData>();
-        List<string> categories = new List<string>();
+
+        for (int i =0 ; i < 12; i++)
+        {
+            lineGraphData data = new lineGraphData();
+            data.TotalCost = 0.0;
+            data.Month = monthCase(i + 1);
+            list.Add(data);
+        }
 
         foreach (var transaction in transactionList)
         {
-            if (!categories.Contains(category))
-            {
-                lineGraphData temp = new lineGraphData();
-                temp.TotalCost = Double.Parse(transaction.ExpenseAmount);
-                temp.Category = category;
-                temp.Month = monthCase(month);
-                categories.Add(category);
-
-                list.Add(temp);
-            }
-            else
-            {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    if (list[i].Category.Equals(category))
-                    {
-                        list[i].TotalCost = list[i].TotalCost + Double.Parse(transaction.ExpenseAmount);
-                    }
-                }
-            }
+            list[transaction.TransactionDate.Month-1].TotalCost += Double.Parse(transaction.ExpenseAmount);
         }
         return list;
     }
