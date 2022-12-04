@@ -113,7 +113,7 @@ namespace Web_API.Controllers
                 {
                     bool userExists = await UserExists(id);
 
-                    if (userExists)
+                    if (!userExists)
                         return NotFound();
                     else
                         throw;
