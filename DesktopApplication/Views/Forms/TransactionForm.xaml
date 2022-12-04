@@ -41,7 +41,7 @@
 
             <CalendarDatePicker x:Name="TransactionDatePicker" 
                                 Header="Date:"
-                                Date="{x:Bind ViewModel.ObservableTransaction.TransactionDate, 
+                                Date="{x:Bind ViewModel.ObservableTransaction.TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
                                               Converter={StaticResource DatePickerConverter}}"/>
             <TextBlock x:Name="dpInvalidDateError" Style="{StaticResource FormErrorTextStyle}" 
                        Visibility="Collapsed"
