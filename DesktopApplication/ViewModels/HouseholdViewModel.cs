@@ -117,13 +117,19 @@ public class HouseholdViewModel : ObservableRecipient
             user.Budgets = userBudgets;
             _dataStore.User.Update(user);
 
-            //Add Household category group to both budgets
-            foreach(Budget b in userBudgets)
-            {
-                BudgetCategoryGroup newHHCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
-                b.BudgetCategoryGroups = new List<BudgetCategoryGroup>() { newHHCategoryGroup };
-            }
-            await _dataStore.User.Update(user);
+            // create a Household category Group linked to the Household budget.
+            BudgetCategoryGroup newHHCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
+            newBudget.BudgetCategoryGroups = new List<BudgetCategoryGroup>();
+            newBudget.BudgetCategoryGroups!.Add(newHHCategoryGroup);
+            await _dataStore.Budget.Update(newBudget);
+            //Create a household category group in the users personal budget, this will hold their amount of a split bill.
+            //NOTE: Transactions posted toward this category group should also be reflected in the household budget page.
+            BudgetCategoryGroup newPersonalHHCatGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
+            Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "personal");
+            Guid? budgetId = budget!.BudgetId;
+            Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
+            personalBudget!.BudgetCategoryGroups!.Add(newPersonalHHCatGroup);
+            var result = await _dataStore.BudgetCategoryGroup.AddAsync(newPersonalHHCatGroup);
 
         }
         CreatingHH = false;
@@ -241,7 +247,7 @@ public class HouseholdViewModel : ObservableRecipient
             newItem.CategoryName = GetCategoryItemNameTxt(e);
             newItem.CategoryAmount = splitAmt;
             newItem.BudgetCategoryGroupID = houseGroup.BudgetCategoryGroupID;
-            await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
+            await _dataStore.BudgetCategory.AddAsync(newItem);
         }
     }
 

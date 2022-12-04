@@ -94,17 +94,5 @@ namespace DesktopApplication.Models
             Remaining = totalRemaining;
         }
 
-        private void ConvertToDecimal(string value)
-        {
-            decimal tempBalance;
-            if (decimal.TryParse(value, out tempBalance))
-            {
-                CategoryAmount = tempBalance;
-            }
-            else
-            {
-                Debug.WriteLine("Error: You must provide a decimal value.");
-            }
-        }
     }
 }
