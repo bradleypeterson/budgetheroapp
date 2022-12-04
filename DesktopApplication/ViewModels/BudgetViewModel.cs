@@ -8,7 +8,6 @@ using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using System.Collections.ObjectModel;
 
-
 namespace DesktopApplication.ViewModels;
 
 public class BudgetViewModel : ObservableRecipient
@@ -217,6 +216,8 @@ public class BudgetViewModel : ObservableRecipient
 
             BudgetCategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
             selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e);
+            var exp = Expanders.FirstOrDefault(e => e.CategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+            exp.CategoryGroupDesc = GetGroupDescEditTxt(e);
             await _dataStore.BudgetCategoryGroup.Update(selectedCategoryGroup); /* updates the database value */
 
             /* Get status of radio button for Category Item Editing */
@@ -237,6 +238,7 @@ public class BudgetViewModel : ObservableRecipient
                     //update list 
                     CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
                     listedExpander.AddItemToExpanderList(newCategoryItem);
+
                 }
                 else if (radStatus == "Remove Category Item")
                 {

@@ -6,9 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms;
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
+
 public sealed partial class EditCategoryGroupForm : Page, IDialogForm
 {
     public EditCategoryGroupFormViewModel ViewModel { get; }
@@ -25,7 +23,7 @@ public sealed partial class EditCategoryGroupForm : Page, IDialogForm
     public EditCategoryGroupForm()
     {
         ViewModel = App.GetService<EditCategoryGroupFormViewModel>();
-        this.InitializeComponent();        
+        InitializeComponent();        
         GroupNameText.IsReadOnly = true;
         EditCatItemText.IsReadOnly = true;
         EditCatItemAmt.IsReadOnly = true;

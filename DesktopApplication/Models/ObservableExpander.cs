@@ -1,20 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
-using DesktopApplication.Contracts.Services;
-using DesktopApplication.Data;
 using ModelsLibrary;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DesktopApplication.Models
 {
     public class ObservableExpander : ObservableObject
     {
-        private readonly BudgetCategoryGroup _budgetCategoryGroup;
+        private BudgetCategoryGroup _budgetCategoryGroup;
         
         private readonly IDataStore _dataStore;
         
@@ -27,12 +20,22 @@ namespace DesktopApplication.Models
             LoadAsync();
         }
 
-        public string? CategoryGroupDesc => _budgetCategoryGroup.CategoryGroupDesc;
+        private string? _categoryGroupDesc;
+        public string? CategoryGroupDesc { 
+            get => _budgetCategoryGroup.CategoryGroupDesc;
+            set
+            {
+                SetProperty(ref _categoryGroupDesc, value);
+            }
+        }
         public Guid CategoryGroupID => _budgetCategoryGroup.BudgetCategoryGroupID;
 
         public void AddItemToExpanderList(BudgetCategory catItem)
         {
             CategoryItems.Add(new ObservableCategoryItem(catItem));
+            
+            var newItem = CategoryItems.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == catItem.BudgetCategoryID);
+            newItem.SetAllocatedAndRemaining();
         }
 
         public void DeleteItemFromExpanderList(BudgetCategory catItem)

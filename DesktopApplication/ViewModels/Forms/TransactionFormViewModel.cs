@@ -28,7 +28,6 @@ public class TransactionFormViewModel : ObservableRecipient
     public ObservableCollection<BankAccount> BankAccounts { get; } = new();
     public ObservableCollection<BudgetCategory> BudgetCategories { get; } = new();
 
-
     private BankAccount? _selectedBankAccount;
     public BankAccount? SelectedBankAccount
     {
@@ -38,7 +37,6 @@ public class TransactionFormViewModel : ObservableRecipient
             SetProperty(ref _selectedBankAccount, value);
             if (value is not null)
                 ObservableTransaction!.Transaction.BankAccountId = value.BankAccountId;
-            //
         }
     }
 
@@ -116,16 +114,19 @@ public class TransactionFormViewModel : ObservableRecipient
         {
             foreach (Budget budget in _user.Budgets)
             {
-                Budget? _userBudget = _dataStore.Budget.Get(b => b.BudgetId == budget.BudgetId, false, "BudgetCategoryGroups");
+                if(budget.BudgetType == "personal") 
+                { 
+                    Budget? _userBudget = _dataStore.Budget.Get(b => b.BudgetId == budget.BudgetId, false, "BudgetCategoryGroups");
 
-                if (_userBudget is not null && _userBudget.BudgetCategoryGroups is not null)
-                {
-                    foreach (BudgetCategoryGroup categoryGroup in _userBudget.BudgetCategoryGroups)
+                    if (_userBudget is not null && _userBudget.BudgetCategoryGroups is not null)
                     {
-                        IEnumerable<BudgetCategory> _userCategories = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == categoryGroup.BudgetCategoryGroupID);
+                        foreach (BudgetCategoryGroup categoryGroup in _userBudget.BudgetCategoryGroups)
+                        {
+                            IEnumerable<BudgetCategory> _userCategories = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == categoryGroup.BudgetCategoryGroupID);
 
-                        if (_userCategories is not null)
-                            _userCategories.ToList().ForEach(c => BudgetCategories.Add(c));
+                            if (_userCategories is not null)
+                                _userCategories.ToList().ForEach(c => BudgetCategories.Add(c));
+                        }
                     }
                 }
             }
