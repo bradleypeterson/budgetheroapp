@@ -21,38 +21,32 @@ namespace Web_API.Controllers
 
         // GET: api/Transactions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransactionDTO>>> GetTransactions()
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
-            IEnumerable<Transaction>? transactions = await _dataStore.Transaction.GetAllAsync();
+            IEnumerable<Transaction> transactions = await _dataStore.Transaction.GetAllAsync();
 
-            return AutoMapper.Map(transactions).ToList();
+            return transactions.ToList();
         }
 
         // GET: api/Transactions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionDTO>> GetTransaction(Guid id)
+        public async Task<ActionResult<Transaction>> GetTransaction(Guid id)
         {
             Transaction? transaction = await _dataStore.Transaction.GetAsync(t => t.TransactionId == id);
 
-            if (transaction == null)
-            {
+            if (transaction == null) 
                 return NotFound();
-            }
 
-            return AutoMapper.Map(transaction);
+            return transaction;
         }
 
         // PUT: api/Transactions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction(Guid id, TransactionDTO transactionDTO)
+        public async Task<IActionResult> PutTransaction(Guid id, Transaction transaction)
         {
-            Transaction transaction = AutoMapper.ReverseMap(transactionDTO);
-
             if (id != transaction.TransactionId)
-            {
                 return BadRequest();
-            }
 
             try
             {
@@ -74,15 +68,26 @@ namespace Web_API.Controllers
         // POST: api/Transactions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transaction>> PostTransaction(TransactionDTO transactionDTO)
+        public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
         {
-            Transaction transaction = AutoMapper.ReverseMap(transactionDTO);
             bool transactionExists = await TransactionExists(transaction.BankAccountId);
 
             if (!transactionExists)
             {
+                if (transaction.BudgetCategory is null)
+                    return BadRequest();
+
+                BudgetCategory? category = transaction.BudgetCategory;
+
+                category = _dataStore.BudgetCategory.Get(c => c.BudgetCategoryID == transaction.BudgetCategoryId, false, "BudgetCategoryGroup");
+
+                if (category is null)
+                    return BadRequest();
+
+                transaction.BudgetCategory = category;
+
                 await _dataStore.Transaction.AddAsync(transaction);
-                return CreatedAtAction("GetTransaction", new { id = transactionDTO.TransactionId }, transactionDTO);
+                return CreatedAtAction("GetTransaction", new { id = transaction.TransactionId }, transaction);
             }
             else
                 return StatusCode(422);

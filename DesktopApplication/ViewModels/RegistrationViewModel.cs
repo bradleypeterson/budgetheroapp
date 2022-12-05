@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DebugTools;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using ModelsLibrary;

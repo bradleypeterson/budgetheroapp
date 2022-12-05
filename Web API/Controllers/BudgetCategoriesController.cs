@@ -20,7 +20,11 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BudgetCategory>>> GetBudgetCategories()
         {
-            return await _context.BudgetCategories.ToListAsync();
+            return await _context.BudgetCategories
+                .Include(c => c.BudgetCategoryGroup!)
+                .ThenInclude(g => g.Budgets!)
+                .ThenInclude(b => b.Users)
+                .ToListAsync();
         }
 
         // GET: api/BudgetCategories/5
@@ -73,7 +77,13 @@ namespace Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<BudgetCategory>> PostBudgetCategory(BudgetCategory budgetCategory)
         {
+            BudgetCategoryGroup? categoryGroup = _context.BudgetCategoryGroups.Find(budgetCategory.BudgetCategoryGroupID);
+            
+            if (categoryGroup is not null)
+                budgetCategory.BudgetCategoryGroup = categoryGroup;
+
             _context.BudgetCategories.Add(budgetCategory);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBudgetCategory", new { id = budgetCategory.BudgetCategoryID }, budgetCategory);
@@ -98,6 +108,11 @@ namespace Web_API.Controllers
         private bool BudgetCategoryExists(Guid id)
         {
             return _context.BudgetCategories.Any(e => e.BudgetCategoryID == id);
+        }
+
+        private bool BudgetCategoryGroupExists(Guid id)
+        {
+            return _context.BudgetCategories.Any(c => c.BudgetCategoryID == id);
         }
     }
 }
