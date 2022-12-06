@@ -3,10 +3,34 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:viewmodels="using:DesktopApplication.ViewModels" 
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
+    <Grid x:Name="ContentArea" Padding="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         
+        <!--Multi Line Graph: Spending per month per category (List all catergories) -Tevin -->
+        <Grid x:Name="catLineGraphArea" Grid.Column="0" Grid.Row="0" />
+        
+        <!-- is this bar graph going to be total expenses no matter the category per month?-->
+        <!-- Bar Graph: Monthly breakdown for a year of expenses -Tevin -->
+        <Grid x:Name="catBarGraphArea" Grid.Column="1" Grid.Row="0" />
+
+        <!-- Pie charts: One Month's Expense with a breakdown per category (only one month, current month only) - Landon -->
+        <Grid x:Name="catPieChartArea" Grid.Column="0" Grid.Row="1" Margin="0 20 0 0 "/>
+        
+        <!-- Multi Line Graph: Expense vs Income for the year -Landon -->
+        <Grid x:Name="expenseVsIncomeChartArea" Grid.Column="1" Grid.Row="1" Margin="0 20 0 0 "/>
     </Grid>
 </Page>

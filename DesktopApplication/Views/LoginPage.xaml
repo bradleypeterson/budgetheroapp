@@ -20,6 +20,7 @@
                 Username cannot be blank
             </TextBlock>
             <TextBox x:Name="txtUsername" 
+                     KeyDown="OnKeyDown"
                      Width="300" 
                      Header="Username" 
                      PlaceholderText="Username" 
@@ -30,6 +31,7 @@
                 Password cannot be blank
             </TextBlock>
             <PasswordBox x:Name="pwbPassword" 
+                         KeyDown="OnKeyDown"
                          Width="300" 
                          Header="Password" 
                          PlaceholderText="Enter your password" 
