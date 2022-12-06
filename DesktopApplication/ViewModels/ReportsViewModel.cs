@@ -32,7 +32,7 @@ public class ReportsViewModel : ObservableRecipient
     //Used to get the user and the user's transactions
     public async Task LoadAsync()
     {
-        int userId = _sessionService.GetSessionUserId();
+        Guid userId = _sessionService.GetSessionUserId();
 
         if (Transactions.Any()) return;
         IEnumerable<Transaction?> transactions =
