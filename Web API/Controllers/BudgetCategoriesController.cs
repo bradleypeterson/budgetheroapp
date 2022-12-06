@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
 using Web_API.Data;
@@ -25,11 +20,16 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BudgetCategory>>> GetBudgetCategories()
         {
-            return await _context.BudgetCategories
+            IEnumerable<BudgetCategory> categories = await _context.BudgetCategories
                 .Include(g => g.BudgetCategoryGroup!)
                 .ThenInclude(b => b.Budgets!)
                 .ThenInclude(u => u.Users)
                 .ToListAsync();
+
+            if (categories is null || !categories.Any())
+                return NoContent();
+            else 
+                return Ok(categories);
         }
 
         // GET: api/BudgetCategories/5
@@ -57,10 +57,8 @@ namespace Web_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBudgetCategory(Guid id, BudgetCategory budgetCategory)
         {
-            if (id != budgetCategory.BudgetCategoryID)
-            {
+            if (id != budgetCategory.BudgetCategoryID || !BudgetCategoryExists(id))
                 return BadRequest();
-            }
 
             _context.Entry(budgetCategory).State = EntityState.Modified;
 

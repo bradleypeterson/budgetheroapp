@@ -12,13 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddNewtonsoftJson(options 
     => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 );
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(x =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    x.IncludeXmlComments(xmlPath);
-});
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen(x =>
+//{
+//    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+//    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+//    x.IncludeXmlComments(xmlPath);
+//});
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IDataStore, DataStore>();
 
@@ -34,9 +34,9 @@ app.UseAuthentication();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseDeveloperExceptionPage();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
 
 //app.UseHttpsRedirection();

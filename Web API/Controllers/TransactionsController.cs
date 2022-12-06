@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
 using Web_API.Data;
@@ -25,11 +20,16 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
-            return await _context.Transactions
+            IEnumerable<Transaction> transactions = await _context.Transactions
                 .Include(a => a.BankAccount!).ThenInclude(u => u.User)
                 .Include(c => c.BudgetCategory).ThenInclude(g => g.BudgetCategoryGroup!)
                 .ThenInclude(b => b.Budgets)
                 .ToListAsync();
+
+            if (transactions is null || !transactions.Any())
+                return NoContent();
+            else
+                return Ok(transactions);
         }
 
         // GET: api/Transactions/5
@@ -55,7 +55,7 @@ namespace Web_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTransaction(Guid id, Transaction transaction)
         {
-            if (id != transaction.TransactionId)
+            if (id != transaction.TransactionId || !TransactionExists(id))
                 return BadRequest();
 
             _context.Entry(transaction).State = EntityState.Modified;

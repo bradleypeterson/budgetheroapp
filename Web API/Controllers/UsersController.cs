@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using ModelsLibrary.Utilities;
 using Web_API.Data;
 
 namespace Web_API.Controllers
@@ -26,11 +20,15 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users
+            IEnumerable<User> users = await _context.Users
                 .Include(b => b.Budgets!)
                 .ThenInclude(c => c.BudgetCategoryGroups)
-                .DefaultIfEmpty()
                 .ToListAsync();
+
+            if (users is null || !users.Any())
+                return NoContent();
+            else 
+                return Ok(users);
         }
 
         // GET: api/Users/5
@@ -45,9 +43,7 @@ namespace Web_API.Controllers
             User? user = users.FirstOrDefault(u => u.UserId == id);
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
             return user;
         }
@@ -59,31 +55,6 @@ namespace Web_API.Controllers
         {
             if (id != user.UserId || !UserExists(user.UserId))
                 return BadRequest();
-
-            //if (user.Budgets is not null && user.Budgets.Any())
-            //{
-            //    Budget? _budget = null;
-
-            //    foreach (Budget budget in user.Budgets)
-            //    {
-            //        _budget = _context.Budgets.FirstOrDefault(b => b.BudgetId == budget.BudgetId);
-
-            //        if (_budget is null)
-            //        {
-            //            _context.Budgets.Add(budget);
-            //            await _context.SaveChangesAsync();
-            //        }
-
-            //        _context.ChangeTracker.Clear();
-            //    }
-
-            //    if (_budget is not null)
-            //    {
-            //        user.Budgets.Clear();
-            //        await _context.SaveChangesAsync();
-            //        _context.ChangeTracker.Clear();
-            //    }
-            //}
 
             User? _user = _context.Users.Include(b => b.Budgets).FirstOrDefault(u => u.UserId == id);
 
@@ -156,9 +127,7 @@ namespace Web_API.Controllers
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
-            {
                 return NotFound();
-            }
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();

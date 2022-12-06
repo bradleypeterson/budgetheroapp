@@ -25,10 +25,15 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BudgetCategoryGroup>>> GetBudgetCategoryGroups()
         {
-            return await _context.BudgetCategoryGroups
+            IEnumerable<BudgetCategoryGroup> categoryGroups = await _context.BudgetCategoryGroups
                 .Include(b => b.Budgets!)
                 .ThenInclude(u => u.Users)
                 .ToListAsync();
+
+            if (categoryGroups is null || !categoryGroups.Any())
+                return NoContent();
+            else
+                return Ok(categoryGroups);
         }
 
         // GET: api/BudgetCategoryGroups/5
@@ -53,7 +58,7 @@ namespace Web_API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutBudgetCategoryGroup(Guid id, BudgetCategoryGroup budgetCategoryGroup)
         {
-            if (id != budgetCategoryGroup.BudgetCategoryGroupID)
+            if (id != budgetCategoryGroup.BudgetCategoryGroupID || !BudgetCategoryGroupExists(id))
             {
                 return BadRequest();
             }
@@ -84,6 +89,9 @@ namespace Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<BudgetCategoryGroup>> PostBudgetCategoryGroup(BudgetCategoryGroup categoryGroup)
         {
+            if (BudgetCategoryGroupExists(categoryGroup.BudgetCategoryGroupID))
+                return StatusCode(422);
+
             if (categoryGroup.Budgets is not null)
             {
                 Guid id = categoryGroup.Budgets.Select(b => b.BudgetId).FirstOrDefault();

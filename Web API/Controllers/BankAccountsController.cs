@@ -25,9 +25,14 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
         {
-            return await _context.BankAccounts
+            IEnumerable<BankAccount> accounts = await _context.BankAccounts
                 .Include(u => u.User)
                 .ToListAsync();
+
+            if (accounts is null || !accounts.Any())
+                return NoContent();
+            else
+                return Ok(accounts);
         }
 
         // GET: api/BankAccounts/5
@@ -51,10 +56,8 @@ namespace Web_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBankAccount(Guid id, BankAccount bankAccount)
         {
-            if (id != bankAccount.BankAccountId)
-            {
+            if (id != bankAccount.BankAccountId || !BankAccountExists(id))
                 return BadRequest();
-            }
 
             User? user = await _context.Users.FindAsync(bankAccount.UserId);
 

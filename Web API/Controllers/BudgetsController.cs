@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
 using Web_API.Data;
-using Web_API.Extensions;
 
 namespace Web_API.Controllers
 {
@@ -21,10 +20,15 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Budget>>> GetBudgets()
         {
-            return await _context.Budgets
+            IEnumerable<Budget> budgets = await _context.Budgets
                 .Include(u => u.Users)
                 .Include(g => g.BudgetCategoryGroups)
                 .ToListAsync();
+
+            if (budgets is null || !budgets.Any())
+                return NoContent();
+            else
+                return Ok(budgets);
         }
 
         // GET: api/Budgets/5
@@ -49,7 +53,7 @@ namespace Web_API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutBudget(Guid id, Budget budget)
         {
-            if (id != budget.BudgetId)
+            if (id != budget.BudgetId || !BudgetExists(id))
                 return BadRequest();
 
             Budget? _budget = _context.Budgets.Include(b => b.Users).FirstOrDefault(b => b.BudgetId == id);
