@@ -84,6 +84,15 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <NavigationViewItem x:Uid="Shell_Household"
+                                    Height="100"
+                                    helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.HouseholdViewModel"
+                                    FontSize="23">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="ms-appx:///Assets\Icons\household.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
                 <NavigationViewItem x:Uid="Shell_Expense" 
                                     Height="100" 
                                     helpers:NavigationHelper.NavigateTo="DesktopApplication.ViewModels.ExpensesViewModel"

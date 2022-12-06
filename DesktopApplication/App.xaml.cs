@@ -82,6 +82,8 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddTransient<HouseholdViewModel>();
+            services.AddTransient<HouseholdPage>();
             services.AddTransient<ReportsViewModel>();
             services.AddTransient<ReportsPage>();
             services.AddTransient<SettingsViewModel>();
@@ -109,6 +111,10 @@ public partial class App : Application
             services.AddTransient<DeleteCategoryGroupFormViewModel>();
             services.AddTransient<EditCategoryGroupFormViewModel>();
             services.AddTransient<TransferFundsFormViewModel>();
+            services.AddTransient<JoinHouseholdFormViewmodel>();
+            services.AddTransient<InviteUserFormViewModel>();
+            services.AddTransient<AddHouseholdBudgetItemFormViewModel>();
+            services.AddTransient<EditHouseholdBudgetItemFormViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

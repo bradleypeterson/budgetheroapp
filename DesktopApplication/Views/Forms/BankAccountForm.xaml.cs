@@ -5,9 +5,7 @@ using DesktopApplication.Contracts.Views;
 using ModelsLibrary;
 
 namespace DesktopApplication.Views.Forms;
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
+
 public sealed partial class BankAccountForm : Page, IDialogForm
 {
     public BankAccountFormViewModel ViewModel { get; }

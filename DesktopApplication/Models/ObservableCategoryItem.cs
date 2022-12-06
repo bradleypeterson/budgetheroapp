@@ -11,6 +11,7 @@ namespace DesktopApplication.Models
         private readonly IDataStore _dataStore;
         IEnumerable<Transaction?> transactions;
 
+        public ObservableCategoryItem() { }
 
         public ObservableCategoryItem(BudgetCategory budgetCategory) 
         {
@@ -93,17 +94,5 @@ namespace DesktopApplication.Models
             Remaining = totalRemaining;
         }
 
-        private void ConvertToDecimal(string value)
-        {
-            decimal tempBalance;
-            if (decimal.TryParse(value, out tempBalance))
-            {
-                CategoryAmount = tempBalance;
-            }
-            else
-            {
-                Debug.WriteLine("Error: You must provide a decimal value.");
-            }
-        }
     }
 }

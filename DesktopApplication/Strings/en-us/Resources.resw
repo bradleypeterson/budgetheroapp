@@ -165,4 +165,7 @@
   <data name="Shell_Reports.Content" xml:space="preserve">
     <value>Reports</value>
   </data>
+  <data name="Shell_Household.Content" xml:space="preserve">
+    <value>Household</value>
+  </data>
 </root>
