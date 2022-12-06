@@ -1,8 +1,10 @@
 ﻿using DesktopApplication.Helpers;
 using DesktopApplication.Services;
 using DesktopApplication.ViewModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.UI.Core;
 
 namespace DesktopApplication.Views;
 
@@ -44,5 +46,14 @@ public sealed partial class LoginPage : Page
     {
         ViewModel.OnUserNotFound -= showInvalidUsernameOrPassword;
         ViewModel.OnValidLogin -= removeLoginError;
+    }
+
+    private void OnKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+    {
+        if(e.Key == Windows.System.VirtualKey.Enter)
+        {
+            ViewModel.LoginCommand.Execute(e.Key);
+        }
+        
     }
 }
