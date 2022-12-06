@@ -10,6 +10,6 @@ namespace ModelsLibrary
         public string? CategoryGroupDesc { get; set; }
 
         [Required]
-        public ICollection<Budget>? Budgets { get; set; }
+        public virtual ICollection<Budget>? Budgets { get; set; }
     }
 }

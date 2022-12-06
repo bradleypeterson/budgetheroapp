@@ -179,7 +179,8 @@ public class RegistrationViewModel : ObservableRecipient
 
                 if (result == 1)
                 {
-                    await _apiService.PostAsync("users", AutoMapper.Map(newUser, false));
+                    await _apiService.PostAsync("users", newUser);
+                    Jsonizer.GimmeDatJson(newUser);
                     _sessionService.CreateSession(newUser);
                     await CreateNewUserBudget();
                     _navigationService.NavigateTo(typeof(AccountsViewModel).FullName!);
@@ -275,7 +276,8 @@ public class RegistrationViewModel : ObservableRecipient
             user.Budgets = userBudgets;
 
             await _dataStore.User.Update(user);
-            await _apiService.PutAsync($"users/{user.UserId}", AutoMapper.Map(user, true));
+            Jsonizer.GimmeDatJson(user.Budgets.ToList()[0]);
+            await _apiService.PostAsync("budgets", user.Budgets.ToList()[0]);
         }
     }
 

@@ -15,8 +15,8 @@ namespace ModelsLibrary
         [Required]
         public string? BudgetType { get; set; }
 
-        public ICollection<User>? Users { get; set; }
+        public virtual ICollection<User>? Users { get; set; }
 
-        public ICollection<BudgetCategoryGroup>? BudgetCategoryGroups { get; set; }
+        public virtual ICollection<BudgetCategoryGroup>? BudgetCategoryGroups { get; set; }
     }
 }

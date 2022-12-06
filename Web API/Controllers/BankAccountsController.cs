@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using ModelsLibrary.DTO;
-using ModelsLibrary.Utilities;
-using Web_API.Contracts.Data;
+using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -11,57 +14,63 @@ namespace Web_API.Controllers
     [ApiController]
     public class BankAccountsController : ControllerBase
     {
-        private readonly IDataStore _dataStore;
+        private readonly ApplicationDbContext _context;
 
-        public BankAccountsController(IDataStore dataStore)
+        public BankAccountsController(ApplicationDbContext context)
         {
-            _dataStore = dataStore;
+            _context = context;
         }
 
         // GET: api/BankAccounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BankAccountDTO>>> GetBankAccounts()
+        public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
         {
-            IEnumerable<BankAccount>? bankAccounts = await _dataStore.BankAccount.GetAllAsync();
-            
-            return AutoMapper.Map(bankAccounts).ToList();
+            return await _context.BankAccounts
+                .Include(u => u.User)
+                .ToListAsync();
         }
 
         // GET: api/BankAccounts/5
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<BankAccountDTO>> GetBankAccount(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BankAccount>> GetBankAccount(Guid id)
         {
-            BankAccount? bankAccount = await _dataStore.BankAccount.GetAsync(b => b.BankAccountId == id);
+            IEnumerable<BankAccount> bankAccounts = await _context.BankAccounts
+                .Include(u => u.User)
+                .ToListAsync();
+
+            BankAccount? bankAccount = bankAccounts.FirstOrDefault(a => a.BankAccountId == id);
 
             if (bankAccount == null)
-            {
                 return NotFound();
-            }
 
-            return AutoMapper.Map(bankAccount);
+            return bankAccount;
         }
 
         // PUT: api/BankAccounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> PutBankAccount(Guid id, BankAccountDTO bankAccountDTO)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBankAccount(Guid id, BankAccount bankAccount)
         {
-            BankAccount bankAccount = AutoMapper.ReverseMap(bankAccountDTO);
-
             if (id != bankAccount.BankAccountId)
             {
                 return BadRequest();
             }
 
+            User? user = await _context.Users.FindAsync(bankAccount.UserId);
+
+            if (user == null)
+                return BadRequest();
+
+            bankAccount.User = user;
+            _context.Entry(bankAccount).State = EntityState.Modified;
+
             try
             {
-                await _dataStore.BankAccount.Update(bankAccount);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                bool bankAccountExists = await BankAccountExists(id);
-
-                if (!bankAccountExists)
+                if (!BankAccountExists(id))
                 {
                     return NotFound();
                 }
@@ -77,43 +86,42 @@ namespace Web_API.Controllers
         // POST: api/BankAccounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BankAccountDTO>> PostBankAccount(BankAccountDTO bankAccountDTO)
+        public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccount bankAccount)
         {
-            BankAccount bankAccount = AutoMapper.ReverseMap(bankAccountDTO);
-            bool bankAccountExists = await BankAccountExists(bankAccount.BankAccountId);
-
-            if (!bankAccountExists)
-            {
-                await _dataStore.BankAccount.AddAsync(bankAccount);
-                return CreatedAtAction("GetBankAccount", new { id = bankAccount.BankAccountId }, bankAccount);
-            }
-            else
+            if (BankAccountExists(bankAccount.BankAccountId))
                 return StatusCode(422);
+
+            User? user = await _context.Users.FindAsync(bankAccount.UserId);
+
+            if (user == null)
+                return BadRequest();
+
+            bankAccount.User = user;
+            _context.BankAccounts.Add(bankAccount);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetBankAccount", new { id = bankAccount.BankAccountId }, bankAccount);
         }
 
         // DELETE: api/BankAccounts/5
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBankAccount(Guid id)
         {
-            BankAccount? bankAccount = await _dataStore.BankAccount.GetAsync(b => b.BankAccountId == id);
-
+            var bankAccount = await _context.BankAccounts.FindAsync(id);
             if (bankAccount == null)
             {
                 return NotFound();
             }
 
-            await _dataStore.BankAccount.DeleteAsync(bankAccount);
+            _context.BankAccounts.Remove(bankAccount);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private async Task<bool> BankAccountExists(Guid id)
+        private bool BankAccountExists(Guid id)
         {
-            BankAccount? bankAccount = await _dataStore.BankAccount.GetByIdAsync(id);
-            if (bankAccount is null)
-                return false;
-            else
-                return true;
+            return _context.BankAccounts.Any(e => e.BankAccountId == id);
         }
     }
 }

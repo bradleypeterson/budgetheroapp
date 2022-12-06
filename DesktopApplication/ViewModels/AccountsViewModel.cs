@@ -285,11 +285,11 @@ public class AccountsViewModel : ObservableRecipient
 
         if (_addedAccounts.Any())
             foreach (BankAccount account in _addedAccounts)
-                await _apiService.PostAsync($"bankaccounts", AutoMapper.Map(account));
+                await _apiService.PostAsync($"bankaccounts", account);
 
         if (_changedAccounts.Any())
             foreach (BankAccount account in _changedAccounts)
-                await _apiService.PutAsync($"bankaccounts/{account.BankAccountId}", AutoMapper.Map(account));
+                await _apiService.PutAsync($"bankaccounts/{account.BankAccountId}", account);
 
         if (_deletedAccounts.Any())
             foreach (BankAccount account in _deletedAccounts)
