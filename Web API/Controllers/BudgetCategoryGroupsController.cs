@@ -25,26 +25,32 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BudgetCategoryGroup>>> GetBudgetCategoryGroups()
         {
-            return await _context.BudgetCategoryGroups.ToListAsync();
+            return await _context.BudgetCategoryGroups
+                .Include(b => b.Budgets!)
+                .ThenInclude(u => u.Users)
+                .ToListAsync();
         }
 
         // GET: api/BudgetCategoryGroups/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<BudgetCategoryGroup>> GetBudgetCategoryGroup(Guid id)
         {
-            var budgetCategoryGroup = await _context.BudgetCategoryGroups.FindAsync(id);
+            IEnumerable<BudgetCategoryGroup> categoryGroups = await _context.BudgetCategoryGroups
+                .Include(b => b.Budgets!)
+                .ThenInclude(u => u.Users)
+                .ToListAsync();
 
-            if (budgetCategoryGroup == null)
-            {
+            BudgetCategoryGroup? categoryGroup = categoryGroups.FirstOrDefault(c => c.BudgetCategoryGroupID == id);
+
+            if (categoryGroup is null)
                 return NotFound();
-            }
 
-            return budgetCategoryGroup;
+            return categoryGroup;
         }
 
         // PUT: api/BudgetCategoryGroups/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutBudgetCategoryGroup(Guid id, BudgetCategoryGroup budgetCategoryGroup)
         {
             if (id != budgetCategoryGroup.BudgetCategoryGroupID)
@@ -76,16 +82,25 @@ namespace Web_API.Controllers
         // POST: api/BudgetCategoryGroups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BudgetCategoryGroup>> PostBudgetCategoryGroup(BudgetCategoryGroup budgetCategoryGroup)
+        public async Task<ActionResult<BudgetCategoryGroup>> PostBudgetCategoryGroup(BudgetCategoryGroup categoryGroup)
         {
-            _context.BudgetCategoryGroups.Add(budgetCategoryGroup);
+            if (categoryGroup.Budgets is not null)
+            {
+                Guid id = categoryGroup.Budgets.Select(b => b.BudgetId).FirstOrDefault();
+                Budget? budget = _context.Budgets.Where(b => b.BudgetId == id).SingleOrDefault();
+
+                categoryGroup.Budgets.Clear();
+                categoryGroup.Budgets.Add(budget!);
+            }
+
+            _context.BudgetCategoryGroups.Add(categoryGroup);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBudgetCategoryGroup", new { id = budgetCategoryGroup.BudgetCategoryGroupID }, budgetCategoryGroup);
+            return CreatedAtAction("GetBudgetCategoryGroup", new { id = categoryGroup.BudgetCategoryGroupID }, categoryGroup);
         }
 
         // DELETE: api/BudgetCategoryGroups/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteBudgetCategoryGroup(Guid id)
         {
             var budgetCategoryGroup = await _context.BudgetCategoryGroups.FindAsync(id);

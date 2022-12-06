@@ -25,19 +25,23 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
         {
-            return await _context.BankAccounts.ToListAsync();
+            return await _context.BankAccounts
+                .Include(u => u.User)
+                .ToListAsync();
         }
 
         // GET: api/BankAccounts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BankAccount>> GetBankAccount(Guid id)
         {
-            var bankAccount = await _context.BankAccounts.FindAsync(id);
+            IEnumerable<BankAccount> bankAccounts = await _context.BankAccounts
+                .Include(u => u.User)
+                .ToListAsync();
+
+            BankAccount? bankAccount = bankAccounts.FirstOrDefault(a => a.BankAccountId == id);
 
             if (bankAccount == null)
-            {
                 return NotFound();
-            }
 
             return bankAccount;
         }
@@ -52,6 +56,12 @@ namespace Web_API.Controllers
                 return BadRequest();
             }
 
+            User? user = await _context.Users.FindAsync(bankAccount.UserId);
+
+            if (user == null)
+                return BadRequest();
+
+            bankAccount.User = user;
             _context.Entry(bankAccount).State = EntityState.Modified;
 
             try
@@ -78,6 +88,15 @@ namespace Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccount bankAccount)
         {
+            if (BankAccountExists(bankAccount.BankAccountId))
+                return StatusCode(422);
+
+            User? user = await _context.Users.FindAsync(bankAccount.UserId);
+
+            if (user == null)
+                return BadRequest();
+
+            bankAccount.User = user;
             _context.BankAccounts.Add(bankAccount);
             await _context.SaveChangesAsync();
 

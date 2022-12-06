@@ -17,6 +17,6 @@ namespace ModelsLibrary
         public Guid BudgetCategoryGroupID { get; set; }
 
         [Required]
-        public BudgetCategoryGroup? BudgetCategoryGroup { get; set; }
+        public virtual BudgetCategoryGroup? BudgetCategoryGroup { get; set; }
     }
 }

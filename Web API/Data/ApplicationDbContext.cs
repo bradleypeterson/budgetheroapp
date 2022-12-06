@@ -6,12 +6,12 @@ namespace Web_API.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<User> Users => Set<User>();
-        public DbSet<BankAccount> BankAccounts => Set<BankAccount>();
-        public DbSet<Budget> Budgets => Set<Budget>();
-        public DbSet<Transaction> Transactions => Set<Transaction>();
-        public DbSet<BudgetCategory> BudgetCategories => Set<BudgetCategory>();
-        public DbSet<BudgetCategoryGroup> BudgetCategoryGroups => Set<BudgetCategoryGroup>();
+        public DbSet<User> Users { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Budget> Budgets { get; set; } = null!;
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<BudgetCategory> BudgetCategories { get; set; }
+        public DbSet<BudgetCategoryGroup> BudgetCategoryGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source=budgetheroapi.db");

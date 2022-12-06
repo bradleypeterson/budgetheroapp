@@ -25,19 +25,27 @@ namespace Web_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
-            return await _context.Transactions.ToListAsync();
+            return await _context.Transactions
+                .Include(a => a.BankAccount!).ThenInclude(u => u.User)
+                .Include(c => c.BudgetCategory).ThenInclude(g => g.BudgetCategoryGroup!)
+                .ThenInclude(b => b.Budgets)
+                .ToListAsync();
         }
 
         // GET: api/Transactions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Transaction>> GetTransaction(Guid id)
         {
-            var transaction = await _context.Transactions.FindAsync(id);
+            IEnumerable<Transaction> transactions = await _context.Transactions
+                .Include(a => a.BankAccount!).ThenInclude(u => u.User)
+                .Include(c => c.BudgetCategory).ThenInclude(g => g.BudgetCategoryGroup!)
+                .ThenInclude(b => b.Budgets)
+                .ToListAsync();
+
+            var transaction = transactions.FirstOrDefault(t => t.TransactionId == id);
 
             if (transaction == null)
-            {
                 return NotFound();
-            }
 
             return transaction;
         }
@@ -48,9 +56,7 @@ namespace Web_API.Controllers
         public async Task<IActionResult> PutTransaction(Guid id, Transaction transaction)
         {
             if (id != transaction.TransactionId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(transaction).State = EntityState.Modified;
 
@@ -78,6 +84,18 @@ namespace Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
         {
+            if (TransactionExists(transaction.TransactionId))
+                return StatusCode(422);
+
+            BankAccount? bankAccount = await _context.BankAccounts.FindAsync(transaction.BankAccountId);
+            BudgetCategory? category = await _context.BudgetCategories.FindAsync(transaction.BudgetCategoryId);
+
+            if (bankAccount is null || category is null)
+                return BadRequest();
+
+            transaction.BankAccount = bankAccount;
+            transaction.BudgetCategory = category;
+
             _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 
@@ -89,10 +107,9 @@ namespace Web_API.Controllers
         public async Task<IActionResult> DeleteTransaction(Guid id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
-            if (transaction == null)
-            {
+
+            if (transaction is null)
                 return NotFound();
-            }
 
             _context.Transactions.Remove(transaction);
             await _context.SaveChangesAsync();

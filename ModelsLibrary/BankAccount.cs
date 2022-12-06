@@ -20,7 +20,7 @@ namespace ModelsLibrary
         public Guid UserId { get; set; }
 
         [Required]
-        public User? User { get; set; }
+        public virtual User? User { get; set; }
 
         public override string ToString()
         {
