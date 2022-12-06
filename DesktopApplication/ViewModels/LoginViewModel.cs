@@ -75,11 +75,13 @@ public class LoginViewModel : ObservableRecipient
         {
             IEnumerable<User>? users = await _apiService.GetAsync<IEnumerable<User>>("users");
 
-            if (users is not null)
-                existingUser = users.FirstOrDefault(u => u.Username == Username);
+            if (users is not null && users.Any())
+            {
+                existingUser = users.FirstOrDefault(u => u.Username == Username, null);
 
                 if (existingUser is not null)
                     await _dataStore.User.AddAsync(existingUser);
+            }    
         }
 
         if (existingUser is not null)

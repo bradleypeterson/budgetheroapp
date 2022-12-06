@@ -9,7 +9,6 @@ using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using ModelsLibrary.Utilities;
-using ModelsLibrary.Utilities.Comparers;
 
 namespace DesktopApplication.ViewModels;
 
@@ -73,26 +72,22 @@ public class AccountsViewModel : ObservableRecipient
     {
         if (BankAccounts.Any()) return;
 
-        IEnumerable<BankAccount> _databaseAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
-        IEnumerable<BankAccount> _apiAccounts = await GetUserAccountsFromApi();
+        Guid userId = _sessionService.GetSessionUserId();
+        IEnumerable<BankAccount> _databaseAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == userId);
+        IEnumerable<BankAccount> _apiAccounts = await _apiService.GetUserAccounts(userId);
 
         if (_databaseAccounts.Any())
         {
-            foreach (BankAccount bankAccount in _databaseAccounts)
-                BankAccounts.Add(new ObservableBankAccount(bankAccount));
+            _databaseAccounts.ToList().ForEach(a => BankAccounts.Add(new ObservableBankAccount(a)));
 
-            await UpdateApiAccounts(_databaseAccounts, _apiAccounts);
+            await _apiService.UpdateAccounts(_apiAccounts, _databaseAccounts);
         } 
         else if (_apiAccounts.Any())
         {
-            foreach (BankAccount bankAccount in _apiAccounts)
-            {
-                Guid id = bankAccount.BankAccountId;
-                int result = await _dataStore.BankAccount.AddAsync(bankAccount);
+            int result = await _dataStore.BankAccount.AddAsync(_apiAccounts);
 
-                if (result == 1)
-                    BankAccounts.Add(new ObservableBankAccount(bankAccount));
-            }
+            if (result > 0)
+                _apiAccounts.ToList().ForEach(a => BankAccounts.Add(new ObservableBankAccount(a)));
         }
 
         VerifyUserAccountCount();
@@ -259,40 +254,9 @@ public class AccountsViewModel : ObservableRecipient
 
     private void VerifyUserAccountCount()
     {
-        if (BankAccounts.Count() > 1)
+        if (BankAccounts.Count > 1)
             HasMultipleAccounts = true;
         else
             HasMultipleAccounts = false;
-    }
-
-    private async Task<IEnumerable<BankAccount>> GetUserAccountsFromApi()
-    {
-        IEnumerable<BankAccount>? _apiBankAccounts = await _apiService.GetAsync<IEnumerable<BankAccount>>("bankaccounts");
-
-        if (_apiBankAccounts is not null)
-            return _apiBankAccounts.Where(b => b.UserId == _sessionService.GetSessionUserId());
-        else
-            return new List<BankAccount>();
-    }
-
-    private async Task UpdateApiAccounts(IEnumerable<BankAccount> _databaseAccounts, IEnumerable<BankAccount> _apiAccounts)
-    {
-        IEnumerable<BankAccount> _savedAccounts = _databaseAccounts.Join(_apiAccounts, a => a.BankAccountId, b => b.BankAccountId, (a, b) => a);
-        IEnumerable<BankAccount> _deletedAccounts = _apiAccounts.Where(a => !_savedAccounts.Select(b => b.BankAccountId).Contains(a.BankAccountId));
-        IEnumerable<BankAccount> _addedAccounts = _databaseAccounts.Except(_savedAccounts, new BankAccountComparer());
-        IEnumerable<BankAccount> _changedAccounts = _savedAccounts.Except(_apiAccounts, new BankAccountComparer());
-        
-
-        if (_addedAccounts.Any())
-            foreach (BankAccount account in _addedAccounts)
-                await _apiService.PostAsync($"bankaccounts", account);
-
-        if (_changedAccounts.Any())
-            foreach (BankAccount account in _changedAccounts)
-                await _apiService.PutAsync($"bankaccounts/{account.BankAccountId}", account);
-
-        if (_deletedAccounts.Any())
-            foreach (BankAccount account in _deletedAccounts)
-                await _apiService.DeleteAsync($"bankaccounts/{account.BankAccountId}");
     }
 }
