@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelsLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace DesktopApplication.Contracts.Services
 {
-    public interface IAPIService
+    public interface IAPIService : IGenericApiService
     {
-        public Task<T?> GetAsync<T>(string url);
-        public Task<int> PostAsync<T>(string url, T contentValue);
-        public Task<int> PutAsync<T>(string url, T stringValue);
-        public Task DeleteAsync(string url);
+        Task<IEnumerable<BankAccount>> GetUserAccounts(Guid userId);
+        Task<IEnumerable<BudgetCategoryGroup>> GetCategoryGroups(Budget _budget);
+        Task<IEnumerable<BudgetCategory>> GetCategories(Budget _budget);
+        Task UpdateAccounts(IEnumerable<BankAccount> _apiAccounts, IEnumerable<BankAccount> _databaseAccounts);
+        Task UpdateCategoryGroups(IEnumerable<BudgetCategoryGroup> _apiGroups, IEnumerable<BudgetCategoryGroup> _databaseGroups);
+        Task UpdateCategories(IEnumerable<BudgetCategory> _apiCategories, IEnumerable<BudgetCategory> _databaseCategories);
     }
 }
