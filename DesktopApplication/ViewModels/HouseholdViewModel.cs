@@ -120,12 +120,14 @@ public class HouseholdViewModel : ObservableRecipient
             userBudgets.Add(newBudget);
             user.Budgets = userBudgets;
             _dataStore.User.Update(user);
+            await _apiService.PutAsync($"users/{user.UserId}", user);
 
             // create a Household category Group linked to the Household budget.
             BudgetCategoryGroup newHHCategoryGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };
             newBudget.BudgetCategoryGroups = new List<BudgetCategoryGroup>();
             newBudget.BudgetCategoryGroups!.Add(newHHCategoryGroup);
             await _dataStore.Budget.Update(newBudget);
+            await _apiService.PutAsync($"budgets/{newBudget.BudgetId}", newBudget);
 
             //Create a household category group in the users personal budget, this will hold their amount of a split bill.
             //NOTE: Transactions posted toward this category group should also be reflected in the household budget page.
@@ -135,6 +137,7 @@ public class HouseholdViewModel : ObservableRecipient
             Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
             personalBudget!.BudgetCategoryGroups!.Add(newPersonalHHCatGroup);
             var result = await _dataStore.BudgetCategoryGroup.AddAsync(newPersonalHHCatGroup);
+            await _apiService.PutAsync($"budgetcategorygroups/{newPersonalHHCatGroup.BudgetCategoryGroupID}", newPersonalHHCatGroup);
         }
         CreatingHH = false;
     }
@@ -262,7 +265,8 @@ public class HouseholdViewModel : ObservableRecipient
         newCategoryItem.BudgetCategoryGroupID = householdGroup.BudgetCategoryGroupID;
         await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
         CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
-                
+        await _apiService.PostAsync($"budgetcategories/{newCategoryItem.BudgetCategoryID}", newCategoryItem);
+
         /* User will be able to select any number of household members to split the items amount.
            Total amount will be split evenly among all selected members of the household. */
 
@@ -285,6 +289,7 @@ public class HouseholdViewModel : ObservableRecipient
             newItem.CategoryAmount = splitAmt;
             newItem.BudgetCategoryGroupID = houseGroup.BudgetCategoryGroupID;
             await _dataStore.BudgetCategory.AddAsync(newItem);
+            await _apiService.PostAsync($"budgetcategories/{newItem.BudgetCategoryID}", newItem);
         }
     }
 
