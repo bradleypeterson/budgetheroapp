@@ -15,21 +15,29 @@ public class BudgetViewModel : ObservableRecipient
     private readonly ISessionService _sessionService;
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
+    private readonly IAPIService _apiService;
+    private readonly Guid _userId;
+
+    private Budget personalBudget;
+    private IEnumerable<BudgetCategoryGroup> categoryGroups;
+    private IEnumerable<BudgetCategory> categories;
 
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
     public IAsyncRelayCommand ShowEditDialogCommand { get; }
     public IAsyncRelayCommand ShowDeleteDialogCommand { get; }
 
-    public ObservableCollection<ObservableCategoryGroup>? BudgetCategoryGroups { get; set; } = new();
+    public ObservableCollection<ObservableCategoryGroup> CategoryGroups { get; set; } = new();
     public ObservableCollection<ObservableBankAccount> BankAccounts { get; set; } = new();
-    public ObservableCollection<ObservableCategoryItem>? CategoryItems { get; set; } = new();
-    public ObservableCollection<ObservableExpander>? Expanders { get; set; } = new();
+    public ObservableCollection<ObservableCategoryItem> Categories { get; set; } = new();
+    public ObservableCollection<ObservableExpander> Expanders { get; set; } = new();
 
     public BudgetViewModel()
     {
         _sessionService = App.GetService<ISessionService>();
         _dialogService = App.GetService<IDialogService>();
         _dataStore = App.GetService<IDataStore>();
+        _apiService = App.GetService<IAPIService>();
+        _userId = _sessionService.GetSessionUserId();
         
         ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
         ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
@@ -39,47 +47,67 @@ public class BudgetViewModel : ObservableRecipient
     //Load Category Groups into observable collection
     public async Task LoadAsync()
     {
-        if (BudgetCategoryGroups.Any() || CategoryItems.Any())
-        {
+        IEnumerable<BudgetCategoryGroup> _apiCategoryGroups;
+        IEnumerable<BudgetCategory> _apiCategories;
+
+        if (CategoryGroups.Any()) 
             return;
+
+        // Data: Database
+        personalBudget = _dataStore.Budget.GetPersonalBudget(_userId);
+        categoryGroups = personalBudget.BudgetCategoryGroups ??= new List<BudgetCategoryGroup>();
+        categories = await _dataStore.Budget.GetBudgetCategories(personalBudget);
+
+        // Data: Api
+        _apiCategoryGroups = await _apiService.GetCategoryGroups(personalBudget);
+        _apiCategories = await _apiService.GetCategories(personalBudget);
+
+        // UI: Account Details
+        if (BankAccounts.Any())
+        {
+            IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _userId);
+
+            if (bankAccounts is not null && bankAccounts.Any())
+                foreach (BankAccount? account in bankAccounts)
+                    BankAccounts.Add(new ObservableBankAccount(account!));
         }
 
-        Guid userId = _sessionService.GetSessionUserId();
-        User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
-        var userBudgets = user?.Budgets;
-        Budget? budget = userBudgets?.ToList()[0];
-        Guid budgetId = budget!.BudgetId;
-        Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
-
-        if (personalBudget is not null)
+        // UI: Load Category Groups
+        if (categoryGroups.Any())
         {
-            if (personalBudget.BudgetCategoryGroups is not null)
-            {
-                foreach (var categoryGroup in personalBudget.BudgetCategoryGroups)
-                {
-                    BudgetCategoryGroups.Add(new ObservableCategoryGroup(categoryGroup!));
-                    Expanders.Add(new ObservableExpander(categoryGroup!));
+            categoryGroups.ToList().ForEach(group => CategoryGroups.Add(new ObservableCategoryGroup(group)));
+            categoryGroups.ToList().ForEach(group => Expanders.Add(new ObservableExpander(group)));
 
-                    var groupID = categoryGroup.BudgetCategoryGroupID;
-                    var BudgetItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == groupID);
-
-                    foreach (var item in BudgetItems)
-                    {
-                        CategoryItems.Add(new ObservableCategoryItem(item));
-                    }
-                }
-            }
+            await _apiService.UpdateCategoryGroups(_apiCategoryGroups, categoryGroups);
         }
-
-        if (BankAccounts.Any()) return;
-
-        IEnumerable<BankAccount?> bankAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _sessionService.GetSessionUserId());
-        if (bankAccounts is not null)
+        else if (_apiCategoryGroups.Any())
         {
-            foreach (var bankAccount in bankAccounts)
+            int result = await _dataStore.BudgetCategoryGroup.AddAsync(_apiCategoryGroups);
+            categoryGroups = _apiCategoryGroups;
+
+            if (result > 0)
             {
-                BankAccounts.Add(new ObservableBankAccount(bankAccount!));
-            }
+                categoryGroups.ToList().ForEach(group => CategoryGroups.Add(new ObservableCategoryGroup(group)));
+                categoryGroups.ToList().ForEach(group => Expanders.Add(new ObservableExpander(group)));
+            }   
+        }
+        else
+            return;
+
+        // UI: Load Categories
+        if (categories.Any())
+        {
+            categories.ToList().ForEach(category => Categories.Add(new ObservableCategoryItem(category)));
+
+            await _apiService.UpdateCategories(_apiCategories, categories);
+        }
+        else if (_apiCategories.Any())
+        {
+            int result = await _dataStore.BudgetCategory.AddAsync(_apiCategories);
+            categories = _apiCategories;
+
+            if (result > 0)
+                categories.ToList().ForEach(category => Categories.Add(new ObservableCategoryItem(category)));
         }
     }
 
@@ -167,20 +195,13 @@ public class BudgetViewModel : ObservableRecipient
     {
         BudgetCategoryGroup newCategoryGroup = GetCategoryGroup(e);
 
-        Guid userId = _sessionService.GetSessionUserId();
-        User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
-        var userBudgets = user?.Budgets;
-        Budget? budget = userBudgets?.ToList()[0];
-        Guid budgetId = budget!.BudgetId;
-        Budget? personalBudget = _dataStore.Budget!.Get(b => b.BudgetId == budgetId, false, "BudgetCategoryGroups");
-
         personalBudget!.BudgetCategoryGroups!.Add(newCategoryGroup);
 
         var result = await _dataStore.BudgetCategoryGroup.AddAsync(newCategoryGroup);
 
         if (result == 2)
         {
-            BudgetCategoryGroups?.Add(new ObservableCategoryGroup(newCategoryGroup));
+            CategoryGroups?.Add(new ObservableCategoryGroup(newCategoryGroup));
             Expanders.Add(new ObservableExpander(newCategoryGroup!));
         }
     }
@@ -188,7 +209,7 @@ public class BudgetViewModel : ObservableRecipient
     private async void DeleteCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
         BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, true, false);
-        ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        ObservableCategoryGroup? listedCategoryGroup = CategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
         ObservableExpander? listedExpander = Expanders.FirstOrDefault(e => e.CategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
         int index;
 
@@ -196,25 +217,29 @@ public class BudgetViewModel : ObservableRecipient
         {
             await _dataStore.BudgetCategoryGroup.DeleteAsync(selectedCategoryGroup);
 
-            index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
-            BudgetCategoryGroups.RemoveAt(index);
-            Expanders.Remove(listedExpander);
+            Guid categoryGroupId = selectedCategoryGroup.BudgetCategoryGroupID;
+            index = CategoryGroups.IndexOf(listedCategoryGroup);
+            CategoryGroups.RemoveAt(index);
+            Expanders.Remove(listedExpander!);
+
+            if (CategoryGroups.Count == 0)
+                await _apiService.DeleteAsync($"budgetcategorygroups/{categoryGroupId}");
         }
     }
 
     private async void EditCategoryGroupAsync(object? sender, DialogServiceEventArgs e)
     {
         BudgetCategoryGroup selectedCategoryGroup = GetCategoryGroup(e, false, true);
-        ObservableCategoryGroup? listedCategoryGroup = BudgetCategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
+        ObservableCategoryGroup? listedCategoryGroup = CategoryGroups.FirstOrDefault(c => c.BudgetCategoryGroup.BudgetCategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
         ObservableExpander? listedExpander = Expanders.FirstOrDefault(e => e.CategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
 
         int index;
 
         if (listedCategoryGroup != null)
         {
-            index = BudgetCategoryGroups.IndexOf(listedCategoryGroup);
+            index = CategoryGroups.IndexOf(listedCategoryGroup);
 
-            BudgetCategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
+            CategoryGroups[index].CategoryGroupDesc = GetGroupDescEditTxt(e);
             selectedCategoryGroup.CategoryGroupDesc = GetGroupDescEditTxt(e);
             var exp = Expanders.FirstOrDefault(e => e.CategoryGroupID == selectedCategoryGroup.BudgetCategoryGroupID);
             exp.CategoryGroupDesc = GetGroupDescEditTxt(e);
@@ -236,7 +261,7 @@ public class BudgetViewModel : ObservableRecipient
                     var result = await _dataStore.BudgetCategory.AddAsync(newCategoryItem);
                     
                     //update list 
-                    CategoryItems?.Add(new ObservableCategoryItem(newCategoryItem));
+                    Categories?.Add(new ObservableCategoryItem(newCategoryItem));
                     listedExpander.AddItemToExpanderList(newCategoryItem);
 
                 }
@@ -244,15 +269,19 @@ public class BudgetViewModel : ObservableRecipient
                 {
                     //Get selected category Item 
                     BudgetCategory selectedCatItem = GetCategoryItem(e);
-                    ObservableCategoryItem? listedCatItem = CategoryItems?.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == selectedCatItem.BudgetCategoryID);
+                    ObservableCategoryItem? listedCatItem = Categories?.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == selectedCatItem.BudgetCategoryID);
 
                     if (listedCatItem != null)
                     {
                         await _dataStore.BudgetCategory.DeleteAsync(selectedCatItem);
-                        
-                        index = CategoryItems.IndexOf(listedCatItem);
-                        CategoryItems.RemoveAt(index);
+
+                        Guid categoryId = selectedCatItem.BudgetCategoryID;
+                        index = Categories.IndexOf(listedCatItem);
+                        Categories.RemoveAt(index);
                         listedExpander.DeleteItemFromExpanderList(selectedCatItem);
+
+                        if (Categories.Count == 0)
+                            await _apiService.DeleteAsync($"budgetcategories/{categoryId}");
                     }
                 }
                 else if (radStatus == "Edit Category Item")
@@ -267,16 +296,16 @@ public class BudgetViewModel : ObservableRecipient
                     }
 
                     //update list
-                    ObservableCategoryItem? listedCatItem = CategoryItems?.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == selectedCatItem.BudgetCategoryID);
+                    ObservableCategoryItem? listedCatItem = Categories?.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == selectedCatItem.BudgetCategoryID);
                     if (listedCatItem != null)
                     {
                         selectedCatItem.CategoryName = GetCategoryItemNameTxt(e);
                         selectedCatItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
                         await _dataStore.BudgetCategory.Update(selectedCatItem);
 
-                        index = CategoryItems.IndexOf(listedCatItem);
-                        CategoryItems[index].CategoryName = GetCategoryItemNameTxt(e);
-                        CategoryItems[index].CategoryAmount = GetCategoryItemBudgetAmt(e);
+                        index = Categories.IndexOf(listedCatItem);
+                        Categories[index].CategoryName = GetCategoryItemNameTxt(e);
+                        Categories[index].CategoryAmount = GetCategoryItemBudgetAmt(e);
 
                         listedExpander.EditItemInExpanderList(selectedCatItem);
                     }
@@ -284,5 +313,4 @@ public class BudgetViewModel : ObservableRecipient
             }
         }
     }
-   
 }

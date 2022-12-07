@@ -17,6 +17,7 @@ public class HouseholdViewModel : ObservableRecipient
     private readonly ISessionService _sessionService;
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
+    private readonly IAPIService _apiService;
 
     public IAsyncRelayCommand CreateHouseholdCommand { get; }
     public IAsyncRelayCommand ShowJoinHouseholdCommand { get; }
@@ -31,6 +32,7 @@ public class HouseholdViewModel : ObservableRecipient
         _sessionService = App.GetService<ISessionService>();
         _dialogService = App.GetService<IDialogService>();
         _dataStore = App.GetService<IDataStore>();
+        _apiService = App.GetService<IAPIService>();
 
         CreateHouseholdCommand = new AsyncRelayCommand(CreateHouseholdBudget);
         ShowJoinHouseholdCommand = new AsyncRelayCommand(ShowJoinHousehold);
@@ -124,6 +126,7 @@ public class HouseholdViewModel : ObservableRecipient
             newBudget.BudgetCategoryGroups = new List<BudgetCategoryGroup>();
             newBudget.BudgetCategoryGroups!.Add(newHHCategoryGroup);
             await _dataStore.Budget.Update(newBudget);
+
             //Create a household category group in the users personal budget, this will hold their amount of a split bill.
             //NOTE: Transactions posted toward this category group should also be reflected in the household budget page.
             BudgetCategoryGroup newPersonalHHCatGroup = new BudgetCategoryGroup { CategoryGroupDesc = "Household" };

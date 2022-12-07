@@ -1,48 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DesktopApplication.Contracts.Data;
+﻿using DesktopApplication.Contracts.Data;
 using ModelsLibrary;
 
 namespace DesktopApplication.Data;
 public class DataStore : IDataStore
 {
-    private readonly BudgetAppContext dbContext;
+    private readonly BudgetAppContext _dbContext;
 
-    public IRepository<BankAccount>? _BankAccount;
+    public IAccountRepository? _BankAccount;
 
-    public IRepository<Budget>? _Budget;
+    public IBudgetRepository? _Budget;
 
     public IRepository<BudgetCategory>? _BudgetCategory;
 
     public IRepository<BudgetCategoryGroup>? _BudgetCategoryGroup;
 
-    public IRepository<Transaction>? _Transaction;
+    public ITransactionRepository? _Transaction;
 
     public IRepository<User>? _User;
 
     public DataStore(BudgetAppContext dbContext)
     {
-        this.dbContext = dbContext;
-        dbContext.Database.EnsureCreated();
+        _dbContext = dbContext;
     }
 
-    public IRepository<BankAccount> BankAccount
+    public IAccountRepository BankAccount
     {
         get
         {
-            _BankAccount ??= new Repository<BankAccount>(dbContext);
+            _BankAccount ??= new AccountRepository(_dbContext);
             return _BankAccount;
         }
     }
 
-    public IRepository<Budget> Budget
+    public IBudgetRepository Budget
     {
         get
         {
-            _Budget ??= new Repository<Budget>(dbContext);
+            _Budget ??= new BudgetRepository(_dbContext);
             return _Budget;
         }
     }
@@ -51,7 +45,7 @@ public class DataStore : IDataStore
     {
         get
         {
-            _BudgetCategory ??= new Repository<BudgetCategory>(dbContext);
+            _BudgetCategory ??= new Repository<BudgetCategory>(_dbContext);
             return _BudgetCategory;
         }
     }
@@ -60,16 +54,16 @@ public class DataStore : IDataStore
     {
         get
         {
-            _BudgetCategoryGroup ??= new Repository<BudgetCategoryGroup>(dbContext);
+            _BudgetCategoryGroup ??= new Repository<BudgetCategoryGroup>(_dbContext);
             return _BudgetCategoryGroup;
         }
     }
 
-    public IRepository<Transaction> Transaction
+    public ITransactionRepository Transaction
     {
         get
         {
-            _Transaction ??= new Repository<Transaction>(dbContext);
+            _Transaction ??= new TransactionRepository(_dbContext);
             return _Transaction;
         }
     }
@@ -78,21 +72,23 @@ public class DataStore : IDataStore
     {
         get
         {
-            _User ??= new Repository<User>(dbContext);
+            _User ??= new Repository<User>(_dbContext);
             return _User;
         }
     }
 
+    public BudgetAppContext GetDbContext() => _dbContext;
+
     public async Task<int> CommitAsync()
     {
-        return await dbContext.SaveChangesAsync();
+        return await _dbContext.SaveChangesAsync();
     }
     public void Dispose()
     {
-        dbContext.Dispose();
+        _dbContext.Dispose();
     }
     public void Commit()
     {
-        dbContext.SaveChanges();
+        _dbContext.SaveChanges();
     }
 }

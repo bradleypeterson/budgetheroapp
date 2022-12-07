@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using ModelsLibrary.DTO;
-using ModelsLibrary.Utilities;
-using Web_API.Contracts.Data;
 using Web_API.Data;
 
 namespace Web_API.Controllers
@@ -12,60 +9,71 @@ namespace Web_API.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly IDataStore _dataStore;
+        private readonly ApplicationDbContext _context;
 
-        public TransactionsController(IDataStore dataStore)
+        public TransactionsController(ApplicationDbContext context)
         {
-            _dataStore = dataStore;
+            _context = context;
         }
 
         // GET: api/Transactions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransactionDTO>>> GetTransactions()
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
-            IEnumerable<Transaction>? transactions = await _dataStore.Transaction.GetAllAsync();
+            IEnumerable<Transaction> transactions = await _context.Transactions
+                .Include(a => a.BankAccount!).ThenInclude(u => u.User)
+                .Include(c => c.BudgetCategory).ThenInclude(g => g.BudgetCategoryGroup!)
+                .ThenInclude(b => b.Budgets)
+                .ToListAsync();
 
-            return AutoMapper.Map(transactions).ToList();
+            if (transactions is null || !transactions.Any())
+                return NoContent();
+            else
+                return Ok(transactions);
         }
 
         // GET: api/Transactions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionDTO>> GetTransaction(Guid id)
+        public async Task<ActionResult<Transaction>> GetTransaction(Guid id)
         {
-            Transaction? transaction = await _dataStore.Transaction.GetAsync(t => t.TransactionId == id);
+            IEnumerable<Transaction> transactions = await _context.Transactions
+                .Include(a => a.BankAccount!).ThenInclude(u => u.User)
+                .Include(c => c.BudgetCategory).ThenInclude(g => g.BudgetCategoryGroup!)
+                .ThenInclude(b => b.Budgets)
+                .ToListAsync();
+
+            var transaction = transactions.FirstOrDefault(t => t.TransactionId == id);
 
             if (transaction == null)
-            {
                 return NotFound();
-            }
 
-            return AutoMapper.Map(transaction);
+            return transaction;
         }
 
         // PUT: api/Transactions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction(Guid id, TransactionDTO transactionDTO)
+        public async Task<IActionResult> PutTransaction(Guid id, Transaction transaction)
         {
-            Transaction transaction = AutoMapper.ReverseMap(transactionDTO);
-
-            if (id != transaction.TransactionId)
-            {
+            if (id != transaction.TransactionId || !TransactionExists(id))
                 return BadRequest();
-            }
+
+            _context.Entry(transaction).State = EntityState.Modified;
 
             try
             {
-                await _dataStore.Transaction.Update(transaction);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                bool transactionExists = await TransactionExists(id);
-
-                if (!transactionExists)
+                if (!TransactionExists(id))
+                {
                     return NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
 
             return NoContent();
@@ -74,43 +82,44 @@ namespace Web_API.Controllers
         // POST: api/Transactions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transaction>> PostTransaction(TransactionDTO transactionDTO)
+        public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
         {
-            Transaction transaction = AutoMapper.ReverseMap(transactionDTO);
-            bool transactionExists = await TransactionExists(transaction.BankAccountId);
-
-            if (!transactionExists)
-            {
-                await _dataStore.Transaction.AddAsync(transaction);
-                return CreatedAtAction("GetTransaction", new { id = transactionDTO.TransactionId }, transactionDTO);
-            }
-            else
+            if (TransactionExists(transaction.TransactionId))
                 return StatusCode(422);
+
+            BankAccount? bankAccount = await _context.BankAccounts.FindAsync(transaction.BankAccountId);
+            BudgetCategory? category = await _context.BudgetCategories.FindAsync(transaction.BudgetCategoryId);
+
+            if (bankAccount is null || category is null)
+                return BadRequest();
+
+            transaction.BankAccount = bankAccount;
+            transaction.BudgetCategory = category;
+
+            _context.Transactions.Add(transaction);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTransaction", new { id = transaction.TransactionId }, transaction);
         }
 
         // DELETE: api/Transactions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransaction(Guid id)
         {
-            Transaction? transaction = await _dataStore.Transaction.GetAsync(t => t.TransactionId == id);
+            var transaction = await _context.Transactions.FindAsync(id);
 
-            if (transaction == null)
-            {
+            if (transaction is null)
                 return NotFound();
-            }
 
-            await _dataStore.Transaction.DeleteAsync(transaction);
+            _context.Transactions.Remove(transaction);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private async Task<bool> TransactionExists(Guid id)
+        private bool TransactionExists(Guid id)
         {
-            Transaction? transaction = await _dataStore.Transaction.GetByIdAsync(id);
-            if (transaction is null)
-                return false;
-            else
-                return true;
+            return _context.Transactions.Any(e => e.TransactionId == id);
         }
     }
 }

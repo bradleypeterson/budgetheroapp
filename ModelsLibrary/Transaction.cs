@@ -31,13 +31,13 @@ namespace ModelsLibrary
         public Guid BankAccountId { get; set; }
 
         [Required]
-        public BankAccount? BankAccount { get; set; }
+        public virtual BankAccount? BankAccount { get; set; }
 
         [Required]
         public Guid BudgetCategoryId { get; set; }
 
         [Required]
-        public BudgetCategory? BudgetCategory { get; set; }
+        public virtual BudgetCategory? BudgetCategory { get; set; }
     }
 }
  

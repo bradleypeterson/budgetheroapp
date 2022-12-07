@@ -12,7 +12,6 @@ namespace ModelsLibrary.Utilities
     {
         public static BankAccount Update(BankAccount existing, BankAccount modified)
         {
-            existing.BankAccountId = modified.BankAccountId;
             existing.BankName = modified.BankName;
             existing.AccountType = modified.AccountType;
             existing.Balance = modified.Balance;
@@ -39,9 +38,8 @@ namespace ModelsLibrary.Utilities
             return existing;
         }
 
-        public static User Update(User existing, User modified)
+        public static void Update(ref User existing, User modified)
         {
-            existing.UserId = modified.UserId;
             existing.FirstName = modified.FirstName;
             existing.LastName = modified.LastName;
             existing.EmailAddress = modified.EmailAddress;
@@ -49,17 +47,12 @@ namespace ModelsLibrary.Utilities
             existing.Username = modified.Username;
             existing.Password = modified.Password;
             existing.UserImageLink = modified.UserImageLink;
-            
-            return existing;
         }
 
-        public static Budget Update(Budget existing, Budget modified)
+        public static void Update(Budget existing, Budget modified)
         {
-            existing.BudgetId = modified.BudgetId;
             existing.BudgetName = modified.BudgetName;
             existing.BudgetType = modified.BudgetType;
-
-            return existing;
         }
 
         public static BankAccount Duplicate(BankAccount selectedBankAccount)

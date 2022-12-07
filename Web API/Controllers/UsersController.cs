@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using ModelsLibrary.Utilities;
-using Web_API.Contracts.Data;
+using Web_API.Data;
 
 namespace Web_API.Controllers
 {
@@ -10,33 +9,41 @@ namespace Web_API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IDataStore _dataStore;
+        private readonly ApplicationDbContext _context;
 
-        public UsersController(IDataStore dataStore)
+        public UsersController(ApplicationDbContext context)
         {
-            _dataStore = dataStore;
+            _context = context;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            IEnumerable<User> users = await _dataStore.User.GetAllAsync(null, "Budgets");
-            await LoadBudgetCategoryGroups(users);
+            IEnumerable<User> users = await _context.Users
+                .Include(b => b.Budgets!)
+                .ThenInclude(c => c.BudgetCategoryGroups)
+                .ToListAsync();
 
-            return users.ToList();
+            if (users is null || !users.Any())
+                return NoContent();
+            else 
+                return Ok(users);
         }
 
         // GET: api/Users/5
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
-            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
+            IEnumerable<User> users = await _context.Users
+                .Include(b => b.Budgets!)
+                .ThenInclude(c => c.BudgetCategoryGroups)
+                .ToListAsync();
+
+            User? user = users.FirstOrDefault(u => u.UserId == id);
 
             if (user == null)
                 return NotFound();
-
-            await LoadBudgetCategoryGroups(user);
 
             return user;
         }
@@ -44,21 +51,58 @@ namespace Web_API.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> PutUser(Guid id, User _user)
+        public async Task<IActionResult> PutUser(Guid id, User user)
         {
-            if (id != _user.UserId)
+            if (id != user.UserId || !UserExists(user.UserId))
                 return BadRequest();
 
-            User? user = await _dataStore.User.GetAsync(u => u.UserId == _user.UserId, false, "Budgets");
+            User? _user = _context.Users.Include(b => b.Budgets).FirstOrDefault(u => u.UserId == id);
 
-            if (user == null)
-                return NotFound();
+            if (_user is not null && _user.Budgets is not null)
+            {
+                if (user.Budgets is not null)
+                {
+                    List<Budget> newBudgets = new();
 
-            user = EntityUtilities.Update(user, _user);
+                    foreach (Budget budget in user.Budgets)
+                    {
+                        if (!BudgetExists(budget.BudgetId))
+                            newBudgets.Add(budget);
+                    }
 
-            await UpdateBudgets(user, _user);
+                    if (newBudgets.Any())
+                    {
+                        foreach (Budget newBudget in newBudgets)
+                        {
+                            _context.Budgets.Add(newBudget);
+                            await _context.SaveChangesAsync();
+                            _context.ChangeTracker.Clear();
+                        }
+                    }
+                }
 
-            await _dataStore.User.Update(user);
+                _user.Budgets.Clear();
+                await _context.SaveChangesAsync();
+                _context.ChangeTracker.Clear();
+            }
+
+            _context.Update(user);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -68,99 +112,37 @@ namespace Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            bool userExists = await UserExists(user.UserId);
-
-            if (!userExists)
-            {
-                await _dataStore.User.AddAsync(user);
-
-                return CreatedAtAction("GetUser", new { id = user.UserId }, user);
-            }
-            else
+            if (UserExists(user.UserId))
                 return StatusCode(422);
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-            User? user = await _dataStore.User.GetAsync(u => u.UserId == id, false, "Budgets");
-
-            if (user is null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
                 return NotFound();
-            else 
-                await _dataStore.User.DeleteAsync(user);
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private async Task<bool> UserExists(Guid id)
+        private bool UserExists(Guid id)
         {
-            User? user = await _dataStore.User.GetByIdAsync(id);
-            if (user is null)
-                return false;
-            else
-                return true;
+            return _context.Users.Any(e => e.UserId == id);
         }
 
-        private async Task LoadBudgetCategoryGroups(User user)
+        private bool BudgetExists(Guid id)
         {
-            if (user.Budgets is not null)
-            {
-                List<Budget> budgets = new List<Budget>();
-
-                foreach (Budget budget in user.Budgets)
-                {
-                    Budget? _budget = await _dataStore.Budget.GetAsync(c => c.BudgetId == budget.BudgetId, false, "BudgetCategoryGroups");
-
-                    if (_budget is not null)
-                        budgets.Add(_budget);
-                }
-
-                user.Budgets = budgets;
-            }
-        }
-
-        private async Task LoadBudgetCategoryGroups(IEnumerable<User> users)
-        {
-            foreach (User user in users)
-            {
-                await LoadBudgetCategoryGroups(user);
-            }
-        }
-
-        private async Task UpdateBudgets(User existingUser, User incomingUser)
-        {
-            List<Budget> incomingBudgets = (incomingUser.Budgets is null) ? new List<Budget>() : incomingUser.Budgets.ToList();
-
-            if (incomingBudgets.Any())
-            {
-                IEnumerable<Budget> existingBudgets = await _dataStore.Budget.GetAllAsync(null, "Users");
-
-                if (incomingBudgets.Any())
-                {
-                    foreach (Budget incomingBudget in incomingBudgets)
-                    {
-                        Budget? existingBudget = existingBudgets.FirstOrDefault(b => b.BudgetId == incomingBudget.BudgetId);
-
-                        if (existingBudget is not null)
-                        {
-                            existingBudget = EntityUtilities.Update(existingBudget, incomingBudget);
-
-                            if (incomingBudget.Users is not null && incomingBudget.Users.Any())
-                            {
-                                existingBudget.Users = (existingBudget.Users is null) ? new List<User>() : existingBudget.Users.ToList();
-                                incomingBudget.Users.ToList().ForEach(u => existingBudget.Users.Add(u));
-                            }
-
-                            await _dataStore.Budget.Update(existingBudget);
-                        }
-                        else
-                            await _dataStore.Budget.AddAsync(incomingBudget);
-                    }
-                    existingUser.Budgets = incomingBudgets;
-                }
-            }
+            return _context.Budgets.Any(e => e.BudgetId == id);
         }
     }
 }

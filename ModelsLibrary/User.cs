@@ -28,6 +28,6 @@ namespace ModelsLibrary
 
         public string? UserImageLink { get; set; }
 
-        public ICollection<Budget>? Budgets { get; set; } 
+        public virtual ICollection<Budget>? Budgets { get; set; } 
     }
 }

@@ -68,18 +68,20 @@ public class LoginViewModel : ObservableRecipient
     private async Task Login()
     {
         // First check the local database for an existing user.
-        User? existingUser = await _dataStore.User.GetAsync(u => u.Username == _username);
+        User? existingUser = await _dataStore.User.GetAsync(u => u.Username == _username, true);
 
         // If existing user is not in the local database, make an API call.
         if (existingUser is null)
         {
             IEnumerable<User>? users = await _apiService.GetAsync<IEnumerable<User>>("users");
 
-            if (users is not null)
-                existingUser = users.FirstOrDefault(u => u.Username == Username);
+            if (users is not null && users.Any())
+            {
+                existingUser = users.FirstOrDefault(u => u.Username == Username, null);
 
                 if (existingUser is not null)
                     await _dataStore.User.AddAsync(existingUser);
+            }    
         }
 
         if (existingUser is not null)

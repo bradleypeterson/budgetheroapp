@@ -1,10 +1,6 @@
-﻿using DebugTools;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary;
-using ModelsLibrary.DTO;
-using ModelsLibrary.Utilities;
-using Web_API.Contracts.Data;
 using Web_API.Data;
 
 namespace Web_API.Controllers
@@ -13,33 +9,41 @@ namespace Web_API.Controllers
     [ApiController]
     public class BudgetsController : ControllerBase
     {
-        private readonly IDataStore _dataStore;
+        private readonly ApplicationDbContext _context;
 
-        public BudgetsController(IDataStore dataStore)
+        public BudgetsController(ApplicationDbContext context)
         {
-            _dataStore = dataStore;
+            _context = context;
         }
 
         // GET: api/Budgets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Budget>>> GetBudgets()
         {
-            IEnumerable<Budget>? _budgets = await _dataStore.Budget.GetAllAsync(null, "Users");
-            await LoadBudgetCategoryGroups(_budgets);
+            IEnumerable<Budget> budgets = await _context.Budgets
+                .Include(u => u.Users)
+                .Include(g => g.BudgetCategoryGroups)
+                .ToListAsync();
 
-            return _budgets.ToList();
+            if (budgets is null || !budgets.Any())
+                return NoContent();
+            else
+                return Ok(budgets);
         }
 
         // GET: api/Budgets/5
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Budget>> GetBudget(Guid id)
         {
-            Budget? budget = await _dataStore.Budget.GetAsync(b => b.BudgetId == id, false, "Users");
+            IEnumerable<Budget> budgets = await _context.Budgets
+                .Include(u => u.Users)
+                .Include(g => g.BudgetCategoryGroups)
+                .ToListAsync();
 
-            if (budget == null)
+            Budget? budget = budgets.FirstOrDefault(b => b.BudgetId == id);
+
+            if (budget is null)
                 return NotFound();
-
-            await LoadBudgetCategoryGroups(budget);
 
             return budget;
         }
@@ -49,21 +53,34 @@ namespace Web_API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutBudget(Guid id, Budget budget)
         {
-            if (id != budget.BudgetId)
+            if (id != budget.BudgetId || !BudgetExists(id))
                 return BadRequest();
+
+            Budget? _budget = _context.Budgets.Include(b => b.Users).FirstOrDefault(b => b.BudgetId == id);
+
+            if (_budget is not null && _budget.Users is not null)
+            {
+                _budget.Users.Clear();
+                await _context.SaveChangesAsync();
+                _context.ChangeTracker.Clear();
+            }
+
+            _context.Update(budget);
 
             try
             {
-                await _dataStore.Budget.Update(budget);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                bool budgetExists = await BudgetExists(id);
-
-                if (!budgetExists)
+                if (!BudgetExists(id))
+                {
                     return NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
 
             return NoContent();
@@ -74,63 +91,43 @@ namespace Web_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Budget>> PostBudget(Budget budget)
         {
-            bool budgetExists = await BudgetExists(budget.BudgetId);
-
-            if (!budgetExists)
-            {
-                if (budget.Users is not null)
-                {
-                    List<User> users = budget.Users.ToList();
-                    budget.Users = null;
-                    await _dataStore.Budget.AddAsync(budget);
-                    budget.Users = users;
-                    await _dataStore.Budget.Update(budget);
-                }
-
-                return CreatedAtAction("GetBudget", new { id = budget.BudgetId }, budget);
-            }
-            else
+            if (BudgetExists(budget.BudgetId))
                 return StatusCode(422);
+
+            if (budget.Users is not null)
+            {
+                Guid id = budget.Users.Select(u => u.UserId).FirstOrDefault();
+                User? user = _context.Users.Where(u => u.UserId == id).SingleOrDefault();
+
+                budget.Users.Clear();
+                budget.Users.Add(user!);
+            }
+
+            _context.Budgets.Add(budget);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetBudget", new { id = budget.BudgetId }, budget);
         }
 
         // DELETE: api/Budgets/5
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBudget(Guid id)
         {
-            Budget? budget = await _dataStore.Budget.GetAsync(b => b.BudgetId == id);
-
+            var budget = await _context.Budgets.FindAsync(id);
             if (budget == null)
             {
                 return NotFound();
             }
 
-            await _dataStore.Budget.DeleteAsync(budget);
+            _context.Budgets.Remove(budget);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private async Task<bool> BudgetExists(Guid id)
+        private bool BudgetExists(Guid id)
         {
-            Budget? budget = await _dataStore.Budget.GetByIdAsync(id);
-
-            if (budget is null)
-                return false;
-            else
-                return true;
-        }
-
-        private async Task LoadBudgetCategoryGroups(Budget budget)
-        {
-            Budget? _budget = await _dataStore.Budget.GetAsync(c => c.BudgetId == budget.BudgetId, false, "BudgetCategoryGroups");
-
-            if (_budget is not null)
-                budget = _budget;
-        }
-
-        private async Task LoadBudgetCategoryGroups(IEnumerable<Budget> budgets)
-        {
-            foreach (Budget budget in budgets)
-                await LoadBudgetCategoryGroups(budget);
+            return _context.Budgets.Any(e => e.BudgetId == id);
         }
     }
 }
