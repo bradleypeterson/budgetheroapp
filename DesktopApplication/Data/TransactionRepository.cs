@@ -16,6 +16,7 @@ namespace DesktopApplication.Data
             List<BankAccount> accounts = new();
             List<BankAccount> savedAccounts = new();
             List<BudgetCategory> allCategories = new();
+            List<BudgetCategory> savedCategories = new();
             List<BudgetCategory> distinctCategories = new();
             List<BudgetCategoryGroup> savedGroups = new();
             List<BudgetCategoryGroup> allGroups = new();
@@ -29,26 +30,28 @@ namespace DesktopApplication.Data
             if (_context.BudgetCategories is null)
                 throw new ArgumentNullException("No categories have been found in the local database.");
 
-            transactions.ForEach(t => allCategories.Add(t.BudgetCategory!));
+            //transactions.ForEach(t => allCategories.Add(t.BudgetCategory!));
 
-            if (allCategories is null || !allCategories.Any())
-                throw new ArgumentNullException("No categories have been found attached to the incoming model.");
+            //if (allCategories is null || !allCategories.Any())
+            //    throw new ArgumentNullException("No categories have been found attached to the incoming model.");
 
-            distinctCategories = allCategories.Distinct().ToList();
+            //distinctCategories = allCategories.Distinct().ToList();
 
-            allCategories.ForEach(t => allGroups.Add(t.BudgetCategoryGroup!));
+            //allCategories.ForEach(t => allGroups.Add(t.BudgetCategoryGroup!));
 
-            if (allGroups is null || !allGroups.Any())
-                throw new ArgumentNullException("No category groups have been found attached to the incoming model.");
+            //if (allGroups is null || !allGroups.Any())
+            //    throw new ArgumentNullException("No category groups have been found attached to the incoming model.");
 
-            distinctGroups = allGroups.Distinct().ToList();
+            //distinctGroups = allGroups.Distinct().ToList();
 
-            savedGroups = _context.BudgetCategoryGroups!
-                .Where(g => distinctGroups.Contains(g)).ToList();
+            //savedGroups = _context.BudgetCategoryGroups!
+            //    .Where(g => distinctGroups.Contains(g)).ToList();
 
-            foreach (BudgetCategory category in distinctCategories)
-                category.BudgetCategoryGroup = savedGroups
-                    .FirstOrDefault(g => g.BudgetCategoryGroupID == category.BudgetCategoryGroupID);
+            //foreach (BudgetCategory category in distinctCategories)
+            //    category.BudgetCategoryGroup = savedGroups
+            //        .FirstOrDefault(g => g.BudgetCategoryGroupID == category.BudgetCategoryGroupID);
+
+            savedCategories = _context.BudgetCategories.Include(b => b.BudgetCategoryGroup).ToList();
 
             savedAccounts = _context.BankAccounts.Include(u => u.User)
                 .Where(u => u.UserId == _userId).ToList();
@@ -57,7 +60,13 @@ namespace DesktopApplication.Data
                 throw new ArgumentNullException("No accounts have been found for this user");
 
             foreach (Transaction transaction in transactions)
-                transaction.BankAccount = savedAccounts.FirstOrDefault(a => a.BankAccountId == transaction.BankAccountId);
+            {
+                transaction.BankAccount = savedAccounts
+                    .FirstOrDefault(a => a.BankAccountId == transaction.BankAccountId);
+
+                transaction.BudgetCategory = savedCategories
+                    .FirstOrDefault(c => c.BudgetCategoryGroupID == transaction.BudgetCategory!.BudgetCategoryGroupID);
+            }
 
             _context.BudgetCategories.AddRange(distinctCategories);
             _context.Transactions!.AddRange(transactions);

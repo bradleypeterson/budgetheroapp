@@ -12,5 +12,6 @@ namespace DesktopApplication.Contracts.Data
         Budget GetPersonalBudget(Guid userId);
 
         Task<IEnumerable<BudgetCategory>> GetBudgetCategories(Budget budget);
+        Task SaveWithForeignKeysAsync(IEnumerable<BudgetCategory> categories, Budget budget);
     }
 }

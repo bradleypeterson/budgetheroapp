@@ -18,7 +18,7 @@ public class AccountsViewModel : ObservableRecipient
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
     private readonly IAPIService _apiService;
-    //private readonly Guid _userId;
+    private readonly Guid _userId;
 
     public AccountsViewModel()
     {
@@ -32,7 +32,7 @@ public class AccountsViewModel : ObservableRecipient
         ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
         ShowTransferDialogCommand = new AsyncRelayCommand(ShowTransferDialog);
 
-        //_userId = _sessionService.GetSessionUserId();
+        _userId = _sessionService.GetSessionUserId();
     }
 
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
@@ -77,13 +77,17 @@ public class AccountsViewModel : ObservableRecipient
 
         IEnumerable<BankAccount> _databaseAccounts;
         IEnumerable<Transaction> _databaseTransactions;
-        IEnumerable<Transaction>? _apiTransactions;
+        IEnumerable<BudgetCategory> _databaseCategories;
+        IEnumerable<Transaction> _apiTransactions;
         IEnumerable<BankAccount> _apiAccounts;
-        Guid _userId = _sessionService.GetSessionUserId();
+        IEnumerable<BudgetCategory> _apiCategories;
+        Budget personalBudget = _dataStore.Budget.GetPersonalBudget(_userId);
         
         _databaseAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _userId);
+        _databaseCategories = await _dataStore.Budget.GetBudgetCategories(personalBudget);
         _apiTransactions = await _apiService.GetTransactions(_userId);
         _apiAccounts = await _apiService.GetUserAccounts(_userId);
+        _apiCategories = await _apiService.GetCategories(personalBudget);
 
         if (_databaseAccounts.Any())
         {
@@ -93,6 +97,9 @@ public class AccountsViewModel : ObservableRecipient
 
             _databaseTransactions = await _dataStore.Transaction
             .ListAsync(t => t.BankAccount!.UserId == _userId, null!, "BankAccount");
+
+            if (_databaseCategories.Any())
+                await _apiService.UpdateCategories(_apiCategories, _databaseCategories);
 
             if (_databaseTransactions.Any())
             {
@@ -105,6 +112,9 @@ public class AccountsViewModel : ObservableRecipient
             await _dataStore.BankAccount.SaveWithForeignKeysAsync(_apiAccounts);
 
             _apiAccounts.ToList().ForEach(a => BankAccounts.Add(new ObservableBankAccount(a)));
+
+            if (_apiCategories.Any())
+                await _dataStore.Budget.SaveWithForeignKeysAsync(_apiCategories, personalBudget);
 
             if (_apiTransactions.Any())
             {
