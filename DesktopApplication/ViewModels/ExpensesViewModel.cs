@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
-using DesktopApplication.Helpers;
 using DesktopApplication.Models;
 using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
@@ -19,12 +18,14 @@ public class ExpensesViewModel : ObservableRecipient
     private readonly ISessionService _sessionService;
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
+    private readonly IAPIService _apiService;
 
     public ExpensesViewModel()
     {
         _sessionService = App.GetService<ISessionService>();
         _dialogService = App.GetService<IDialogService>();
         _dataStore = App.GetService<IDataStore>();
+        _apiService = App.GetService<IAPIService>();
 
         ShowAddDialogCommand = new AsyncRelayCommand(ShowAddDialog);
         ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
@@ -173,6 +174,9 @@ public class ExpensesViewModel : ObservableRecipient
             Transactions[index].Transaction = existingTransaction;
             BankAccountName = existingTransaction.BankAccount.BankName;
             BankAccountBalance = existingTransaction.BankAccount.Balance.ToString("C2");
+
+            if (Transactions.Count == 0)
+                await _apiService.DeleteAsync($"transactions/{existingTransaction.TransactionId}");
         }
     }
 

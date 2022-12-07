@@ -18,6 +18,7 @@ public class AccountsViewModel : ObservableRecipient
     private readonly IDialogService _dialogService;
     private readonly IDataStore _dataStore;
     private readonly IAPIService _apiService;
+    //private readonly Guid _userId;
 
     public AccountsViewModel()
     {
@@ -30,6 +31,8 @@ public class AccountsViewModel : ObservableRecipient
         ShowEditDialogCommand = new AsyncRelayCommand(ShowEditDialog);
         ShowDeleteDialogCommand = new AsyncRelayCommand(ShowDeleteDialog);
         ShowTransferDialogCommand = new AsyncRelayCommand(ShowTransferDialog);
+
+        //_userId = _sessionService.GetSessionUserId();
     }
 
     public IAsyncRelayCommand ShowAddDialogCommand { get; }
@@ -72,27 +75,45 @@ public class AccountsViewModel : ObservableRecipient
     {
         if (BankAccounts.Any()) return;
 
-        Guid userId = _sessionService.GetSessionUserId();
-        IEnumerable<BankAccount> _databaseAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == userId);
-        IEnumerable<BankAccount> _apiAccounts = await _apiService.GetUserAccounts(userId);
+        IEnumerable<BankAccount> _databaseAccounts;
+        IEnumerable<Transaction> _databaseTransactions;
+        IEnumerable<Transaction>? _apiTransactions;
+        IEnumerable<BankAccount> _apiAccounts;
+        Guid _userId = _sessionService.GetSessionUserId();
+        
+        _databaseAccounts = await _dataStore.BankAccount.ListAsync(a => a.UserId == _userId);
+        _apiTransactions = await _apiService.GetTransactions(_userId);
+        _apiAccounts = await _apiService.GetUserAccounts(_userId);
 
         if (_databaseAccounts.Any())
         {
             _databaseAccounts.ToList().ForEach(a => BankAccounts.Add(new ObservableBankAccount(a)));
 
             await _apiService.UpdateAccounts(_apiAccounts, _databaseAccounts);
+
+            _databaseTransactions = await _dataStore.Transaction
+            .ListAsync(t => t.BankAccount!.UserId == _userId, null!, "BankAccount");
+
+            if (_databaseTransactions.Any())
+            {
+                await _apiService.UpdateTransactions(_apiTransactions, _databaseTransactions);
+                allTransactions = _databaseTransactions.ToList();
+            }
         } 
         else if (_apiAccounts.Any())
         {
-            int result = await _dataStore.BankAccount.AddAsync(_apiAccounts);
+            await _dataStore.BankAccount.SaveWithForeignKeysAsync(_apiAccounts);
 
-            if (result > 0)
-                _apiAccounts.ToList().ForEach(a => BankAccounts.Add(new ObservableBankAccount(a)));
+            _apiAccounts.ToList().ForEach(a => BankAccounts.Add(new ObservableBankAccount(a)));
+
+            if (_apiTransactions.Any())
+            {
+                await _dataStore.Transaction.SaveWithForeignKeysAsync(_apiTransactions);
+
+                allTransactions = _apiTransactions.ToList();
+            }
         }
-
         VerifyUserAccountCount();
-
-        allTransactions = _dataStore.Transaction.GetAll(t => t.BankAccount.UserId == _sessionService.GetSessionUserId());
     }
 
     private async Task ShowAddDialog()

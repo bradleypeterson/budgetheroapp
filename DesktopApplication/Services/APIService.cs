@@ -9,11 +9,12 @@ namespace DesktopApplication.Services
         public async Task<IEnumerable<BankAccount>> GetUserAccounts(Guid userId)
         {
             IEnumerable<BankAccount>? _accounts = await GetAsync<IEnumerable<BankAccount>>("bankaccounts");
+            IEnumerable<BankAccount>? userAccounts = null;
 
             if (_accounts is not null)
-                return _accounts.Where(b => b.UserId == userId);
-            else
-                return new List<BankAccount>();
+                userAccounts = _accounts.Where(b => b.UserId == userId).ToList();
+            
+            return userAccounts ??= new List<BankAccount>();
         }
 
         public async Task<IEnumerable<BudgetCategoryGroup>> GetCategoryGroups(Budget _budget)
@@ -32,14 +33,38 @@ namespace DesktopApplication.Services
         public async Task<IEnumerable<BudgetCategory>> GetCategories(Budget _budget)
         {
             IEnumerable<BudgetCategory>? _allCategories = await GetAsync<IEnumerable<BudgetCategory>>("budgetcategories");
-            IEnumerable<BudgetCategory> categories;
+            List<BudgetCategoryGroup> budgetGroups = new();
+            List<BudgetCategory>? categories = new();
 
-            if (_allCategories is null || !_allCategories.Any())
+            if (_budget.BudgetCategoryGroups is null || !_budget.BudgetCategoryGroups.Any()
+                || _allCategories is null || !_allCategories.Any())
                 return new List<BudgetCategory>();
 
-            categories = _allCategories.Where(c => c.BudgetCategoryGroup!.Budgets!.Contains(_budget));
+            budgetGroups = _budget.BudgetCategoryGroups.ToList();
 
-            return categories ??= new List<BudgetCategory>();
+            foreach (BudgetCategory category in _allCategories)
+            {
+                foreach (BudgetCategoryGroup group in budgetGroups)
+                {
+                    if (category.BudgetCategoryGroupID.ToString() == group.BudgetCategoryGroupID.ToString())
+                        categories.Add(category);
+                }
+            }
+
+            return categories;
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactions(Guid _userid)
+        {
+            IEnumerable<Transaction>? _allTransactions = await GetAsync<IEnumerable<Transaction>>("transactions");
+            IEnumerable<Transaction> transactions;
+
+            if (_allTransactions is null || !_allTransactions.Any())
+                return new List<Transaction>();
+
+            transactions = _allTransactions.Where(t => t.BankAccount!.UserId == _userid);
+
+            return transactions ??= new List<Transaction>();
         }
 
         public async Task UpdateAccounts(IEnumerable<BankAccount> _apiAccounts, IEnumerable<BankAccount> _databaseAccounts)
@@ -94,6 +119,24 @@ namespace DesktopApplication.Services
 
             if (_deletedCategories.Any())
                 _deletedCategories.ToList().ForEach(async c => await DeleteAsync($"{endpoint}/{c.BudgetCategoryID}"));
+        }
+
+        public async Task UpdateTransactions(IEnumerable<Transaction> _apiTransactions, IEnumerable<Transaction> _databaseTransactions)
+        {
+            IEnumerable<Transaction> _savedTransactions = _databaseTransactions.Join(_apiTransactions, a => a.TransactionId, b => b.TransactionId, (a, b) => a);
+            IEnumerable<Transaction> _deletedTransactions = _apiTransactions.Where(a => !_savedTransactions.Select(b => b.TransactionId).Contains(a.TransactionId));
+            IEnumerable<Transaction> _addedTransactions = _databaseTransactions.Except(_savedTransactions, new TransactionComparer());
+            IEnumerable<Transaction> _changedTransactions = _savedTransactions.Except(_apiTransactions, new TransactionComparer());
+            string endpoint = "transactions";
+
+            if (_addedTransactions.Any())
+                _addedTransactions.ToList().ForEach(async t => await PostAsync(endpoint, t));
+
+            if (_changedTransactions.Any())
+                _changedTransactions.ToList().ForEach(async t => await PutAsync($"{endpoint}/{t.TransactionId}", t));
+
+            if (_deletedTransactions.Any())
+                _deletedTransactions.ToList().ForEach(async t => await DeleteAsync($"{endpoint}/{t.TransactionId}"));
         }
     }
 }

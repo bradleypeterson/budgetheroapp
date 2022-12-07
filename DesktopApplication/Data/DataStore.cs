@@ -6,15 +6,15 @@ public class DataStore : IDataStore
 {
     private readonly BudgetAppContext _dbContext;
 
-    public IRepository<BankAccount>? _BankAccount;
+    public IAccountRepository? _BankAccount;
 
-    public IBudgetRepository _Budget;
+    public IBudgetRepository? _Budget;
 
     public IRepository<BudgetCategory>? _BudgetCategory;
 
     public IRepository<BudgetCategoryGroup>? _BudgetCategoryGroup;
 
-    public IRepository<Transaction>? _Transaction;
+    public ITransactionRepository? _Transaction;
 
     public IRepository<User>? _User;
 
@@ -23,11 +23,11 @@ public class DataStore : IDataStore
         _dbContext = dbContext;
     }
 
-    public IRepository<BankAccount> BankAccount
+    public IAccountRepository BankAccount
     {
         get
         {
-            _BankAccount ??= new Repository<BankAccount>(_dbContext);
+            _BankAccount ??= new AccountRepository(_dbContext);
             return _BankAccount;
         }
     }
@@ -59,11 +59,11 @@ public class DataStore : IDataStore
         }
     }
 
-    public IRepository<Transaction> Transaction
+    public ITransactionRepository Transaction
     {
         get
         {
-            _Transaction ??= new Repository<Transaction>(_dbContext);
+            _Transaction ??= new TransactionRepository(_dbContext);
             return _Transaction;
         }
     }
