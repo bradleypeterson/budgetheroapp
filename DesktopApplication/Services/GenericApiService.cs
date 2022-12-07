@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DebugTools;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,7 +40,7 @@ namespace DesktopApplication.Services
         {
             var content = new StringContent(JsonConvert.SerializeObject(contentValue), Encoding.UTF8, "application/json");
             var result = await _client.PostAsync(url, content);
-
+            
             if (result.IsSuccessStatusCode)
                 return 1;
             else
