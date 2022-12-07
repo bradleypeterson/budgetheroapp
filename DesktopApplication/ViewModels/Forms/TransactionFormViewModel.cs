@@ -1,14 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.UI.Controls.TextToolbarFormats;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.Helpers;
 using DesktopApplication.Models;
-using DesktopApplication.Services;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using ModelsLibrary;
+using System.Collections.ObjectModel;
 
 namespace DesktopApplication.ViewModels.Forms;
 public class TransactionFormViewModel : ObservableRecipient
