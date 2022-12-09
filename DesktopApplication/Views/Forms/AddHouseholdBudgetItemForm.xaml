@@ -24,7 +24,7 @@
                 <TextBlock x:Name="SelectedUserListError" HorizontalAlignment="Center" Text="Must Select Users To Split" Margin="0,10,0,-30"
                            Foreground="{StaticResource ErrorForegroundBrush}" FontWeight="Bold" Visibility="Collapsed"/>
                 <TextBlock Text="Select Users:" Margin="0,10,0,0"/>
-                <ListView x:Name="UserSelectList" Margin="0,5,0,0" BorderBrush="Black" BorderThickness="1"
+                <ListView x:Name="UserSelectList" Margin="0,5,0,0" BorderBrush="Black" BorderThickness="1" SelectionMode="Multiple"
                           ItemsSource="{x:Bind ViewModel.UsersToShow}" DisplayMemberPath="Username" IsMultiSelectCheckBoxEnabled="True"
                           SelectionChanged="UserSelectList_SelectionChanged"/>
             </StackPanel>

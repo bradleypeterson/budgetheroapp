@@ -5,7 +5,6 @@ using DesktopApplication.Contracts.Views;
 using ModelsLibrary;
 using DesktopApplication.Contracts.Data;
 
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace DesktopApplication.Views.Forms
 {
@@ -28,17 +27,26 @@ namespace DesktopApplication.Views.Forms
             ValidateJoinCode();
         }
 
-        public bool? CheckJoinCode(Guid joinCode)
+        public bool? CheckJoinCode(string joinCode)
         {
-            Budget budget = _dataStore.Budget.Get(b => b.BudgetId == joinCode);
+            Guid code = new Guid();
+            try
+            {
+                code = Guid.Parse(joinCode);
+                Budget budget = _dataStore.Budget.Get(b => b.BudgetId == code);
 
-            if (budget == null)
+                if (budget == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (FormatException e)
             {
                 return false;
-            }
-            else
-            {
-                return true;
             }
         }
 
@@ -61,11 +69,8 @@ namespace DesktopApplication.Views.Forms
                 }
                 else
                 {
-                    //NoJoinCodeError.Visibility = Visibility.Collapsed;
-                    //isValidJoinCode = true;
-                    NoJoinCodeError.Text = "VALID Join Code";
-                    NoJoinCodeError.Visibility = Visibility.Visible;
-                    isValidJoinCode = false;
+                    NoJoinCodeError.Visibility = Visibility.Collapsed;
+                    isValidJoinCode = true;
                 }
             }
         }

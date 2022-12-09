@@ -73,7 +73,6 @@ namespace DesktopApplication.Models
             }
         }
 
-
         public void SetAllocatedAndRemaining()
         {
             /* First set Allocated */

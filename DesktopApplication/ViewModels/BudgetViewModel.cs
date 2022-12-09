@@ -299,15 +299,18 @@ public class BudgetViewModel : ObservableRecipient
                     ObservableCategoryItem? listedCatItem = Categories?.FirstOrDefault(i => i.BudgetCategory.BudgetCategoryID == selectedCatItem.BudgetCategoryID);
                     if (listedCatItem != null)
                     {
-                        selectedCatItem.CategoryName = GetCategoryItemNameTxt(e);
-                        selectedCatItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
-                        await _dataStore.BudgetCategory.Update(selectedCatItem);
+                        if (selectedCatItem != null)
+                        {
+                            selectedCatItem.CategoryName = GetCategoryItemNameTxt(e);
+                            selectedCatItem.CategoryAmount = GetCategoryItemBudgetAmt(e);
+                            await _dataStore.BudgetCategory.Update(selectedCatItem);
 
-                        index = Categories.IndexOf(listedCatItem);
-                        Categories[index].CategoryName = GetCategoryItemNameTxt(e);
-                        Categories[index].CategoryAmount = GetCategoryItemBudgetAmt(e);
+                            index = Categories.IndexOf(listedCatItem);
+                            Categories[index].CategoryName = GetCategoryItemNameTxt(e);
+                            Categories[index].CategoryAmount = GetCategoryItemBudgetAmt(e);
 
-                        listedExpander.EditItemInExpanderList(selectedCatItem);
+                            listedExpander.EditItemInExpanderList(selectedCatItem);
+                        }
                     }
                 }
             }

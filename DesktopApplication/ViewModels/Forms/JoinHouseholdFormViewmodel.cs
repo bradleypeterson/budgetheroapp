@@ -12,8 +12,8 @@ namespace DesktopApplication.ViewModels.Forms
             set=> _budget = value;      
         }
 
-        private Guid _joinCode;
-        public Guid JoinCode
+        private string? _joinCode;
+        public string JoinCode
         {
             get => _joinCode;
             set

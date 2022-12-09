@@ -272,12 +272,34 @@ public class RegistrationViewModel : ObservableRecipient
             };
 
             userBudgets.Add(budget);
-
             user.Budgets = userBudgets;
-
             await _dataStore.User.Update(user);
             Jsonizer.GimmeDatJson(user.Budgets.ToList()[0]);
             await _apiService.PostAsync("budgets", user.Budgets.ToList()[0]);
+
+            //Create a category group to hold deposits
+            BudgetCategoryGroup DepositCatGroup = new BudgetCategoryGroup() { CategoryGroupDesc = "Deposits" };
+            Budget personalBudget = _dataStore.Budget.GetPersonalBudget(userId);
+            personalBudget!.BudgetCategoryGroups!.Add(DepositCatGroup);
+            await _dataStore.BudgetCategoryGroup.AddAsync(DepositCatGroup);
+
+            //Create Category items for user to deposit to
+            BudgetCategoryGroup? depositGroup = personalBudget.BudgetCategoryGroups.FirstOrDefault(g => g.CategoryGroupDesc == "Deposits");
+
+            List<BudgetCategory> newCategories = new List<BudgetCategory>
+            {
+                new BudgetCategory() { CategoryName = "Paychecks", CategoryAmount = 0, BudgetCategoryGroupID = depositGroup.BudgetCategoryGroupID },
+                new BudgetCategory() { CategoryName = "Refunds", CategoryAmount = 0, BudgetCategoryGroupID = depositGroup.BudgetCategoryGroupID },
+                new BudgetCategory() { CategoryName = "Cash", CategoryAmount = 0, BudgetCategoryGroupID = depositGroup.BudgetCategoryGroupID }
+            };
+
+            foreach(var category in newCategories)
+            {
+                await _dataStore.BudgetCategory.AddAsync(category);
+            }
+
+            //TODO: Add more API Calls for new code
+
         }
     }
 

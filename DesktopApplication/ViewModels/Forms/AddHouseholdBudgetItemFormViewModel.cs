@@ -12,7 +12,7 @@ namespace DesktopApplication.ViewModels.Forms
         private readonly IDataStore _dataStore;
         private readonly ISessionService _sessionService;
 
-        public ObservableCollection<User> UsersToShow { get; } = new();
+        public ObservableCollection<User> UsersToShow { get; set; } = new();
         
         public AddHouseholdBudgetItemFormViewModel()
         {
@@ -46,13 +46,11 @@ namespace DesktopApplication.ViewModels.Forms
         {
             if (UsersToShow.Any()) { UsersToShow.Clear(); }
 
-            Guid? userId = _sessionService.GetSessionUserId();
-            User? user = _dataStore.User!.Get(u => u.UserId == userId, false, "Budgets");
-            var userBudgets = user?.Budgets;
-            Budget? budget = userBudgets?.FirstOrDefault(b => b.BudgetType == "household");
-            ICollection<User> usersOfHousehold = budget.Users;
+            Budget budget = _dataStore.Budget.Get(b => b.BudgetId == _dataStore.Budget.GetHouseholdBudget(_sessionService.GetSessionUserId()).BudgetId, false, "Users");
 
-            foreach(var u in usersOfHousehold)
+            List<User> users = budget.Users.ToList();
+
+            foreach(var u in users)
             {
                 UsersToShow.Add(u);
             }
