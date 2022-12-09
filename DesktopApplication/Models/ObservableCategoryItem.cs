@@ -10,6 +10,7 @@ namespace DesktopApplication.Models
     {
         private readonly IDataStore _dataStore;
         IEnumerable<Transaction?> transactions;
+        private readonly string[] depositItems = new string[3] { "Cash", "Paychecks", "Refunds" };
 
         public ObservableCategoryItem() { }
 
@@ -78,19 +79,31 @@ namespace DesktopApplication.Models
             /* First set Allocated */
             decimal totalAllocated = 0;
             transactions = _dataStore.Transaction!.GetAll(t => t.BudgetCategoryId == BudgetCategory.BudgetCategoryID);
-            foreach (Transaction? transaction in transactions)
-            {
-                totalAllocated += transaction.ExpenseAmount;
-            }
-            Allocated = totalAllocated;
 
-            /* Next set Remaining */
-            decimal totalRemaining = _categoryAmount - _allocated;
-            if (totalRemaining <= 0)
+            if (depositItems.Contains(BudgetCategory.CategoryName))
             {
-                totalRemaining = 0.00m;
+                foreach (Transaction? transaction in transactions)
+                {
+                    totalAllocated += transaction.DepositAmount;
+                }
+                Allocated = totalAllocated;
             }
-            Remaining = totalRemaining;
+            else
+            {
+                foreach (Transaction? transaction in transactions)
+                {
+                    totalAllocated += transaction.ExpenseAmount;
+                }
+                Allocated = totalAllocated;
+
+                /* Next set Remaining */
+                decimal totalRemaining = _categoryAmount - _allocated;
+                if (totalRemaining <= 0)
+                {
+                    totalRemaining = 0.00m;
+                }
+                Remaining = totalRemaining;
+            }
         }
 
     }
