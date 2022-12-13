@@ -211,20 +211,68 @@ public class HouseholdViewModel : ObservableRecipient
     private async void JoinHouseholdAsync(object? sender, DialogServiceEventArgs e)
     {
         User? user = _dataStore.User.Get(u => u.UserId == _sessionService.GetSessionUserId(), false, "Budgets");
-        Budget? hhToJoin = _dataStore.Budget.Get(b => b.BudgetId == GetJoinCode(e));
+        Budget? budgetToJoinDB = _dataStore.Budget.Get(b => b.BudgetId == GetJoinCode(e), false, "Users");
+        Budget? budgetToJoinApi = await _apiService.GetAsync<Budget>($"budgets/{GetJoinCode(e)}");
 
         if (user is not null)
         {
             List<Budget> userBudgets = user.Budgets.ToList();
 
-            userBudgets.Add(hhToJoin);
-            user.Budgets = userBudgets;
             //await _dataStore.User.Update(user);
 
-            var budUser =  _dataStore.Budget.Get(b => b.BudgetId == hhToJoin.BudgetId, false, "Users");
-            budUser.Users.Add(user);
-            await _dataStore.Budget.Update(budUser);
-            
+            //var budUser =  _dataStore.Budget.Get(b => b.BudgetId == budgetToJoinDB.BudgetId, false, "Users");
+
+            if (budgetToJoinDB is not null)
+            {
+                userBudgets.Add(budgetToJoinDB);
+                user.Budgets = userBudgets;
+
+                budgetToJoinDB.Users.Add(user);
+                await _dataStore.Budget.Update(budgetToJoinDB);
+                await _apiService.PostAsync($"budgets/{budgetToJoinDB.BudgetId}", budgetToJoinDB);
+            }  
+            else
+            {
+                List<BudgetCategoryGroup> groupsToAdd = new();
+                Budget newBudget = new()
+                {
+                    BudgetId = GetJoinCode(e),
+                    BudgetName = "Household Budget",
+                    BudgetType = "household",
+                };
+
+                await _dataStore.Budget.AddAsync(newBudget);
+
+                user.Budgets.ToList().Add(newBudget);
+                await _dataStore.User.Update(user);
+                newBudget.Users = budgetToJoinApi.Users.ToList();
+                newBudget.Users.Add(user);
+
+                //foreach (BudgetCategoryGroup group in budgetToJoinApi.BudgetCategoryGroups)
+                //{
+                //    groupsToAdd.Add(new BudgetCategoryGroup
+                //    {
+                //        BudgetCategoryGroupID = group.BudgetCategoryGroupID,
+                //        CategoryGroupDesc = group.CategoryGroupDesc,
+                //        Budgets = group.Budgets,
+                //    });
+                //}
+
+                //await _dataStore.BudgetCategoryGroup.AddAsync(groupsToAdd);
+                await _apiService.PutAsync($"budgets/{budgetToJoinApi.BudgetId}", budgetToJoinApi);
+                //await _apiService.PutAsync($"users/{user.UserId}", user);
+
+
+                //userBudgets.Add(budgetToJoinApi);
+                //user.Budgets = userBudgets;
+                //var groups = budgetToJoinApi.BudgetCategoryGroups;
+                //budgetToJoinApi.BudgetCategoryGroups = null;
+
+                //budgetToJoinApi.Users.Add(user);
+                //await _dataStore.User.Update(user);
+                //await _apiService.PostAsync($"budgets/{budgetToJoinApi.BudgetId}", budgetToJoinApi);
+            }
+
             //Jsonizer.GimmeDatJson(user.Budgets.ToList()[1]);
             //await _apiService.PostAsync("budgets", user.Budgets.ToList()[1]);
         }

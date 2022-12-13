@@ -5,6 +5,7 @@ namespace ModelsLibrary
 {
     public class Budget
     {
+        [Key]
         public Guid BudgetId { get; set; }
 
         [Required]

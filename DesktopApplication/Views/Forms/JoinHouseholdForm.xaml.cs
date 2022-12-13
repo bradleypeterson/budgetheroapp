@@ -4,7 +4,8 @@ using Microsoft.UI.Xaml;
 using DesktopApplication.Contracts.Views;
 using ModelsLibrary;
 using DesktopApplication.Contracts.Data;
-
+using Windows.System;
+using DesktopApplication.Contracts.Services;
 
 namespace DesktopApplication.Views.Forms
 {
@@ -27,22 +28,14 @@ namespace DesktopApplication.Views.Forms
             ValidateJoinCode();
         }
 
-        public bool? CheckJoinCode(string joinCode)
+        public bool CheckJoinCode(string joinCode)
         {
             Guid code = new Guid();
             try
             {
                 code = Guid.Parse(joinCode);
-                Budget budget = _dataStore.Budget.Get(b => b.BudgetId == code);
-
-                if (budget == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                Budget budgetDB = _dataStore.Budget.Get(b => b.BudgetId == code);
+                return true;
             }
             catch (FormatException e)
             {
