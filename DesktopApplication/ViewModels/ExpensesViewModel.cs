@@ -10,6 +10,7 @@ using DesktopApplication.ViewModels.Forms;
 using DesktopApplication.Views.Forms;
 using ModelsLibrary;
 using ModelsLibrary.Utilities;
+using Windows.Security.Authentication.OnlineId;
 
 namespace DesktopApplication.ViewModels;
 
@@ -154,32 +155,36 @@ public class ExpensesViewModel : ObservableRecipient
         if (result > 0)
             Transactions.Add(new ObservableTransaction(newTransaction));
 
-        //Find out if there is a household transaction related and update it as well
-        var catItemName = newTransaction.BudgetCategory.CategoryName;
+        User? user = _dataStore.User!.Get(u => u.UserId == _sessionService.GetSessionUserId(), false, "Budgets");
+        if(user?.Budgets.Count() > 1) {
 
-        Budget? householdBudget = _dataStore.Budget.GetHouseholdBudget(_sessionService.GetSessionUserId());
-        if (householdBudget is not null)
-        {
-            BudgetCategoryGroup? hhCategoryGroup = householdBudget.BudgetCategoryGroups.FirstOrDefault(g => g.CategoryGroupDesc == "Household");
-            IEnumerable<BudgetCategory> hhCategoryItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == hhCategoryGroup.BudgetCategoryGroupID);
+            //Find out if there is a household transaction related and update it as well
+            var catItemName = newTransaction.BudgetCategory.CategoryName;
 
-            BudgetCategory item = hhCategoryItems.FirstOrDefault(i => i.CategoryName == catItemName);
-
-            if (item is not null)
+            Budget? householdBudget = _dataStore.Budget.GetHouseholdBudget(_sessionService.GetSessionUserId());
+            if (householdBudget is not null)
             {
-                Transaction newHHTransaction = new Transaction();
-                newHHTransaction.TransactionDate = newTransaction.TransactionDate;
-                newHHTransaction.TransactionPayee = newTransaction.TransactionPayee;
-                newHHTransaction.TransactionMemo= newTransaction.TransactionMemo;
-                newHHTransaction.ExpenseAmount= newTransaction.ExpenseAmount;
-                newHHTransaction.DepositAmount = newTransaction.DepositAmount;
-                newHHTransaction.IsTransactionPaid = newTransaction.IsTransactionPaid;
-                newHHTransaction.IsHousehold = true;
-                newHHTransaction.BankAccountId = newTransaction.BankAccountId;
-                newHHTransaction.BankAccount = newTransaction.BankAccount;
-                newHHTransaction.BudgetCategoryId = item.BudgetCategoryID;
-                newHHTransaction.BudgetCategory = item;
-                await _dataStore.Transaction.AddAsync(newHHTransaction);
+                BudgetCategoryGroup? hhCategoryGroup = householdBudget.BudgetCategoryGroups.FirstOrDefault(g => g.CategoryGroupDesc == "Household");
+                IEnumerable<BudgetCategory> hhCategoryItems = _dataStore.BudgetCategory.GetAll(c => c.BudgetCategoryGroupID == hhCategoryGroup.BudgetCategoryGroupID);
+
+                BudgetCategory item = hhCategoryItems.FirstOrDefault(i => i.CategoryName == catItemName);
+
+                if (item is not null)
+                {
+                    Transaction newHHTransaction = new Transaction();
+                    newHHTransaction.TransactionDate = newTransaction.TransactionDate;
+                    newHHTransaction.TransactionPayee = newTransaction.TransactionPayee;
+                    newHHTransaction.TransactionMemo= newTransaction.TransactionMemo;
+                    newHHTransaction.ExpenseAmount= newTransaction.ExpenseAmount;
+                    newHHTransaction.DepositAmount = newTransaction.DepositAmount;
+                    newHHTransaction.IsTransactionPaid = newTransaction.IsTransactionPaid;
+                    newHHTransaction.IsHousehold = true;
+                    newHHTransaction.BankAccountId = newTransaction.BankAccountId;
+                    newHHTransaction.BankAccount = newTransaction.BankAccount;
+                    newHHTransaction.BudgetCategoryId = item.BudgetCategoryID;
+                    newHHTransaction.BudgetCategory = item;
+                    await _dataStore.Transaction.AddAsync(newHHTransaction);
+                }
             }
         }
     }
