@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DebugTools;
 using DesktopApplication.Contracts.Data;
 using DesktopApplication.Contracts.Services;
 using DesktopApplication.CustomEventArgs;
@@ -223,7 +224,7 @@ public class HouseholdViewModel : ObservableRecipient
             var budUser =  _dataStore.Budget.Get(b => b.BudgetId == hhToJoin.BudgetId, false, "Users");
             budUser.Users.Add(user);
             await _dataStore.Budget.Update(budUser);
-
+            
             //Jsonizer.GimmeDatJson(user.Budgets.ToList()[1]);
             //await _apiService.PostAsync("budgets", user.Budgets.ToList()[1]);
         }
