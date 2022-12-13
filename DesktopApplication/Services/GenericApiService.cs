@@ -47,15 +47,15 @@ namespace DesktopApplication.Services
                 return 0;
         }
 
-        public async Task<int> PutAsync<T>(string url, T stringValue)
+        public async Task PutAsync<T>(string url, T stringValue)
         {
             var content = new StringContent(JsonConvert.SerializeObject(stringValue), Encoding.UTF8, "application/json");
             var result = await _client.PutAsync(url, content);
 
-            if (result.IsSuccessStatusCode)
-                return 1;
-            else
-                return 0;
+            Debug.WriteLine("__________________________________________________");
+            Jsonizer.GimmeDatJson(stringValue);
+
+            result.EnsureSuccessStatusCode();
         }
 
         public async Task DeleteAsync(string url)

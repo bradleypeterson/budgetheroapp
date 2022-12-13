@@ -10,7 +10,7 @@ namespace DesktopApplication.Contracts.Services
     {
         public Task<T?> GetAsync<T>(string url);
         public Task<int> PostAsync<T>(string url, T contentValue);
-        public Task<int> PutAsync<T>(string url, T stringValue);
+        public Task PutAsync<T>(string url, T stringValue);
         public Task DeleteAsync(string url);
     }
 }

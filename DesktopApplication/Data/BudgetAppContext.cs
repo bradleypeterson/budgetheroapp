@@ -17,7 +17,7 @@ public class BudgetAppContext : DbContext
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = System.IO.Path.Join(path, "BudgetHeroFinal.db");
+        DbPath = System.IO.Path.Join(path, "BudgetHeroProduction.db");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)

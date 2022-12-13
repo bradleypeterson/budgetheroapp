@@ -233,7 +233,15 @@ public class HouseholdViewModel : ObservableRecipient
             }  
             else
             {
+                List<User> usersToAdd = budgetToJoinApi.Users.ToList(); 
                 List<BudgetCategoryGroup> groupsToAdd = new();
+
+                usersToAdd.ForEach(u => u.Budgets.Clear());
+
+                await _dataStore.User.AddAsync(usersToAdd);
+
+                usersToAdd.Add(user);
+
                 Budget newBudget = new()
                 {
                     BudgetId = GetJoinCode(e),
@@ -243,10 +251,18 @@ public class HouseholdViewModel : ObservableRecipient
 
                 await _dataStore.Budget.AddAsync(newBudget);
 
-                user.Budgets.ToList().Add(newBudget);
-                await _dataStore.User.Update(user);
-                newBudget.Users = budgetToJoinApi.Users.ToList();
-                newBudget.Users.Add(user);
+                usersToAdd.ForEach(u => u.Budgets.Clear());
+
+                newBudget.Users = usersToAdd;
+
+                await _dataStore.Budget.Update(newBudget);            
+
+                await _apiService.PutAsync($"budgets/{newBudget.BudgetId}", newBudget);
+
+                //user.Budgets.ToList().Add(newBudget);
+                //await _dataStore.User.Update(user);
+                //newBudget.Users = budgetToJoinApi.Users.ToList();
+                //newBudget.Users.Add(user);
 
                 //foreach (BudgetCategoryGroup group in budgetToJoinApi.BudgetCategoryGroups)
                 //{
@@ -259,7 +275,7 @@ public class HouseholdViewModel : ObservableRecipient
                 //}
 
                 //await _dataStore.BudgetCategoryGroup.AddAsync(groupsToAdd);
-                await _apiService.PutAsync($"budgets/{budgetToJoinApi.BudgetId}", budgetToJoinApi);
+                //await _apiService.PutAsync($"budgets/{newBudget.BudgetId}", newBudget);
                 //await _apiService.PutAsync($"users/{user.UserId}", user);
 
 
